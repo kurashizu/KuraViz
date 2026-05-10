@@ -5,8 +5,8 @@ export const canvas = {
 }
 
 export const server = {
-  host: '0.0.0.0',
-  port: 9999,
+  host: process.env.HOSTNAME ?? '0.0.0.0',
+  port: Number(process.env.PORT) || 9999,
 }
 
 export type CanvasConfig = typeof canvas

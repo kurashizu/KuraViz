@@ -77,12 +77,12 @@ def main():
     shutil.copytree(SCAFFOLD_DIR, target, ignore=IGNORE_PATTERNS, symlinks=True)
     print(f'  [OK] Copied scaffold → {target}')
 
-    # Create .env.local from .env.example if not present
+    # Create .env.local from .env.example for local overrides
     env_example = os.path.join(target, '.env.example')
     env_local = os.path.join(target, '.env.local')
     if os.path.exists(env_example) and not os.path.exists(env_local):
         shutil.copy2(env_example, env_local)
-        print(f'  [OK] Created .env.local from .env.example')
+        print(f'  [OK] Created .env.local for local overrides')
 
     print(f'\n  ── Done ──')
     print(f'  cd {target}')
