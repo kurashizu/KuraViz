@@ -23,7 +23,7 @@ This skill builds PPT-style video tutorials using HTML slides + TTS audio. Each 
 
 ## Core Constraints
 
-1. **Canvas**: 1920×1080 fixed — defined in `lib/theme.ts`. Do not change.
+1. **Canvas**: 1920×1080 fixed — defined in `components/theme.ts`. Do not change.
 2. **Layout**: All elements use Box absolute positioning (`x`, `y`, `w`, `h`). No `flex`/`grid` at page level.
 3. **Colors**: Must use CSS variables (`var(--brand-primary)`) or `@/components/theme` constants. No hardcoded hex values.
 4. **Text**: Use `<Text variant="...">` — never raw `<h1>`, `<p>`, etc.
@@ -31,7 +31,7 @@ This skill builds PPT-style video tutorials using HTML slides + TTS audio. Each 
 6. **Pages**: Each page is a default-exported component in `content/chapters/{ch}/pg-NN-{name}.tsx`.
 7. **Registration**: Every page must be registered in its chapter's `index.ts`.
 8. **Narration**: Every page must have an entry in `public/narration.json`. `script` field is required.
-9. **Icons**: Use `<SVG>` component only. No emoji characters anywhere (not in text, not in code).
+9. **Icons**: Use inline `<svg>` for small decorative icons (circles, checkmarks, numbered badges). No emoji anywhere.
 10. **Box height**: Always set `h` on components containing text, tall enough for the font size (`h1`=72px needs ≥110px, `body`=30px needs ≥48px per line).
 11. **Mermaid container**: `w` and `h` must both be ≥ 540px (`canvas` half-minimum). Smaller boxes make diagram text unreadable.
 
@@ -45,12 +45,12 @@ scaffold/
 │   ├── player/                 # SlidePlayer, narration, debug, progress
 │   ├── text/                   # <Text variant="h1|h2|h3|body|caption|code">
 │   ├── anim/                   # <Anim type="fade-in|slide-*|scale-in" delay={ms}>
-│   ├── markdown/               # Markdown renderer (LaTeX, Mermaid, tables)
-│   ├── graph/                  # BarChart, LineChart, MindMap, Axis
+│   ├── markdown/               # Markdown renderer (LaTeX, GFM tables)
+│   │   └── mermaid.tsx          # Mermaid diagram renderer (standalone)
+│   ├── graph/                  # BarChart, LineChart, Axis
 │   ├── cardbox/                # Card container
-│   ├── image/                  # Image with effects
-│   └── svg/                    # SVG wrapper
-├── lib/                        # types, theme, utils, bbox
+│   ├── theme.ts                # colors, typography, fonts, canvas
+├── lib/                        # types, utils, bbox
 ├── content/chapters/           # Page components organized by chapter
 ├── public/
 │   ├── narration.json          # All narration scripts + audio paths
@@ -91,13 +91,14 @@ See `references/components.md` for full API documentation of each component.
 | `references/narration-system.md` | Narration JSON schema + audio system |
 | `references/design-guide.md` | Visual design rules, layout templates, color assignments |
 | `references/collision-prevention.md` | Font metrics, box sizing, spacing rules, debug workflow |
+| `references/lessons-learned.md` | Concrete mistakes + fixes from building this scaffold |
 
 ## Prohibited Actions
 
 - ❌ Do not use raw `<div>` for layout — always use Box-based components
 - ❌ Do not hardcode colors — use `@/components/theme` or CSS variables
 - ❌ Do not bypass the SlidePlayer — all pages must be registered in the chapter system
-- ❌ Do not modify `lib/theme.ts` canvas config — 1920×1080 is fixed
+- ❌ Do not modify `components/theme.ts` canvas config — 1920×1080 is fixed
 - ❌ Do not add `npm install` of new packages without verifying with the user
 - ❌ Do not use emoji characters anywhere — use `<SVG>` for icons
 - ❌ Do not leave Box `h` undersized for text content — text will overflow silently
