@@ -27,12 +27,12 @@ export const colors = {
 } as const
 
 export const typography = {
-  h1: { fontSize: 48, fontWeight: 700, lineHeight: 1.2, color: colors.text.primary },
-  h2: { fontSize: 36, fontWeight: 600, lineHeight: 1.3, color: colors.text.primary },
-  h3: { fontSize: 28, fontWeight: 600, lineHeight: 1.4, color: colors.text.primary },
-  body: { fontSize: 20, fontWeight: 400, lineHeight: 1.6, color: colors.text.secondary },
-  caption: { fontSize: 14, fontWeight: 400, lineHeight: 1.5, color: colors.text.dim },
-  code: { fontSize: 18, fontWeight: 400, lineHeight: 1.5, color: colors.brand.secondary },
+  h1: { fontSize: 72, fontWeight: 700, lineHeight: 1.2, color: colors.text.primary },
+  h2: { fontSize: 54, fontWeight: 600, lineHeight: 1.3, color: colors.text.primary },
+  h3: { fontSize: 42, fontWeight: 600, lineHeight: 1.4, color: colors.text.primary },
+  body: { fontSize: 30, fontWeight: 400, lineHeight: 1.6, color: colors.text.secondary },
+  caption: { fontSize: 22, fontWeight: 400, lineHeight: 1.5, color: colors.text.dim },
+  code: { fontSize: 28, fontWeight: 400, lineHeight: 1.5, color: colors.brand.secondary },
 } as const
 
 export type TextVariant = keyof typeof typography
