@@ -27,7 +27,7 @@ export default function Pg02Overview() {
         <Text variant="h2" x={0} y={0}>课程概览</Text>
       </Anim>
 
-      <Anim type="fade-in" delay={200} x={128} y={150} w={600} h={35}>
+      <Anim type="fade-in" delay={200} x={128} y={162} w={600} h={35}>
         <Text variant="caption" x={0} y={0}>本章将介绍以下核心内容</Text>
       </Anim>
 

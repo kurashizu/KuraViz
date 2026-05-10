@@ -27,7 +27,7 @@ export default function Pg03Summary() {
         <Text variant="h2" x={0} y={0}>本章小结</Text>
       </Anim>
 
-      <Anim type="fade-in" delay={200} x={148} y={140} w={600} h={35}>
+      <Anim type="fade-in" delay={200} x={148} y={154} w={600} h={35}>
         <Text variant="caption" x={0} y={0}>回顾本章核心知识点</Text>
       </Anim>
 

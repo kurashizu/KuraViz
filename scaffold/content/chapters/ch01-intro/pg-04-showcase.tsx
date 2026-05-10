@@ -33,7 +33,7 @@ export default function Pg04Showcase() {
         <Text variant="h2" x={0} y={0}>组件展示</Text>
       </Anim>
 
-      <Anim type="fade-in" delay={200} x={128} y={140} w={600} h={35}>
+      <Anim type="fade-in" delay={200} x={128} y={152} w={600} h={35}>
         <Text variant="caption" x={0} y={0}>思维导图、图片与自定义 SVG</Text>
       </Anim>
 

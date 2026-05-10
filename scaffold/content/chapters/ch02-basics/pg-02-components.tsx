@@ -26,7 +26,7 @@ export default function Pg02Components() {
         <Text variant="h2" x={0} y={0}>组件展示</Text>
       </Anim>
 
-      <Anim type="fade-in" delay={200} x={128} y={140} w={600} h={35}>
+      <Anim type="fade-in" delay={200} x={128} y={152} w={600} h={35}>
         <Text variant="caption" x={0} y={0}>Cardbox 三种变体与文字层级</Text>
       </Anim>
 
