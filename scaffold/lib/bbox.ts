@@ -65,7 +65,7 @@ export function scanOverlaps(container: HTMLElement): { a: string; b: string; ra
       if (getComputedStyle(el2).position !== 'absolute') continue
       const rj = el2.getBoundingClientRect()
       if (rj.left <= cr.left + 5 && rj.top <= cr.top + 5 && rj.width >= cr.width * 0.8) continue
-      if (ri.left < rj.right - 0.5 && ri.right > rj.left + 0.5 && ri.top < rj.bottom - 0.5 && ri.bottom > rj.top + 0.5) {
+      if (ri.left < rj.right - 1 && ri.right > rj.left + 1 && ri.top < rj.bottom - 1 && ri.bottom > rj.top + 1) {
         const id1 = el.getAttribute('data-box-id') || el.tagName.toLowerCase() + (el.textContent?.slice(0, 20) || '')
         const id2 = el2.getAttribute('data-box-id') || el2.tagName.toLowerCase() + (el2.textContent?.slice(0, 20) || '')
         collisions.push({ a: `${id1}[${Math.round(ri.left)},${Math.round(ri.top)} ${Math.round(ri.width)}x${Math.round(ri.height)}]`, b: `${id2}[${Math.round(rj.left)},${Math.round(rj.top)} ${Math.round(rj.width)}x${Math.round(rj.height)}]`, ra: ri, rb: rj })
