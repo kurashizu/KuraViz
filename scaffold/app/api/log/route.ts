@@ -16,17 +16,15 @@ export async function POST(req: NextRequest) {
       return new Response('ok', { status: 200 })
     }
 
-    // scan complete marker (overwrite with final summary)
+    // scan complete marker
     if (body.scanComplete) {
       const total = body.total ?? 0
-      const hasCollisions = body.hasCollisions ?? false
+      const tc = body.totalCollisions ?? 0
       const ts = new Date().toISOString().replace('T', ' ').slice(0, 19)
-      const status = hasCollisions ? 'HAS COLLISIONS' : 'ALL CLEAN'
-      const entry = [
-        `[${ts}] SCAN COMPLETE: ${total} pages checked, ${status}`,
-        '',
-      ].join('\n')
-      await fs.appendFile(LOG_FILE, entry, 'utf-8')
+      const line = tc > 0
+        ? `[${ts}] SCAN COMPLETE: ${total} pages checked, ${tc} collision(s) found`
+        : `[${ts}] SCAN COMPLETE: ${total} pages checked, all clean`
+      await fs.appendFile(LOG_FILE, line + '\n', 'utf-8')
       return new Response('ok', { status: 200 })
     }
 

@@ -40,6 +40,7 @@ export function DebugOverlay({ info, totalPages, onNextPage }: DebugOverlayProps
   const [autoDone, setAutoDone] = useState(false)
   const [autoPage, setAutoPage] = useState(0)
   const scannedRef = useRef(false)
+  const totalCollisionsRef = useRef(0)
   const panelRef = useRef<HTMLDivElement>(null)
 
   // scan once after DOM stabilizes
@@ -66,7 +67,10 @@ export function DebugOverlay({ info, totalPages, onNextPage }: DebugOverlayProps
         if (stable >= 3) {
           const result = scanOverlaps(vp!)
           setCollisions(result)
-          if (result.length > 0) logToFile(result, info)
+          if (result.length > 0) {
+            logToFile(result, info)
+            totalCollisionsRef.current += result.length
+          }
           scannedRef.current = true
           return
         }
@@ -86,11 +90,13 @@ export function DebugOverlay({ info, totalPages, onNextPage }: DebugOverlayProps
     if (!auto || autoDone) return
     if (autoPage >= totalPages) {
       setAutoDone(true)
-      fetch('/api/log', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ scanComplete: true, total: totalPages, hasCollisions: collisions.length > 0 }),
-      }).catch(() => {})
+      setTimeout(() => {
+        fetch('/api/log', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ scanComplete: true, total: totalPages, totalCollisions: totalCollisionsRef.current }),
+        }).catch(() => {})
+      }, 500)
       return
     }
     const interval = setInterval(() => {
@@ -153,7 +159,7 @@ export function DebugOverlay({ info, totalPages, onNextPage }: DebugOverlayProps
           style={{
             position: 'fixed',
             top: 0, left: 0, right: 0,
-            background: 'rgba(34,197,94,0.85)',
+            background: totalCollisionsRef.current > 0 ? 'rgba(239,68,68,0.85)' : 'rgba(34,197,94,0.85)',
             color: colors.base.white,
             padding: '8px 16px',
             zIndex: 999999,
@@ -162,7 +168,9 @@ export function DebugOverlay({ info, totalPages, onNextPage }: DebugOverlayProps
           }}
         >
           <Text variant="body" style={{ color: colors.base.white, fontWeight: 700 }}>
-            Auto-scan complete — {totalPages} pages, all clean
+            {totalCollisionsRef.current > 0
+              ? `Collision scan complete — ${totalCollisionsRef.current} overlap(s) across ${totalPages} pages`
+              : `Collision scan complete — ${totalPages} pages, all clean`}
           </Text>
         </div>
       )}
