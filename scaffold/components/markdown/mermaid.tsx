@@ -29,11 +29,10 @@ export function Mermaid({ chart, ...box }: MermaidProps) {
         },
         mindmap: { padding: 16 },
       })
-      const id = 'mermaid-' + Math.random().toString(36).slice(2, 8)
-      if (ref.current) {
-        ref.current.innerHTML = `<div class="${id}">${chart}</div>`
-        mermaid.default.run({ nodes: [{ id, node: ref.current.querySelector(`.${id}`) }] as any[] }).catch(() => {})
-      }
+      const el = document.createElement('div')
+      el.textContent = chart
+      ref.current.append(el)
+      mermaid.default.run({ nodes: [el] }).catch(() => {})
     }
     render()
     return () => { cancelled = true }
