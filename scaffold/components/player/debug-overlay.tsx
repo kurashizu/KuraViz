@@ -175,7 +175,7 @@ export function DebugOverlay({ info, totalPages, onNextPage }: DebugOverlayProps
         </div>
       )}
 
-      {collisions.length > 0 || auto ? (
+      {debug || auto ? (
         <div
           ref={panelRef}
           style={{
