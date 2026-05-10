@@ -1,7 +1,7 @@
 'use client'
 
-import type { TextVariant } from '@/lib/theme'
-import { typography } from '@/lib/theme'
+import type { TextVariant } from '@/components/theme'
+import { typography } from '@/components/theme'
 import { boxStyle, cn } from '@/lib/utils'
 import type { Box } from '@/lib/types'
 

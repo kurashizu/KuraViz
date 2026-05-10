@@ -23,9 +23,9 @@ This skill builds PPT-style video tutorials using HTML slides + TTS audio. Each 
 
 ## Core Constraints
 
-1. **Canvas**: 1920×1080 fixed — defined in `config/canvas.ts`. Do not change.
+1. **Canvas**: 1920×1080 fixed — defined in `lib/theme.ts`. Do not change.
 2. **Layout**: All elements use Box absolute positioning (`x`, `y`, `w`, `h`). No `flex`/`grid` at page level.
-3. **Colors**: Must use CSS variables (`var(--brand-primary)`) or `@/lib/theme` constants. No hardcoded hex values.
+3. **Colors**: Must use CSS variables (`var(--brand-primary)`) or `@/components/theme` constants. No hardcoded hex values.
 4. **Text**: Use `<Text variant="...">` — never raw `<h1>`, `<p>`, etc.
 5. **Animation**: Use `<Anim type="..." delay={ms}>` — never direct framer-motion.
 6. **Pages**: Each page is a default-exported component in `content/chapters/{ch}/pg-NN-{name}.tsx`.
@@ -36,7 +36,7 @@ This skill builds PPT-style video tutorials using HTML slides + TTS audio. Each 
 
 ```
 scaffold/
-├── config/canvas.ts            # 1920×1080, server 0.0.0.0:9999
+├── lib/theme.ts                # colors, typography, canvas (1920×1080)
 ├── app/                        # Next.js App Router
 ├── components/
 │   ├── player/                 # SlidePlayer, narration, debug, progress
@@ -89,7 +89,7 @@ See `references/components.md` for full API documentation of each component.
 ## Prohibited Actions
 
 - ❌ Do not use raw `<div>` for layout — always use Box-based components
-- ❌ Do not hardcode colors — use `@/lib/theme` or CSS variables
+- ❌ Do not hardcode colors — use `@/components/theme` or CSS variables
 - ❌ Do not bypass the SlidePlayer — all pages must be registered in the chapter system
-- ❌ Do not modify `config/canvas.ts` — 1920×1080 is fixed
+- ❌ Do not modify `lib/theme.ts` canvas config — 1920×1080 is fixed
 - ❌ Do not add `npm install` of new packages without verifying with the user

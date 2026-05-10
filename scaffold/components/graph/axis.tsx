@@ -2,7 +2,7 @@
 
 import { boxStyle } from '@/lib/utils'
 import type { Box } from '@/lib/types'
-import { colors } from '@/lib/theme'
+import { colors } from '@/components/theme'
 
 interface AxisProps extends Box {
   xLabel?: string

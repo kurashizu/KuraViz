@@ -6,7 +6,7 @@ import remarkMath from 'remark-math'
 import rehypeKatex from 'rehype-katex'
 import { boxStyle } from '@/lib/utils'
 import type { Box } from '@/lib/types'
-import { colors, typography } from '@/lib/theme'
+import { colors, typography } from '@/components/theme'
 
 interface MarkdownProps extends Box {
   content: string

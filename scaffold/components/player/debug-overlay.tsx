@@ -10,6 +10,8 @@ interface DebugInfo {
   audioSrc: string | null
 }
 
+const whiteText = { color: '#fff', display: 'block' as const }
+
 export function DebugOverlay({ info }: { info: DebugInfo }) {
   const params = useSearchParams()
   const debug = params.get('debug') === '1'
@@ -34,13 +36,13 @@ export function DebugOverlay({ info }: { info: DebugInfo }) {
       <Text variant="caption" style={{ fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1, opacity: 0.8, color: '#fff', marginBottom: 4, fontSize: 11 }}>
         Debug Mode
       </Text>
-      <Text variant="caption" style={{ color: '#fff', display: 'block' }}>Chapter: {info.chapterId}</Text>
-      <Text variant="caption" style={{ color: '#fff', display: 'block' }}>Page: {info.pageId}</Text>
+      <Text variant="caption" style={whiteText}>Chapter: {info.chapterId}</Text>
+      <Text variant="caption" style={whiteText}>Page: {info.pageId}</Text>
       {info.audioSrc && (
-        <Text variant="caption" style={{ color: '#fff', display: 'block' }}>Audio: {info.audioSrc}</Text>
+        <Text variant="caption" style={whiteText}>Audio: {info.audioSrc}</Text>
       )}
       <div style={{ marginTop: 4, borderTop: '1px solid rgba(255,255,255,0.2)', paddingTop: 4 }}>
-        <Text variant="caption" style={{ color: '#fff', display: 'block' }}>
+        <Text variant="caption" style={whiteText}>
           Script: {info.script || '(none)'}
         </Text>
       </div>

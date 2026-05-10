@@ -32,3 +32,11 @@ export const typography = {
 } as const
 
 export type TextVariant = keyof typeof typography
+
+export const canvas = {
+  width: 1920,
+  height: 1080,
+  aspectRatio: '16/9' as const,
+} as const
+
+export type CanvasConfig = typeof canvas

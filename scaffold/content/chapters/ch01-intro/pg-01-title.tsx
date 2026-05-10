@@ -4,7 +4,7 @@ import { Anim } from '@/components/anim'
 import { Text } from '@/components/text'
 import { Cardbox } from '@/components/cardbox'
 import { useNarration } from '@/components/player/narration-context'
-import { canvas } from '@/config/canvas'
+import { canvas, colors } from '@/components/theme'
 
 const cx = canvas.width / 2
 
@@ -16,7 +16,7 @@ export default function Pg01Title() {
       <Anim type="fade-in" delay={0} x={0} y={0} w={1920} h={1080}>
         <div style={{
           width: '100%', height: '100%',
-          background: 'radial-gradient(ellipse at 50% 35%, rgba(99,102,241,0.15), transparent 65%)',
+          background: `radial-gradient(ellipse at 50% 35%, ${colors.brand.primary}26, transparent 65%)`,
         }} />
       </Anim>
 
@@ -27,7 +27,11 @@ export default function Pg01Title() {
       </Anim>
 
       <Anim type="scale-in" delay={300} w={640} h={4} x={cx - 320} y={388}>
-        <div style={{ width: '100%', height: '100%', background: 'linear-gradient(90deg, transparent, #6366F1, transparent)', borderRadius: 2 }} />
+        <div style={{
+          width: '100%', height: '100%',
+          background: `linear-gradient(90deg, transparent, ${colors.brand.primary}, transparent)`,
+          borderRadius: 2,
+        }} />
       </Anim>
 
       <Anim type="slide-up" delay={400} x={cx - 600} y={420} w={1200} h={80}>
@@ -37,7 +41,7 @@ export default function Pg01Title() {
       </Anim>
 
       <Anim type="fade-in" delay={700} x={cx - 400} y={510} w={800} h={40}>
-        <Text variant="h3" x={0} y={0} w={800} style={{ textAlign: 'center', color: '#9CA3AF' }}>
+        <Text variant="h3" x={0} y={0} w={800} style={{ textAlign: 'center', color: colors.text.secondary }}>
           Introduction to Machine Learning
         </Text>
       </Anim>

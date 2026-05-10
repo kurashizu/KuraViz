@@ -3,7 +3,7 @@
 import { LineChart as RechartsLine, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts'
 import { boxStyle } from '@/lib/utils'
 import type { Box } from '@/lib/types'
-import { colors, typography } from '@/lib/theme'
+import { colors, typography } from '@/components/theme'
 
 interface LineChartProps extends Box {
   data: { label: string; value: number }[]

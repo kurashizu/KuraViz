@@ -189,7 +189,7 @@ import { Anim } from '@/components/anim'
 import { Text } from '@/components/text'
 import { Cardbox } from '@/components/cardbox'
 import { SVG } from '@/components/svg'
-import { canvas } from '@/config/canvas'
+import { canvas } from '@/components/theme'
 import { useNarration } from '@/components/player/narration-context'
 
 const cx = canvas.width / 2

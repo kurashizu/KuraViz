@@ -3,11 +3,11 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { chapters } from '@/content/chapters/index'
 import type { NarrationMap } from '@/lib/types'
-import { canvas } from '@/config/canvas'
+import { canvas } from '@/components/theme'
 import { NarrationProvider } from './narration-context'
 import { DebugOverlay } from './debug-overlay'
 import { Text } from '@/components/text'
-import { colors } from '@/lib/theme'
+import { colors } from '@/components/theme'
 
 export function SlidePlayer() {
   const [chapterIdx, setChapterIdx] = useState(0)
@@ -92,7 +92,7 @@ export function SlidePlayer() {
   }, [chapterIdx, pageIdx, narrationEntry])
 
   if (!chapter || !pageDef) {
-    return <div style={{ padding: 40 }}><Text variant="body" style={{ color: '#EF4444' }}>No chapters loaded.</Text></div>
+    return <div style={{ padding: 40 }}><Text variant="body" style={{ color: colors.semantic.error }}>No chapters loaded.</Text></div>
   }
 
   const totalPages = chapters.reduce((s, c) => s + c.pages.length, 0)
@@ -109,7 +109,7 @@ export function SlidePlayer() {
           height: canvas.height,
           transformOrigin: 'top left',
           overflow: 'hidden',
-          background: '#0F1117',
+          background: colors.surface.bg,
         }}
         id="slide-viewport"
       >
