@@ -35,22 +35,36 @@ export function DebugOverlay({ info }: { info: DebugInfo }) {
     if (!debug) return
     const vp = document.getElementById('slide-viewport')
     if (!vp) return
-    const check = () => {
-      const result = scanOverlaps(vp)
-      setCollisions(result)
-      if (result.length > 0) logToFile(result, info)
+
+    let raf: number
+    let prev = ''
+    let stable = 0
+
+    function poll() {
+      const snapshot = Array.from(vp!.children)
+        .filter(el => getComputedStyle(el).position === 'absolute')
+        .map(el => {
+          const r = el.getBoundingClientRect()
+          return `${r.left},${r.top},${r.width},${r.height}`
+        }).join('|')
+
+      if (snapshot === prev) {
+        stable++
+        if (stable >= 3) {
+          const result = scanOverlaps(vp!)
+          setCollisions(result)
+          if (result.length > 0) logToFile(result, info)
+          return
+        }
+      } else {
+        stable = 0
+        prev = snapshot
+      }
+      raf = requestAnimationFrame(poll)
     }
-    // wait for all animations to settle before first scan
-    const startupTimer = setTimeout(() => {
-      check()
-      const intervalTimer = setInterval(check, 500)
-      // store interval handle for cleanup
-      ;(vp as any).__collisionTimer = intervalTimer
-    }, 2500)
-    return () => {
-      clearTimeout(startupTimer)
-      clearInterval((vp as any).__collisionTimer)
-    }
+
+    raf = requestAnimationFrame(poll)
+    return () => cancelAnimationFrame(raf)
   }, [debug, info.chapterId, info.pageId])
 
   if (!debug) return null
