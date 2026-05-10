@@ -61,6 +61,8 @@ y=200+ │ content cards             h varies by content
 
 **Gaps between elements**: minimum 16px. If a card bottom is at y=600 and the next element starts at y=620, no collision.
 
+**Mermaid diagram containers**: both `w` and `h` must be ≥ 540px. Mermaid renders text labels inside SVG; a container smaller than half the canvas clips text and makes the diagram illegible.
+
 ## Debug Verification
 
 After creating/modifying any page:

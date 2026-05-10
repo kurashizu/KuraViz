@@ -33,6 +33,7 @@ This skill builds PPT-style video tutorials using HTML slides + TTS audio. Each 
 8. **Narration**: Every page must have an entry in `public/narration.json`. `script` field is required.
 9. **Icons**: Use `<SVG>` component only. No emoji characters anywhere (not in text, not in code).
 10. **Box height**: Always set `h` on components containing text, tall enough for the font size (`h1`=72px needs ≥110px, `body`=30px needs ≥48px per line).
+11. **Mermaid container**: `w` and `h` must both be ≥ 540px (`canvas` half-minimum). Smaller boxes make diagram text unreadable.
 
 ## Project Structure
 
