@@ -2,7 +2,7 @@
 
 import type { TextVariant } from '@/components/theme'
 import { typography } from '@/components/theme'
-import { boxStyle, cn } from '@/lib/utils'
+import { boxStyle } from '@/lib/utils'
 import type { Box } from '@/lib/types'
 
 type HtmlTag = 'h1' | 'h2' | 'h3' | 'p' | 'span' | 'code'
@@ -10,7 +10,6 @@ type HtmlTag = 'h1' | 'h2' | 'h3' | 'p' | 'span' | 'code'
 interface TextProps extends Box {
   variant?: TextVariant
   children: React.ReactNode
-  className?: string
   style?: React.CSSProperties
   as?: HtmlTag
 }
@@ -24,13 +23,12 @@ const tagMap: Record<TextVariant, HtmlTag> = {
   code: 'code',
 }
 
-export function Text({ variant = 'body', children, className, style, as, ...box }: TextProps) {
+export function Text({ variant = 'body', children, style, as, ...box }: TextProps) {
   const t = typography[variant]
   const Tag = as ?? tagMap[variant]
 
   return (
     <Tag
-      className={cn(className)}
       style={{
         ...boxStyle(box),
         fontSize: t.fontSize,
