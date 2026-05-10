@@ -3,7 +3,7 @@
 import { useEffect, useRef } from 'react'
 import { boxStyle } from '@/lib/utils'
 import type { Box } from '@/lib/types'
-import { typography } from '@/components/theme'
+import { colors, typography } from '@/components/theme'
 
 interface MermaidProps extends Box {
   chart: string
@@ -22,12 +22,12 @@ export function Mermaid({ chart, ...box }: MermaidProps) {
         startOnLoad: false,
         theme: 'dark',
         themeVariables: {
-          primaryColor: '#6366F1',
-          primaryTextColor: '#F1F3F9',
-          primaryBorderColor: '#2E3144',
-          lineColor: '#2E3144',
-          secondaryColor: '#1A1D2B',
-          tertiaryColor: '#0F1117',
+          primaryColor: `${colors.brand.primary}33`,
+          primaryTextColor: colors.base.white,
+          primaryBorderColor: `${colors.surface.border}99`,
+          lineColor: colors.surface.border,
+          secondaryColor: `${colors.surface.card}80`,
+          tertiaryColor: `${colors.surface.bg}4D`,
         },
         mindmap: { padding: 16 },
       })
