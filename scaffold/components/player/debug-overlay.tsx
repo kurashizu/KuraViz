@@ -83,15 +83,29 @@ export function DebugOverlay({ info, totalPages, onNextPage }: DebugOverlayProps
     if (!auto || autoDone) return
     if (autoPage >= totalPages) {
       setAutoDone(true)
+      fetch('/api/log', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ scanComplete: true, total: totalPages, hasCollisions: collisions.length > 0 }),
+      }).catch(() => {})
       return
     }
-    // wait for the scan effect above to settle, then navigate
     const t = setTimeout(() => {
       setAutoPage(p => p + 1)
       onNextPage?.()
     }, 3000)
     return () => clearTimeout(t)
   }, [auto, autoPage, totalPages, autoDone, onNextPage, collisions])
+
+  // auto mode: clear log on mount
+  useEffect(() => {
+    if (!auto) return
+    fetch('/api/log', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ clear: true }),
+    }).catch(() => {})
+  }, [auto])
 
   if (!debug && !auto) return null
 

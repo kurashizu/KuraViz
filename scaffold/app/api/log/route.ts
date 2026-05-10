@@ -9,9 +9,31 @@ export async function POST(req: NextRequest) {
   try {
     await fs.mkdir(LOG_DIR, { recursive: true })
     const body = await req.json()
-    const timestamp = new Date().toISOString().replace('T', ' ').slice(0, 19)
+
+    // clear log
+    if (body.clear) {
+      await fs.writeFile(LOG_FILE, '', 'utf-8')
+      return new Response('ok', { status: 200 })
+    }
+
+    // scan complete marker (overwrite with final summary)
+    if (body.scanComplete) {
+      const total = body.total ?? 0
+      const hasCollisions = body.hasCollisions ?? false
+      const ts = new Date().toISOString().replace('T', ' ').slice(0, 19)
+      const status = hasCollisions ? 'HAS COLLISIONS' : 'ALL CLEAN'
+      const entry = [
+        `[${ts}] SCAN COMPLETE: ${total} pages checked, ${status}`,
+        '',
+      ].join('\n')
+      await fs.appendFile(LOG_FILE, entry, 'utf-8')
+      return new Response('ok', { status: 200 })
+    }
+
+    // append log lines
     const lines = body.lines as string[] | undefined
     if (!lines || lines.length === 0) return new Response('ok', { status: 200 })
+    const timestamp = new Date().toISOString().replace('T', ' ').slice(0, 19)
     const entry = [`[${timestamp}]`, ...lines, ''].join('\n')
     await fs.appendFile(LOG_FILE, entry, 'utf-8')
     return new Response('ok', { status: 200 })
