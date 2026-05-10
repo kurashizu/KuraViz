@@ -5,7 +5,7 @@ import { Text } from '@/components/text'
 import { Cardbox } from '@/components/cardbox'
 import { SVG } from '@/components/svg'
 import { useNarration } from '@/components/player/narration-context'
-import { colors } from '@/components/theme'
+import { colors, typography } from '@/components/theme'
 
 const items = [
   { num: '01', label: '什么是机器学习？', desc: '定义、历史与应用场景' },
@@ -38,7 +38,7 @@ export default function Pg02Overview() {
               <SVG x={24} y={22} w={48} h={48} viewBox="0 0 48 48">
                 <circle cx="24" cy="24" r="24" fill={colors.surface.card} />
                 <circle cx="24" cy="24" r="20" fill="none" stroke={colors.brand.primary} strokeWidth={1} />
-                <text x="24" y="29" textAnchor="middle" fill={colors.brand.primary} fontSize={16} fontWeight={700}>{item.num}</text>
+                <text x="24" y="29" textAnchor="middle" fill={colors.brand.primary} fontSize={typography.caption.fontSize} fontWeight={700}>{item.num}</text>
               </SVG>
               <Text variant="body" x={88} y={18} w={648}>{item.label}</Text>
               <Text variant="caption" x={88} y={72} w={648}>{item.desc}</Text>

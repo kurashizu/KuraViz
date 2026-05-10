@@ -6,7 +6,7 @@ import { Cardbox } from '@/components/cardbox'
 import { SVG } from '@/components/svg'
 import { MindMap, Axis } from '@/components/graph'
 import { useNarration } from '@/components/player/narration-context'
-import { colors } from '@/components/theme'
+import { colors, typography } from '@/components/theme'
 
 const mindmapData = {
   root: 'AI',
@@ -54,8 +54,8 @@ export default function Pg04Showcase() {
             <rect x="10" y="10" width="180" height="140" rx="12" fill="none" stroke={colors.brand.secondary} strokeWidth={2} />
             <circle cx="100" cy="50" r="25" fill={colors.brand.primary} opacity={0.6} />
             <rect x="60" y="90" width="80" height="40" rx="6" fill={colors.brand.secondary} opacity={0.4} />
-            <text x="100" y="55" textAnchor="middle" fill={colors.base.white} fontSize={14}>AI</text>
-            <text x="100" y="115" textAnchor="middle" fill={colors.base.white} fontSize={12}>Data</text>
+            <text x="100" y="55" textAnchor="middle" fill={colors.base.white} fontSize={typography.caption.fontSize}>AI</text>
+            <text x="100" y="115" textAnchor="middle" fill={colors.base.white} fontSize={typography.caption.fontSize}>Data</text>
           </SVG>
         </Cardbox>
       </Anim>

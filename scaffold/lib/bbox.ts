@@ -39,25 +39,46 @@ export function boxStyle(box: Box): React.CSSProperties {
 }
 
 export function scanOverlaps(container: HTMLElement): { a: string; b: string; ra: DOMRect; rb: DOMRect }[] {
+  const cr = container.getBoundingClientRect()
   const items: { el: HTMLElement; id: string; rect: DOMRect }[] = []
-  const walker = document.createTreeWalker(container, NodeFilter.SHOW_ELEMENT)
-  let node: Node | null
-  while ((node = walker.nextNode())) {
-    const el = node as HTMLElement
+
+  // only check top-level absolutely-positioned children (direct children of container)
+  // this avoids false positives from nested parent-child overlaps
+  for (let i = 0; i < container.children.length; i++) {
+    const el = container.children[i] as HTMLElement
     const style = getComputedStyle(el)
     if (style.position !== 'absolute') continue
     const rect = el.getBoundingClientRect()
+    // skip full-canvas backgrounds (>80% of container)
+    if (rect.left <= cr.left + 5 && rect.top <= cr.top + 5 && rect.width >= cr.width * 0.8 && rect.height >= cr.height * 0.8) continue
     const id = el.getAttribute('data-box-id') || el.tagName.toLowerCase() + (el.textContent?.slice(0, 20) || '')
     items.push({ el, id: `${id}[${Math.round(rect.left)},${Math.round(rect.top)} ${Math.round(rect.width)}x${Math.round(rect.height)}]`, rect })
   }
 
   const collisions: { a: string; b: string; ra: DOMRect; rb: DOMRect }[] = []
   for (let i = 0; i < items.length; i++) {
+    const ai = items[i]
     for (let j = i + 1; j < items.length; j++) {
-      const ai = items[i]
-      const bi = items[j]
-      if (ai.rect.left <= bi.rect.right && ai.rect.right >= bi.rect.left && ai.rect.top <= bi.rect.bottom && ai.rect.bottom >= bi.rect.top) {
-        collisions.push({ a: ai.id, b: bi.id, ra: ai.rect, rb: bi.rect })
+      const a = ai, b = items[j]
+      if (a.rect.left <= b.rect.right && a.rect.right >= b.rect.left && a.rect.top <= b.rect.bottom && a.rect.bottom >= b.rect.top) {
+        collisions.push({ a: a.id, b: b.id, ra: a.rect, rb: b.rect })
+      }
+    }
+
+    // child exceeds parent boundary (direct parent with position:relative/absolute)
+    const parent = ai.el.parentElement
+    if (parent && parent !== container) {
+      const ps = getComputedStyle(parent)
+      if (ps.position === 'absolute' || ps.position === 'relative') {
+        const pr = parent.getBoundingClientRect()
+        if (ai.rect.left + 1 < pr.left || ai.rect.top + 1 < pr.top || ai.rect.right - 1 > pr.right || ai.rect.bottom - 1 > pr.bottom) {
+          collisions.push({
+            a: `[溢出] ${ai.id}`,
+            b: `父容器[${Math.round(pr.left)},${Math.round(pr.top)} ${Math.round(pr.width)}x${Math.round(pr.height)}]`,
+            ra: ai.rect,
+            rb: pr,
+          })
+        }
       }
     }
   }
