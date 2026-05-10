@@ -34,17 +34,15 @@ export function Mermaid({ chart, ...box }: MermaidProps) {
       el.textContent = chart
       ref.current.append(el)
       await mermaid.default.run({ nodes: [el] }).catch(() => {})
-      // force ALL text in rendered svg to match theme
       const svg = ref.current.querySelector('svg')
       if (svg) {
-        svg.querySelectorAll('text, tspan, [class*="node"] > text, [class*="leaf"] > text, [class*="root"] > text').forEach(t => {
-          t.setAttribute('font-size', String(typography.body.fontSize))
-        })
-        // root node text gets bigger
-        svg.querySelectorAll('[class*="root"] text, [class*="section"] text').forEach(t => {
-          t.setAttribute('font-size', String(typography.h2.fontSize))
-          t.setAttribute('font-weight', '700')
-        })
+        const s = document.createElement('style')
+        s.textContent = `
+          svg text { font-size: ${typography.body.fontSize}px !important; }
+          svg .root text { font-size: ${typography.h2.fontSize}px !important; font-weight: 700 !important; }
+          svg .section text { font-size: ${typography.h3.fontSize}px !important; }
+        `
+        svg.append(s)
       }
     }
     render()
