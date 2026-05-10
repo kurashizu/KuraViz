@@ -3,7 +3,6 @@
 import { Anim } from '@/components/anim'
 import { Text } from '@/components/text'
 import { Cardbox } from '@/components/cardbox'
-import { SVG } from '@/components/svg'
 import { useNarration } from '@/components/player/narration-context'
 import { colors } from '@/components/theme'
 
@@ -35,11 +34,11 @@ export default function Pg03Summary() {
         {points.map((p, i) => (
           <Anim key={i} type="slide-left" delay={350 + i * 250} w={760} h={96} x={0} y={i * 112}>
             <Cardbox variant="default" x={0} y={0} w={760} h={96}>
-              <SVG x={24} y={28} w={36} h={36} viewBox="0 0 36 36">
+              <svg style={{ position: "absolute", left: 24, top: 28, width: 36, height: 36 }} viewBox="0 0 36 36">
                 <circle cx="18" cy="18" r="18" fill={colors.brand.accent} fillOpacity={0.15} />
                 <circle cx="18" cy="18" r="11" fill="none" stroke={colors.brand.accent} strokeWidth={1.5} />
                 <path d="M12 18l4 4 8-8" fill="none" stroke={colors.brand.accent} strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" />
-              </SVG>
+              </svg>
               <Text variant="body" x={76} y={26} w={660}>{p}</Text>
             </Cardbox>
           </Anim>

@@ -3,7 +3,6 @@
 import { Anim } from '@/components/anim'
 import { Text } from '@/components/text'
 import { Cardbox } from '@/components/cardbox'
-import { SVG } from '@/components/svg'
 import { useNarration } from '@/components/player/narration-context'
 import { colors } from '@/components/theme'
 

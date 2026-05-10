@@ -3,7 +3,6 @@
 import { Anim } from '@/components/anim'
 import { Text } from '@/components/text'
 import { Cardbox } from '@/components/cardbox'
-import { SVG } from '@/components/svg'
 import { Markdown } from '@/components/markdown'
 import { BarChart, LineChart, Axis } from '@/components/graph'
 import { useNarration } from '@/components/player/narration-context'
@@ -51,9 +50,9 @@ export default function Pg03Charts() {
 
       <Anim type="fade-in" delay={350} w={540} h={340} x={100} y={200}>
         <Cardbox variant="elevated" x={0} y={0} w={540} h={340}>
-          <SVG x={20} y={16} w={16} h={16} viewBox="0 0 24 24">
+          <svg style={{ position: "absolute", left: 20, top: 16, width: 16, height: 16 }} viewBox="0 0 24 24">
             <path d="M3 3v18h18v-2H5V3H3zm4 12h2v-4H7v4zm4 0h2V7h-2v8zm4 0h2v-6h-2v6z" fill={colors.brand.secondary} />
-          </SVG>
+          </svg>
           <Text variant="caption" x={44} y={16} w={300}>准确率 (%)</Text>
           <BarChart data={barData} x={20} y={44} w={500} h={280} />
         </Cardbox>
@@ -61,9 +60,9 @@ export default function Pg03Charts() {
 
       <Anim type="fade-in" delay={450} w={540} h={340} x={680} y={200}>
         <Cardbox variant="elevated" x={0} y={0} w={540} h={340}>
-          <SVG x={20} y={16} w={16} h={16} viewBox="0 0 24 24">
+          <svg style={{ position: "absolute", left: 20, top: 16, width: 16, height: 16 }} viewBox="0 0 24 24">
             <path d="M3 3v18h18v-2H5V3H3zm4 12h2v-4H7v4zm4 0h2V7h-2v8zm4 0h2v-6h-2v6z" fill={colors.brand.secondary} />
-          </SVG>
+          </svg>
           <Text variant="caption" x={44} y={16} w={300}>训练损失下降曲线</Text>
           <LineChart data={lineData} x={20} y={44} w={500} h={280} />
         </Cardbox>
@@ -71,9 +70,9 @@ export default function Pg03Charts() {
 
       <Anim type="fade-in" delay={550} w={1120} h={400} x={100} y={570}>
         <Cardbox variant="default" x={0} y={0} w={1120} h={400}>
-          <SVG x={20} y={16} w={16} h={16} viewBox="0 0 24 24">
+          <svg style={{ position: "absolute", left: 20, top: 16, width: 16, height: 16 }} viewBox="0 0 24 24">
             <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z" fill={colors.brand.secondary} />
-          </SVG>
+          </svg>
           <Text variant="caption" x={44} y={16} w={300}>核心公式</Text>
           <Markdown content={formula} x={20} y={40} w={1080} h={340} />
         </Cardbox>

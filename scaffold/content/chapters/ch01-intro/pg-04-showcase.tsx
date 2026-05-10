@@ -3,11 +3,9 @@
 import { Anim } from '@/components/anim'
 import { Text } from '@/components/text'
 import { Cardbox } from '@/components/cardbox'
-import { SVG } from '@/components/svg'
-import { Axis } from '@/components/graph'
 import { Mermaid } from '@/components/markdown/mermaid'
 import { useNarration } from '@/components/player/narration-context'
-import { colors, typography } from '@/components/theme'
+import { colors } from '@/components/theme'
 
 export default function Pg04Showcase() {
   const { script } = useNarration()
@@ -19,40 +17,38 @@ export default function Pg04Showcase() {
       </Anim>
 
       <Anim type="fade-in" delay={100} x={128} y={72} w={600} h={70}>
-        <Text variant="h2" x={0} y={0}>组件展示</Text>
+        <Text variant="h2" x={0} y={0}>Mermaid 图表展示</Text>
       </Anim>
 
       <Anim type="fade-in" delay={200} x={128} y={152} w={600} h={35}>
-        <Text variant="caption" x={0} y={0}>思维导图、图片与自定义 SVG</Text>
+        <Text variant="caption" x={0} y={0}>思维导图、流程图、时序图</Text>
       </Anim>
 
-      <Anim type="fade-in" delay={350} w={820} h={420} x={100} y={200}>
-        <Cardbox variant="elevated" x={0} y={0} w={820} h={420}>
-          <Text variant="h3" x={20} y={16} w={400}>AI 知识体系</Text>
-          <Mermaid chart={'mindmap\n  AI\n    Machine Learning\n      Supervised\n      Unsupervised\n      Reinforcement\n    NLP\n    Computer Vision'} x={20} y={55} w={780} h={345} />
+      <Anim type="fade-in" delay={350} w={560} h={420} x={100} y={200}>
+        <Cardbox variant="elevated" x={0} y={0} w={560} h={420}>
+          <Text variant="h3" x={20} y={16} w={520}>思维导图</Text>
+          <Mermaid chart={'mindmap\n  AI\n    Machine Learning\n      Supervised\n      Unsupervised\n      Reinforcement\n    NLP\n    Computer Vision'} x={20} y={55} w={520} h={345} />
         </Cardbox>
       </Anim>
 
-      <Anim type="slide-right" delay={500} w={460} h={300} x={960} y={200}>
-        <Cardbox variant="bordered" x={0} y={0} w={460} h={300}>
-          <SVG x={20} y={20} w={24} h={24} viewBox="0 0 24 24">
-            <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z" fill={colors.brand.accent} />
-          </SVG>
-          <Text variant="h3" x={20} y={58} w={420}>自定义 SVG</Text>
-          <SVG x={20} y={110} w={200} h={160} viewBox="0 0 200 160">
-            <rect x="10" y="10" width="180" height="140" rx="12" fill="none" stroke={colors.brand.secondary} strokeWidth={2} />
-            <circle cx="100" cy="50" r="25" fill={colors.brand.primary} opacity={0.6} />
-            <rect x="60" y="90" width="80" height="40" rx="6" fill={colors.brand.secondary} opacity={0.4} />
-            <text x="100" y="55" textAnchor="middle" fill={colors.base.white} fontSize={typography.caption.fontSize}>AI</text>
-            <text x="100" y="115" textAnchor="middle" fill={colors.base.white} fontSize={typography.caption.fontSize}>Data</text>
-          </SVG>
+      <Anim type="slide-right" delay={500} w={560} h={420} x={700} y={200}>
+        <Cardbox variant="elevated" x={0} y={0} w={560} h={420}>
+          <Text variant="h3" x={20} y={16} w={520}>流程图</Text>
+          <Mermaid chart={'flowchart LR\n  A[Start] --> B{Check}\n  B -->|Yes| C[OK]\n  B -->|No| D[Fix]\n  D --> B'} x={20} y={55} w={520} h={345} />
         </Cardbox>
       </Anim>
 
-      <Anim type="fade-in" delay={650} w={460} h={180} x={960} y={540}>
-        <Cardbox variant="default" x={0} y={0} w={460} h={180}>
-          <Text variant="h3" x={20} y={16} w={420}>图表示例</Text>
-          <Axis x={20} y={60} w={420} h={100} xLabel="X" yLabel="Y" />
+      <Anim type="fade-in" delay={650} w={560} h={280} x={100} y={660}>
+        <Cardbox variant="default" x={0} y={0} w={560} h={280}>
+          <Text variant="h3" x={20} y={16} w={520}>时序图</Text>
+          <Mermaid chart={'sequenceDiagram\n  User->>App: Request\n  App->>DB: Query\n  DB-->>App: Data\n  App-->>User: Response'} x={20} y={55} w={520} h={205} />
+        </Cardbox>
+      </Anim>
+
+      <Anim type="fade-in" delay={800} w={560} h={280} x={700} y={660}>
+        <Cardbox variant="default" x={0} y={0} w={560} h={280}>
+          <Text variant="h3" x={20} y={16} w={520}>甘特图</Text>
+          <Mermaid chart={'gantt\n  title Project\n  dateFormat YYYY-MM-DD\n  section Phase1\n  Task1 :a1, 2024-01-01, 30d\n  Task2 :after a1, 20d'} x={20} y={55} w={520} h={205} />
         </Cardbox>
       </Anim>
 

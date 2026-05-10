@@ -3,7 +3,6 @@
 import { Anim } from '@/components/anim'
 import { Text } from '@/components/text'
 import { Cardbox } from '@/components/cardbox'
-import { SVG } from '@/components/svg'
 import { useNarration } from '@/components/player/narration-context'
 import { colors, typography } from '@/components/theme'
 
@@ -35,11 +34,11 @@ export default function Pg02Overview() {
         {items.map((item, i) => (
           <Anim key={i} type="slide-right" delay={400 + i * 250} w={760} h={116} x={0} y={i * 132}>
             <Cardbox variant="default" x={0} y={0} w={760} h={116}>
-              <SVG x={24} y={22} w={48} h={48} viewBox="0 0 48 48">
+              <svg style={{ position: "absolute", left: 24, top: 22, width: 48, height: 48 }} viewBox="0 0 48 48">
                 <circle cx="24" cy="24" r="24" fill={colors.surface.card} />
                 <circle cx="24" cy="24" r="20" fill="none" stroke={colors.brand.primary} strokeWidth={1} />
                 <text x="24" y="29" textAnchor="middle" fill={colors.brand.primary} fontSize={typography.caption.fontSize} fontWeight={700}>{item.num}</text>
-              </SVG>
+              </svg>
               <Text variant="body" x={88} y={18} w={648}>{item.label}</Text>
               <Text variant="caption" x={88} y={72} w={648}>{item.desc}</Text>
             </Cardbox>
