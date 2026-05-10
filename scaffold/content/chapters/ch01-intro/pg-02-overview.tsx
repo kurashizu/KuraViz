@@ -23,7 +23,7 @@ export default function Pg02Overview() {
         <div style={{ width: '100%', height: '100%', background: colors.brand.primary, borderRadius: 4 }} />
       </Anim>
 
-      <Anim type="fade-in" delay={100} x={128} y={80} w={600} h={70}>
+      <Anim type="fade-in" delay={100} x={128} y={82} w={600} h={70}>
         <Text variant="h2" x={0} y={0}>课程概览</Text>
       </Anim>
 
@@ -31,23 +31,23 @@ export default function Pg02Overview() {
         <Text variant="caption" x={0} y={0}>本章将介绍以下核心内容</Text>
       </Anim>
 
-      <div style={{ position: 'absolute', left: 160, top: 220 }}>
+      <div style={{ position: 'absolute', left: 160, top: 210 }}>
         {items.map((item, i) => (
-          <Anim key={i} type="slide-right" delay={400 + i * 260} w={760} h={120} x={0} y={i * 136}>
-            <Cardbox variant="default" x={0} y={0} w={760} h={120}>
-              <SVG x={24} y={24} w={48} h={48} viewBox="0 0 48 48">
+          <Anim key={i} type="slide-right" delay={400 + i * 250} w={760} h={116} x={0} y={i * 132}>
+            <Cardbox variant="default" x={0} y={0} w={760} h={116}>
+              <SVG x={24} y={22} w={48} h={48} viewBox="0 0 48 48">
                 <circle cx="24" cy="24" r="24" fill={colors.surface.card} />
                 <circle cx="24" cy="24" r="20" fill="none" stroke={colors.brand.primary} strokeWidth={1} />
                 <text x="24" y="29" textAnchor="middle" fill={colors.brand.primary} fontSize={16} fontWeight={700}>{item.num}</text>
               </SVG>
-              <Text variant="body" x={88} y={20} w={640}>{item.label}</Text>
-              <Text variant="caption" x={88} y={72} w={640}>{item.desc}</Text>
+              <Text variant="body" x={88} y={18} w={648}>{item.label}</Text>
+              <Text variant="caption" x={88} y={72} w={648}>{item.desc}</Text>
             </Cardbox>
           </Anim>
         ))}
       </div>
 
-      <Text variant="caption" x={660} y={1020} w={600} style={{ textAlign: "center" }}>{script}</Text>
+      <Text variant="caption" x={320} y={1020} w={1280} style={{ textAlign: 'center' }}>{script}</Text>
     </>
   )
 }

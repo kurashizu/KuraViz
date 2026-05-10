@@ -7,16 +7,24 @@
     "pg-02-overview": {
       "script": "本节课我们将了解四个核心主题：什么是机器学习、监督学习和无监督学习的区别、常见算法概览，以及本课程的学习路径。",
       "audioSrc": "/audio/ch01-intro/pg-02-overview.wav"
+    },
+    "pg-03-charts": {
+      "script": "本章我们将展示数据可视化与核心公式。左侧柱状图对比了五种模型的准确率，右侧折线图显示训练损失的变化趋势。",
+      "audioSrc": "/audio/ch01-intro/pg-03-charts.wav"
+    },
+    "pg-04-showcase": {
+      "script": "最后我们展示思维导图与自定义 SVG 图形。思维导图概括了人工智能的主要分支，右侧是自定义绘制的示例图形。",
+      "audioSrc": "/audio/ch01-intro/pg-04-showcase.wav"
     }
   },
   "ch02-basics": {
     "pg-01-title": {
-      "script": "接下来进入第二章，核心概念部分。我们将深入探讨算法的性能对比和关键发现。",
+      "script": "接下来进入第二章，核心概念部分。我们将深入探讨组件系统的使用。",
       "audioSrc": "/audio/ch02-basics/pg-01-title.wav"
     },
-    "pg-02-core-concept": {
-      "script": "这张图表展示了五种常见模型在标准测试集上的准确率对比。可以看到神经网络以百分之九十二的准确率领先，其次是 XGBoost。",
-      "audioSrc": "/audio/ch02-basics/pg-02-core-concept.wav"
+    "pg-02-components": {
+      "script": "本章展示 Cardbox 的三种变体以及完整的文字层级系统，包括从 h1 到 caption 的全部样式。",
+      "audioSrc": "/audio/ch02-basics/pg-02-components.wav"
     },
     "pg-03-summary": {
       "script": "最后做一个本章小结。机器学习是人工智能的核心分支，包含三大范式。模型选择取决于数据规模和任务类型，而实践出真知，动手 coding 是关键。",
