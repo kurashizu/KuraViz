@@ -40,9 +40,17 @@ export function DebugOverlay({ info }: { info: DebugInfo }) {
       setCollisions(result)
       if (result.length > 0) logToFile(result, info)
     }
-    check()
-    const timer = setInterval(check, 500)
-    return () => clearInterval(timer)
+    // wait for all animations to settle before first scan
+    const startupTimer = setTimeout(() => {
+      check()
+      const intervalTimer = setInterval(check, 500)
+      // store interval handle for cleanup
+      ;(vp as any).__collisionTimer = intervalTimer
+    }, 2500)
+    return () => {
+      clearTimeout(startupTimer)
+      clearInterval((vp as any).__collisionTimer)
+    }
   }, [debug, info.chapterId, info.pageId])
 
   if (!debug) return null
