@@ -7,6 +7,7 @@ import rehypeKatex from 'rehype-katex'
 import { boxStyle } from '@/lib/utils'
 import type { Box } from '@/lib/types'
 import { colors, typography } from '@/components/theme'
+import { Mermaid } from './mermaid'
 
 interface MarkdownProps extends Box {
   content: string
@@ -43,16 +44,26 @@ export function Markdown({ content, ...box }: MarkdownProps) {
             </h3>
           ),
           p: ({ children }) => <p style={{ margin: '8px 0', color: colors.text.secondary }}>{children}</p>,
-          code: ({ children }) => (
-            <code style={{ background: colors.surface.card, padding: '2px 6px', borderRadius: 4, fontSize: typography.code.fontSize, color: colors.brand.secondary }}>
-              {children}
-            </code>
-          ),
-          pre: ({ children }) => (
-            <pre style={{ background: colors.surface.card, padding: 16, borderRadius: 8, overflow: 'auto', fontSize: typography.code.fontSize, lineHeight: typography.code.lineHeight }}>
-              {children}
-            </pre>
-          ),
+          code: ({ children, className }) => {
+            if (className === 'language-mermaid') {
+              return <Mermaid chart={String(children)} />
+            }
+            return (
+              <code style={{ background: colors.surface.card, padding: '2px 6px', borderRadius: 4, fontSize: typography.code.fontSize, color: colors.brand.secondary }}>
+                {children}
+              </code>
+            )
+          },
+          pre: ({ children, className }) => {
+            if (className === 'language-mermaid') {
+              return <>{children}</>
+            }
+            return (
+              <pre style={{ background: colors.surface.card, padding: 16, borderRadius: 8, overflow: 'auto', fontSize: typography.code.fontSize, lineHeight: typography.code.lineHeight }}>
+                {children}
+              </pre>
+            )
+          },
           table: ({ children }) => (
             <div style={{ overflow: 'auto' }}>
               <table style={{ borderCollapse: 'collapse', width: '100%' }}>{children}</table>

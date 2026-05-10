@@ -77,7 +77,7 @@ $$ E = mc^2 $$
 | content | string (markdown) | required |
 | x, y, w, h, z | number (px) | — |
 
-Supports: GFM tables, LaTeX (via KaTeX), strikethrough, task lists, code blocks.
+Supports: GFM tables, LaTeX (via KaTeX), strikethrough, task lists, code blocks, Mermaid diagrams (via ```mermaid code blocks).
 
 ## Graph — `@/components/graph`
 
@@ -105,19 +105,22 @@ import { LineChart } from '@/components/graph'
 />
 ```
 
-### MindMap
+### Mermaid (via Markdown)
+
+Mind maps, flowcharts, sequence diagrams via ```` ```mermaid ```` code blocks inside `<Markdown>`:
 
 ```tsx
-import { MindMap } from '@/components/graph'
+import { Markdown } from '@/components/markdown'
 
-<MindMap
-  root="AI"
-  nodes={[
-    { id: 'ml', label: 'Machine Learning', parent: 'AI' },
-    { id: 'dl', label: 'Deep Learning', parent: 'ml' },
-  ]}
-  x={120} y={100} w={900} h={600}
-/>
+<Markdown content={`
+\`\`\`mermaid
+mindmap
+  AI
+    Machine Learning
+    NLP
+    Computer Vision
+\`\`\`
+`} x={100} y={100} w={800} h={400} />
 ```
 
 ### Axis

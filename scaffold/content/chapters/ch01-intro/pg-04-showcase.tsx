@@ -4,21 +4,12 @@ import { Anim } from '@/components/anim'
 import { Text } from '@/components/text'
 import { Cardbox } from '@/components/cardbox'
 import { SVG } from '@/components/svg'
-import { MindMap, Axis } from '@/components/graph'
+import { Axis } from '@/components/graph'
+import { Markdown } from '@/components/markdown'
 import { useNarration } from '@/components/player/narration-context'
 import { colors, typography } from '@/components/theme'
 
-const mindmapData = {
-  root: 'AI',
-  nodes: [
-    { id: 'ml', label: 'Machine Learning', parent: 'AI' },
-    { id: 'nlp', label: 'NLP', parent: 'AI' },
-    { id: 'cv', label: 'Computer Vision', parent: 'AI' },
-    { id: 'supervised', label: 'Supervised', parent: 'ml' },
-    { id: 'unsupervised', label: 'Unsupervised', parent: 'ml' },
-    { id: 'rl', label: 'Reinforcement', parent: 'ml' },
-  ],
-}
+const mindmapChart = 'mindmap\n  AI\n    Machine Learning\n      Supervised\n      Unsupervised\n      Reinforcement\n    NLP\n    Computer Vision'
 
 export default function Pg04Showcase() {
   const { script } = useNarration()
@@ -40,7 +31,7 @@ export default function Pg04Showcase() {
       <Anim type="fade-in" delay={350} w={820} h={420} x={100} y={200}>
         <Cardbox variant="elevated" x={0} y={0} w={820} h={420}>
           <Text variant="h3" x={20} y={16} w={400}>AI 知识体系</Text>
-          <MindMap root={mindmapData.root} nodes={mindmapData.nodes} x={10} y={60} w={800} h={340} />
+          <Markdown content={'```mermaid\n' + mindmapChart + '\n```'} x={20} y={55} w={780} h={345} />
         </Cardbox>
       </Anim>
 
