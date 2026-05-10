@@ -13,8 +13,16 @@
       "audioSrc": "/audio/ch01-intro/pg-03-charts.wav"
     },
     "pg-04-showcase": {
-      "script": "最后我们展示思维导图与自定义 SVG 图形。思维导图概括了人工智能的主要分支，右侧是自定义绘制的示例图形。",
+      "script": "首先展示 Mermaid 思维导图，它概括了人工智能的主要分支，包括机器学习、自然语言处理和计算机视觉。",
       "audioSrc": "/audio/ch01-intro/pg-04-showcase.wav"
+    },
+    "pg-05-flowchart": {
+      "script": "接下来是流程图示例，展示一个数据处理流程中的条件判断和循环分支。",
+      "audioSrc": "/audio/ch01-intro/pg-05-flowchart.wav"
+    },
+    "pg-06-sequence": {
+      "script": "最后是时序图示例，展示用户、应用和数据库三者之间的交互过程，包括正常流程和异常处理。",
+      "audioSrc": "/audio/ch01-intro/pg-06-sequence.wav"
     }
   },
   "ch02-basics": {

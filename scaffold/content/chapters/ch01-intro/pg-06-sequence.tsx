@@ -7,7 +7,7 @@ import { Mermaid } from '@/components/markdown/mermaid'
 import { useNarration } from '@/components/player/narration-context'
 import { colors } from '@/components/theme'
 
-export default function Pg04Showcase() {
+export default function Pg06Sequence() {
   const { script } = useNarration()
 
   return (
@@ -17,16 +17,16 @@ export default function Pg04Showcase() {
       </Anim>
 
       <Anim type="fade-in" delay={100} x={128} y={72} w={600} h={70}>
-        <Text variant="h2" x={0} y={0}>思维导图</Text>
+        <Text variant="h2" x={0} y={0}>时序图</Text>
       </Anim>
 
       <Anim type="fade-in" delay={200} x={128} y={152} w={600} h={35}>
-        <Text variant="caption" x={0} y={0}>Mermaid mindmap 展示 AI 知识体系</Text>
+        <Text variant="caption" x={0} y={0}>Mermaid sequenceDiagram 展示交互流程</Text>
       </Anim>
 
       <Anim type="fade-in" delay={350} w={1720} h={760} x={100} y={210}>
         <Cardbox variant="elevated" x={0} y={0} w={1720} h={760}>
-          <Mermaid chart={'mindmap\n  AI\n    Machine Learning\n      Supervised\n      Unsupervised\n      Reinforcement\n    NLP\n    Computer Vision\n    Robotics'} x={20} y={20} w={1680} h={720} />
+          <Mermaid chart={'sequenceDiagram\n  participant U as User\n  participant A as App\n  participant D as Database\n  U->>A: 提交请求\n  A->>D: 查询数据\n  D-->>A: 返回结果\n  A-->>U: 显示页面\n  alt 出错时\n    A-->>U: 显示错误信息\n  end'} x={20} y={20} w={1680} h={720} />
         </Cardbox>
       </Anim>
 

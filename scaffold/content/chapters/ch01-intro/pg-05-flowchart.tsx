@@ -7,7 +7,7 @@ import { Mermaid } from '@/components/markdown/mermaid'
 import { useNarration } from '@/components/player/narration-context'
 import { colors } from '@/components/theme'
 
-export default function Pg04Showcase() {
+export default function Pg05Flowchart() {
   const { script } = useNarration()
 
   return (
@@ -17,16 +17,16 @@ export default function Pg04Showcase() {
       </Anim>
 
       <Anim type="fade-in" delay={100} x={128} y={72} w={600} h={70}>
-        <Text variant="h2" x={0} y={0}>思维导图</Text>
+        <Text variant="h2" x={0} y={0}>流程图</Text>
       </Anim>
 
       <Anim type="fade-in" delay={200} x={128} y={152} w={600} h={35}>
-        <Text variant="caption" x={0} y={0}>Mermaid mindmap 展示 AI 知识体系</Text>
+        <Text variant="caption" x={0} y={0}>Mermaid flowchart 展示流程分支</Text>
       </Anim>
 
       <Anim type="fade-in" delay={350} w={1720} h={760} x={100} y={210}>
         <Cardbox variant="elevated" x={0} y={0} w={1720} h={760}>
-          <Mermaid chart={'mindmap\n  AI\n    Machine Learning\n      Supervised\n      Unsupervised\n      Reinforcement\n    NLP\n    Computer Vision\n    Robotics'} x={20} y={20} w={1680} h={720} />
+          <Mermaid chart={'flowchart TB\n  Start([开始]) --> Process[处理数据]\n  Process --> Condition{验证通过?}\n  Condition -->|Yes| Success([完成])\n  Condition -->|No| Fix[修正错误]\n  Fix --> Process'} x={20} y={20} w={1680} h={720} />
         </Cardbox>
       </Anim>
 
