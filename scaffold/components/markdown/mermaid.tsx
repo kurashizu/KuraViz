@@ -22,17 +22,15 @@ function detectType(chart: string): ChartType {
 
 function applyTheme(svgEl: SVGSVGElement, type: ChartType) {
   const theme = {
-    primary: colors.mermaid.node,
+    primary: colors.brand.primary,
     primaryLight: colors.mermaid.nodeBorder,
-    nodeBg: colors.mermaid.section,
-    nodeBgDeep: colors.mermaid.leaf,
-    border: colors.mermaid.sectionBorder,
+    section: colors.mermaid.section,
+    leaf: colors.mermaid.leaf,
+    leafBorder: colors.mermaid.leafBorder,
     text: colors.base.white,
     textMuted: colors.mermaid.leafText,
-    line: colors.brand.primary,
   }
 
-  // all types: force font size on text elements
   svgEl.querySelectorAll('text').forEach(t => {
     (t as SVGTextElement).style.fontSize = `${typography.body.fontSize}px`
   })
@@ -46,54 +44,54 @@ function applyTheme(svgEl: SVGSVGElement, type: ChartType) {
       svgEl.querySelectorAll('.section text').forEach(t => {
         (t as SVGTextElement).style.fontSize = `${typography.h3.fontSize}px`
       })
-      svgEl.querySelectorAll('rect, path').forEach(el => {
+      svgEl.querySelectorAll('.mindmap-node rect, .mindmap-node path, .mindmap-node ellipse').forEach(el => {
         const e = el as SVGElement
-        const c = (el.className?.toString() || '') + ' ' + (el.closest?.('.root') ? 'root' : '') + ' ' + (el.closest?.('.section') ? 'section' : '')
+        const c = ((el as Element).className?.toString() || '') + (el.closest?.('.root') ? ' root' : '') + (el.closest?.('.section') ? ' section' : '')
         if (c.includes('root')) { e.style.fill = theme.primary; e.style.stroke = theme.primaryLight }
-        else if (c.includes('section')) { e.style.fill = theme.nodeBg; e.style.stroke = theme.border }
-        else { e.style.fill = theme.nodeBgDeep; e.style.stroke = theme.border }
+        else if (c.includes('section')) { e.style.fill = theme.section; e.style.stroke = theme.primary }
+        else { e.style.fill = theme.leaf; e.style.stroke = theme.leafBorder }
       })
-      svgEl.querySelectorAll('path:not([class*="node"])').forEach(el => {
-        const d = (el as SVGElement).getAttribute('d') || ''
-        if (d.match(/[QCLM]/)) { (el as SVGElement).style.stroke = theme.line; (el as SVGElement).style.strokeWidth = '2' }
+      svgEl.querySelectorAll('.mindmap-edge path').forEach(el => {
+        (el as SVGElement).style.stroke = theme.primary
+        ;(el as SVGElement).style.strokeWidth = '2'
       })
     },
 
     flowchart() {
       svgEl.querySelectorAll('.node rect, .node circle, .node polygon').forEach(el => {
-        (el as SVGElement).style.fill = theme.nodeBg
+        (el as SVGElement).style.fill = theme.section
         ;(el as SVGElement).style.stroke = theme.primary
       })
       svgEl.querySelectorAll('.node .label').forEach(el => {
         (el as HTMLElement).style.color = theme.text
       })
       svgEl.querySelectorAll('.edgePath path').forEach(el => {
-        (el as SVGElement).style.stroke = theme.line
+        (el as SVGElement).style.stroke = theme.primary
         ;(el as SVGElement).style.strokeWidth = '2'
       })
       svgEl.querySelectorAll('.arrowheadPath').forEach(el => {
-        (el as SVGElement).style.fill = theme.line
+        (el as SVGElement).style.fill = theme.primary
       })
       svgEl.querySelectorAll('.edgeLabel').forEach(el => {
-        (el as HTMLElement).style.background = theme.nodeBgDeep
+        (el as HTMLElement).style.background = theme.leaf
         ;(el as HTMLElement).style.color = theme.textMuted
       })
     },
 
     sequence() {
       svgEl.querySelectorAll('.actor').forEach(el => {
-        (el as SVGElement).style.fill = theme.nodeBg
+        (el as SVGElement).style.fill = theme.section
         ;(el as SVGElement).style.stroke = theme.primary
       })
       svgEl.querySelectorAll('.messageLine0, .messageLine1').forEach(el => {
-        (el as SVGElement).style.stroke = theme.line
+        (el as SVGElement).style.stroke = theme.primary
       })
       svgEl.querySelectorAll('.labelBox').forEach(el => {
-        (el as SVGElement).style.fill = theme.nodeBgDeep
-        ;(el as SVGElement).style.stroke = theme.border
+        (el as SVGElement).style.fill = theme.leaf
+        ;(el as SVGElement).style.stroke = theme.leafBorder
       })
       svgEl.querySelectorAll('.loopLine').forEach(el => {
-        (el as SVGElement).style.stroke = theme.border
+        (el as SVGElement).style.stroke = theme.leafBorder
       })
     },
 
@@ -106,17 +104,17 @@ function applyTheme(svgEl: SVGSVGElement, type: ChartType) {
         (el as SVGElement).style.fill = theme.text
       })
       svgEl.querySelectorAll('.grid .tick line').forEach(el => {
-        (el as SVGElement).style.stroke = theme.border
+        (el as SVGElement).style.stroke = theme.leafBorder
       })
     },
 
     class() {
       svgEl.querySelectorAll('.classBox .outer').forEach(el => {
-        (el as SVGElement).style.fill = theme.nodeBg
+        (el as SVGElement).style.fill = theme.section
         ;(el as SVGElement).style.stroke = theme.primary
       })
       svgEl.querySelectorAll('.relation').forEach(el => {
-        (el as SVGElement).style.stroke = theme.line
+        (el as SVGElement).style.stroke = theme.primary
       })
     },
   }
@@ -136,18 +134,6 @@ export function Mermaid({ chart, ...box }: MermaidProps) {
       mermaid.default.initialize({
         startOnLoad: false,
         theme: 'dark',
-        themeVariables: {
-          primaryColor: colors.mermaid.node,
-          primaryTextColor: colors.base.white,
-          primaryBorderColor: colors.mermaid.nodeBorder,
-          secondaryColor: colors.mermaid.section,
-          secondaryTextColor: colors.text.primary,
-          secondaryBorderColor: colors.mermaid.sectionBorder,
-          tertiaryColor: colors.mermaid.leaf,
-          tertiaryTextColor: colors.mermaid.leafText,
-          tertiaryBorderColor: colors.mermaid.leafBorder,
-          lineColor: colors.brand.primary,
-        },
         mindmap: { padding: 16 },
       })
 
@@ -161,15 +147,18 @@ export function Mermaid({ chart, ...box }: MermaidProps) {
         const svgEl = ref.current.querySelector('svg')
         if (!svgEl) return
 
+        // read original dimensions before overriding
+        const origW = parseFloat(svgEl.getAttribute('width') || '800')
+        const origH = parseFloat(svgEl.getAttribute('height') || '600')
+
+        if (!svgEl.getAttribute('viewBox')) {
+          svgEl.setAttribute('viewBox', `0 0 ${origW} ${origH}`)
+        }
+
         svgEl.setAttribute('width', '100%')
         svgEl.setAttribute('height', '100%')
         svgEl.style.width = '100%'
         svgEl.style.height = '100%'
-        if (!svgEl.getAttribute('viewBox')) {
-          const w = parseFloat(svgEl.getAttribute('width') || '800')
-          const h = parseFloat(svgEl.getAttribute('height') || '600')
-          svgEl.setAttribute('viewBox', `0 0 ${w} ${h}`)
-        }
 
         applyTheme(svgEl, detectType(chart))
       } catch (e) {

@@ -1,12 +1,10 @@
 export const colors = {
   mermaid: {
-    node: '#6366F1',
-    nodeBorder: '#818CF8',
-    section: '#1E2235',
-    sectionBorder: '#4F5680',
-    leaf: '#252A3D',
-    leafBorder: '#3D4466',
-    leafText: '#C7CADE',
+    nodeBorder: '#A5B4FC',
+    section: '#252A3D',
+    leaf: '#1E2438',
+    leafBorder: '#4F5680',
+    leafText: '#D1D5DB',
   },
   base: {
     white: '#FFFFFF',
