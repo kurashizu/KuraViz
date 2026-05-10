@@ -107,9 +107,10 @@ export function SlidePlayer() {
           position: 'relative',
           width: canvas.width,
           height: canvas.height,
-          transformOrigin: 'top left',
+          transformOrigin: 'center center',
           overflow: 'hidden',
           background: '#0F1117',
+          margin: 'auto',
         }}
         id="slide-viewport"
       >
@@ -145,6 +146,9 @@ export function SlidePlayer() {
         }
         #slide-viewport {
           transform: scale(var(--slide-scale, 1));
+        }
+        * {
+          user-select: none;
         }
       `}</style>
 
