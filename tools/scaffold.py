@@ -4,7 +4,7 @@ Scaffold tool — pre-installs dependencies and copies the web-video scaffold te
 
 Usage:
     python tools/scaffold.py --dir /path/to/workspace
-    python tools/scaffold.py --dir /path/to/workspace --name my-project
+    python tools/scaffold.py --dir /path/to/workspace --name my-project --port 9999 --host 0.0.0.0
     python tools/scaffold.py --dir /path/to/workspace --force
 """
 
@@ -15,12 +15,13 @@ import subprocess
 import sys
 
 SCAFFOLD_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'scaffold')
+DEFAULT_PORT = '9999'
+DEFAULT_HOST = '0.0.0.0'
 
 IGNORE_PATTERNS = shutil.ignore_patterns('.next', '.gitignore')
 
 
 def ensure_deps():
-    """Run npm install in scaffold/ if node_modules is missing."""
     nm = os.path.join(SCAFFOLD_DIR, 'node_modules')
     if os.path.isdir(nm):
         print(f'  [OK] Dependencies already installed in scaffold/')
@@ -31,13 +32,7 @@ def ensure_deps():
     except (subprocess.CalledProcessError, FileNotFoundError):
         print(f'  [Error] Node.js not found. Install Node.js first.', file=sys.stderr)
         sys.exit(1)
-    result = subprocess.run(
-        ['npm', 'install'],
-        cwd=SCAFFOLD_DIR,
-        capture_output=True,
-        text=True,
-        timeout=180,
-    )
+    result = subprocess.run(['npm', 'install'], cwd=SCAFFOLD_DIR, capture_output=True, text=True, timeout=180)
     if result.returncode == 0:
         print(f'  [OK] npm install completed in scaffold/')
         return True
@@ -47,10 +42,20 @@ def ensure_deps():
     sys.exit(1)
 
 
+def write_env(target: str, port: str, host: str):
+    """Write .env with server config."""
+    env_path = os.path.join(target, '.env')
+    with open(env_path, 'w') as f:
+        f.write(f'PORT={port}\n')
+        f.write(f'HOSTNAME={host}\n')
+
+
 def main():
     parser = argparse.ArgumentParser(description='Copy scaffold template to target directory')
     parser.add_argument('--dir', type=str, required=True, help='Target workspace directory')
     parser.add_argument('--name', type=str, default='scaffold', help='Output folder name')
+    parser.add_argument('--port', type=str, default=DEFAULT_PORT, help='Dev server port (default: 9999)')
+    parser.add_argument('--host', type=str, default=DEFAULT_HOST, help='Dev server host (default: 0.0.0.0)')
     parser.add_argument('--force', action='store_true', help='Overwrite existing directory')
     args = parser.parse_args()
 
@@ -69,20 +74,14 @@ def main():
             print(f'  Use --force to overwrite.', file=sys.stderr)
             sys.exit(1)
 
-    # Pre-install deps in source scaffold/
     ensure_deps()
 
-    # Copy (includes pre-installed node_modules, preserve symlinks for .bin entries)
     os.makedirs(os.path.dirname(target), exist_ok=True)
     shutil.copytree(SCAFFOLD_DIR, target, ignore=IGNORE_PATTERNS, symlinks=True)
     print(f'  [OK] Copied scaffold → {target}')
 
-    # Note: .env is committed with defaults (PORT, HOSTNAME).
-    # Create .env.local for local overrides (already gitignored).
-    env_local = os.path.join(target, '.env.local')
-    if not os.path.exists(env_local):
-        with open(env_local, 'w') as f:
-            f.write('# Local overrides (not committed)\n')
+    write_env(target, args.port, args.host)
+    print(f'  [OK] Server: {args.host}:{args.port}')
 
     print(f'\n  ── Done ──')
     print(f'  cd {target}')
