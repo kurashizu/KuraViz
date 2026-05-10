@@ -183,6 +183,7 @@ export function Mermaid({ chart, ...box }: MermaidProps) {
         svgEl.setAttribute('height', '100%')
         svgEl.style.width = '100%'
         svgEl.style.height = '100%'
+        svgEl.style.maxWidth = 'none'
 
         applyTheme(svgEl, type)
       } catch (e) {
