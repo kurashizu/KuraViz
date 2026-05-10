@@ -13,6 +13,12 @@ interface DebugInfo {
   audioSrc: string | null
 }
 
+interface DebugOverlayProps {
+  info: DebugInfo
+  totalPages: number
+  onNextPage?: () => void
+}
+
 function logToFile(collisions: ReturnType<typeof scanOverlaps>, info: DebugInfo) {
   const lines = [
     `Page: ${info.chapterId}/${info.pageId}`,
@@ -25,14 +31,19 @@ function logToFile(collisions: ReturnType<typeof scanOverlaps>, info: DebugInfo)
   }).catch(() => {})
 }
 
-export function DebugOverlay({ info }: { info: DebugInfo }) {
+export function DebugOverlay({ info, totalPages, onNextPage }: DebugOverlayProps) {
   const params = useSearchParams()
-  const debug = params.get('debug') === '1'
+  const mode = params.get('debug')
+  const debug = mode === '1' || mode === 'true'
+  const auto = mode === 'auto'
   const [collisions, setCollisions] = useState<ReturnType<typeof scanOverlaps>>([])
+  const [autoDone, setAutoDone] = useState(false)
+  const [autoPage, setAutoPage] = useState(0)
   const panelRef = useRef<HTMLDivElement>(null)
 
+  // scan once after DOM stabilizes
   useEffect(() => {
-    if (!debug) return
+    if (!debug && !auto) return
     const vp = document.getElementById('slide-viewport')
     if (!vp) return
 
@@ -65,9 +76,34 @@ export function DebugOverlay({ info }: { info: DebugInfo }) {
 
     raf = requestAnimationFrame(poll)
     return () => cancelAnimationFrame(raf)
-  }, [debug, info.chapterId, info.pageId])
+  }, [debug, auto, info.chapterId, info.pageId])
 
-  if (!debug) return null
+  // auto mode: advance after scan completes
+  useEffect(() => {
+    if (!auto || autoDone) return
+    if (autoPage >= totalPages) {
+      setAutoDone(true)
+      return
+    }
+    // wait for the scan effect above to settle, then navigate
+    const t = setTimeout(() => {
+      setAutoPage(p => p + 1)
+      onNextPage?.()
+    }, 3000)
+    return () => clearTimeout(t)
+  }, [auto, autoPage, totalPages, autoDone, onNextPage, collisions])
+
+  if (!debug && !auto) return null
+
+  const autoSummary = autoDone ? (
+    <Text variant="caption" style={{ color: '#22C55E', display: 'block', fontWeight: 700 }}>
+      Auto-scan complete: {totalPages} pages checked
+    </Text>
+  ) : auto ? (
+    <Text variant="caption" style={{ color: colors.base.white, display: 'block' }}>
+      Auto-scan: {autoPage}/{totalPages}
+    </Text>
+  ) : null
 
   return (
     <>
@@ -91,47 +127,73 @@ export function DebugOverlay({ info }: { info: DebugInfo }) {
         </div>
       )}
 
-      <div
-        ref={panelRef}
-        style={{
-          position: 'fixed',
-          top: 12,
-          right: 12,
-          background: 'rgba(239,68,68,0.55)',
-          color: colors.base.white,
-          padding: '10px 14px',
-          borderRadius: 8,
-          zIndex: 99999,
-          maxWidth: 420,
-          boxShadow: '0 4px 20px rgba(0,0,0,0.5)',
-        }}
-      >
-        <Text variant="caption" style={{ fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1, opacity: 0.8, color: colors.base.white, marginBottom: 2, fontSize: 11 }}>
-          Debug Mode
-        </Text>
-        <Text variant="caption" style={{ color: colors.base.white, display: 'block' }}>Chapter: {info.chapterId}</Text>
-        <Text variant="caption" style={{ color: colors.base.white, display: 'block' }}>Page: {info.pageId}</Text>
-        {info.audioSrc && (
-          <Text variant="caption" style={{ color: colors.base.white, display: 'block' }}>Audio: {info.audioSrc}</Text>
-        )}
-        <div style={{ marginTop: 4, borderTop: '1px solid rgba(255,255,255,0.2)', paddingTop: 4 }}>
-          <Text variant="caption" style={{ color: colors.base.white, display: 'block' }}>
-            Script: {info.script || '(none)'}
+      {autoDone && (
+        <div
+          style={{
+            position: 'fixed',
+            top: 0, left: 0, right: 0,
+            background: 'rgba(34,197,94,0.85)',
+            color: colors.base.white,
+            padding: '8px 16px',
+            zIndex: 999999,
+            textAlign: 'center',
+            boxShadow: '0 4px 20px rgba(0,0,0,0.5)',
+          }}
+        >
+          <Text variant="body" style={{ color: colors.base.white, fontWeight: 700 }}>
+            Auto-scan complete — {totalPages} pages, all clean
           </Text>
         </div>
-        {collisions.length > 0 && (
-          <div style={{ marginTop: 4, borderTop: '1px solid rgba(255,255,255,0.2)', paddingTop: 4 }}>
-            <Text variant="caption" style={{ color: '#FFD700', display: 'block', fontWeight: 700, fontSize: 11 }}>
-              Collisions:
-            </Text>
-            {collisions.map((c, i) => (
-              <Text key={i} variant="caption" style={{ color: '#FFD700', display: 'block', fontSize: 10 }}>
-                {c.a}  vs  {c.b}
+      )}
+
+      {collisions.length > 0 || auto ? (
+        <div
+          ref={panelRef}
+          style={{
+            position: 'fixed',
+            top: 12,
+            right: 12,
+            background: 'rgba(239,68,68,0.55)',
+            color: colors.base.white,
+            padding: '10px 14px',
+            borderRadius: 8,
+            zIndex: 99999,
+            maxWidth: 420,
+            boxShadow: '0 4px 20px rgba(0,0,0,0.5)',
+          }}
+        >
+          {autoSummary}
+          {!autoDone && (
+            <>
+              <Text variant="caption" style={{ fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1, opacity: 0.8, color: colors.base.white, marginBottom: 2, fontSize: 11 }}>
+                {auto ? 'Auto Debug' : 'Debug Mode'}
               </Text>
-            ))}
-          </div>
-        )}
-      </div>
+              <Text variant="caption" style={{ color: colors.base.white, display: 'block' }}>Chapter: {info.chapterId}</Text>
+              <Text variant="caption" style={{ color: colors.base.white, display: 'block' }}>Page: {info.pageId}</Text>
+              {info.audioSrc && (
+                <Text variant="caption" style={{ color: colors.base.white, display: 'block' }}>Audio: {info.audioSrc}</Text>
+              )}
+              <div style={{ marginTop: 4, borderTop: '1px solid rgba(255,255,255,0.2)', paddingTop: 4 }}>
+                <Text variant="caption" style={{ color: colors.base.white, display: 'block' }}>
+                  Script: {info.script || '(none)'}
+                </Text>
+              </div>
+              {collisions.length > 0 && (
+                <div style={{ marginTop: 4, borderTop: '1px solid rgba(255,255,255,0.2)', paddingTop: 4 }}>
+                  <Text variant="caption" style={{ color: '#FFD700', display: 'block', fontWeight: 700, fontSize: 11 }}>
+                    Collisions:
+                  </Text>
+                  {collisions.map((c, i) => (
+                    <Text key={i} variant="caption" style={{ color: '#FFD700', display: 'block', fontSize: 10 }}>
+                      {c.a}  vs  {c.b}
+                    </Text>
+                  ))}
+                </div>
+              )}
+            </>
+          )}
+        </div>
+      ) : null}
     </>
   )
 }

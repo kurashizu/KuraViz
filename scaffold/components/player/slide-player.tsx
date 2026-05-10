@@ -122,6 +122,8 @@ export function SlidePlayer() {
             script: narrationEntry?.script ?? '',
             audioSrc: narrationEntry?.audioSrc ?? null,
           }}
+          totalPages={totalPages}
+          onNextPage={() => navigate(1)}
         />
         <ProgressBar current={globalPageIdx + 1} total={totalPages} />
         <Text variant="watermark" x={canvas.width - 280} y={canvas.height - 48} w={260} h={40} style={{ opacity: 0.25, textAlign: 'right' }}>

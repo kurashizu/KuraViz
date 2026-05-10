@@ -75,7 +75,8 @@ See `references/components.md` for full API documentation of each component.
 
 ### Testing
 
-- `?debug=1` — shows chapter ID, page ID, audio path, script text in red overlay
+- `?debug=1` or `?debug=true` — shows chapter ID, page ID, audio path, script text in red overlay
+- `?debug=auto` — auto-scans ALL pages, logs collisions to `logs/debug.log`, shows green banner when done
 - Arrow keys: ← previous page, → next page
 - Audio plays automatically and advances on end
 - **Collision log**: when `?debug=1` detects overlaps, details are POSTed to `/api/log` and written to `logs/debug.log` in the project root. Tail it to trace layout issues: `tail -f logs/debug.log`
