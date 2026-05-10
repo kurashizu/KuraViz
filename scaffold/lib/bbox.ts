@@ -81,7 +81,7 @@ export function scanOverlaps(container: HTMLElement): { a: string; b: string; ra
       if (ps.position === 'absolute' || ps.position === 'relative') {
         const pr = parent.getBoundingClientRect()
         if (pr.width === 0 || pr.height === 0) break // positioning wrapper, skip
-        if (item.rect.left + 1 < pr.left || item.rect.top + 1 < pr.top || item.rect.right - 1 > pr.right || item.rect.bottom - 1 > pr.bottom) {
+        if (item.rect.left + 0.5 < pr.left || item.rect.top + 0.5 < pr.top || item.rect.right - 0.5 > pr.right || item.rect.bottom - 0.5 > pr.bottom) {
           collisions.push({
             a: `[溢出] ${item.id}`,
             b: `父容器[${Math.round(pr.left)},${Math.round(pr.top)} ${Math.round(pr.width)}x${Math.round(pr.height)}]`,
