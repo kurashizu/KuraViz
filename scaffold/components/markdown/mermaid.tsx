@@ -36,13 +36,16 @@ export function Mermaid({ chart, ...box }: MermaidProps) {
       await mermaid.default.run({ nodes: [el] }).catch(() => {})
       const svg = ref.current.querySelector('svg')
       if (svg) {
-        const s = document.createElement('style')
-        s.textContent = `
-          svg text { font-size: ${typography.body.fontSize}px !important; }
-          svg .root text { font-size: ${typography.h2.fontSize}px !important; font-weight: 700 !important; }
-          svg .section text { font-size: ${typography.h3.fontSize}px !important; }
-        `
-        svg.append(s)
+        svg.querySelectorAll('text').forEach(t => {
+          (t as SVGTextElement).style.fontSize = `${typography.body.fontSize}px`
+        })
+        svg.querySelectorAll('.root text').forEach(t => {
+          (t as SVGTextElement).style.fontSize = `${typography.h2.fontSize}px`
+          ;(t as SVGTextElement).style.fontWeight = '700'
+        })
+        svg.querySelectorAll('.section text').forEach(t => {
+          (t as SVGTextElement).style.fontSize = `${typography.h3.fontSize}px`
+        })
       }
     }
     render()
