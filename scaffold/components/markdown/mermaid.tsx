@@ -26,7 +26,6 @@ export function Mermaid({ chart, ...box }: MermaidProps) {
           lineColor: '#2E3144',
           secondaryColor: '#1A1D2B',
           tertiaryColor: '#0F1117',
-          fontSize: `${typography.body.fontSize}px`,
         },
         mindmap: { padding: 16 },
       })
@@ -34,23 +33,47 @@ export function Mermaid({ chart, ...box }: MermaidProps) {
       el.textContent = chart
       ref.current.append(el)
       await mermaid.default.run({ nodes: [el] }).catch(() => {})
+
       const svg = ref.current.querySelector('svg')
-      if (svg) {
-        svg.querySelectorAll('text').forEach(t => {
-          (t as SVGTextElement).style.fontSize = `${typography.body.fontSize}px`
-        })
-        svg.querySelectorAll('.root text').forEach(t => {
-          (t as SVGTextElement).style.fontSize = `${typography.h2.fontSize}px`
-          ;(t as SVGTextElement).style.fontWeight = '700'
-        })
-        svg.querySelectorAll('.section text').forEach(t => {
-          (t as SVGTextElement).style.fontSize = `${typography.h3.fontSize}px`
-        })
+      if (!svg) return
+
+      // force SVG to fill container
+      svg.setAttribute('width', '100%')
+      svg.setAttribute('height', '100%')
+      svg.style.width = '100%'
+      svg.style.height = '100%'
+      svg.style.maxWidth = '100%'
+      svg.style.maxHeight = '100%'
+
+      // create viewBox from original dimensions if missing
+      if (!svg.getAttribute('viewBox')) {
+        const w = parseFloat(svg.getAttribute('width') || '800')
+        const h = parseFloat(svg.getAttribute('height') || '600')
+        svg.setAttribute('viewBox', `0 0 ${w} ${h}`)
+        svg.removeAttribute('width')
+        svg.removeAttribute('height')
       }
+
+      // override inline font-size on all text elements
+      svg.querySelectorAll('text').forEach(t => {
+        (t as SVGTextElement).style.fontSize = `${typography.body.fontSize}px`
+      })
+      svg.querySelectorAll('.root text').forEach(t => {
+        (t as SVGTextElement).style.fontSize = `${typography.h2.fontSize}px`
+        ;(t as SVGTextElement).style.fontWeight = '700'
+      })
+      svg.querySelectorAll('.section text').forEach(t => {
+        (t as SVGTextElement).style.fontSize = `${typography.h3.fontSize}px`
+      })
     }
     render()
     return () => { cancelled = true }
   }, [chart])
 
-  return <div ref={ref} style={{ ...boxStyle(box), display: 'flex', alignItems: 'center', justifyContent: 'center' }} />
+  return (
+    <div
+      ref={ref}
+      style={{ ...boxStyle(box), display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}
+    />
+  )
 }
