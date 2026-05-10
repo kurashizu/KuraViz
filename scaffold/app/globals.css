@@ -7,7 +7,7 @@ html, body {
   padding: 0;
   background: #0F1117;
   color: #F1F3F9;
-  font-family: system-ui, sans-serif;
+  font-family: system-ui, sans-serif;  /* also defined in components/theme.ts fonts.sans */
   overflow: hidden;
   width: 100vw;
   height: 100vh;

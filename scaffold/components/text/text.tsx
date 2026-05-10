@@ -1,7 +1,7 @@
 'use client'
 
 import type { TextVariant } from '@/components/theme'
-import { typography } from '@/components/theme'
+import { typography, fonts } from '@/components/theme'
 import { boxStyle } from '@/lib/utils'
 import type { Box } from '@/lib/types'
 
@@ -35,7 +35,7 @@ export function Text({ variant = 'body', children, style, as, ...box }: TextProp
         fontWeight: t.fontWeight,
         lineHeight: t.lineHeight,
         color: t.color,
-        fontFamily: 'fontFamily' in t ? t.fontFamily : undefined,
+        fontFamily: variant === 'code' ? fonts.mono : fonts.sans,
         margin: 0,
         whiteSpace: 'pre-wrap',
         ...style,

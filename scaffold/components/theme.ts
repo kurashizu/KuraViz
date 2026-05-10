@@ -32,10 +32,15 @@ export const typography = {
   h3: { fontSize: 28, fontWeight: 600, lineHeight: 1.4, color: colors.text.primary },
   body: { fontSize: 20, fontWeight: 400, lineHeight: 1.6, color: colors.text.secondary },
   caption: { fontSize: 14, fontWeight: 400, lineHeight: 1.5, color: colors.text.dim },
-  code: { fontSize: 18, fontWeight: 400, lineHeight: 1.5, fontFamily: 'monospace', color: colors.brand.secondary },
+  code: { fontSize: 18, fontWeight: 400, lineHeight: 1.5, color: colors.brand.secondary },
 } as const
 
 export type TextVariant = keyof typeof typography
+
+export const fonts = {
+  sans: 'system-ui, sans-serif',
+  mono: 'monospace',
+} as const
 
 export const canvas = {
   width: 1920,
