@@ -45,7 +45,7 @@ export default function Pg03Charts() {
         <Text variant="h2" x={0} y={0}>数据可视化</Text>
       </Anim>
 
-      <Anim type="fade-in" delay={200} x={128} y={140} w={600} h={30}>
+      <Anim type="fade-in" delay={200} x={128} y={140} w={600} h={35}>
         <Text variant="caption" x={0} y={0}>模型性能对比与核心公式展示</Text>
       </Anim>
 

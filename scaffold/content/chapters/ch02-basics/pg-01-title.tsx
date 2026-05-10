@@ -20,9 +20,9 @@ export default function Pg01Title() {
         }} />
       </Anim>
 
-      <Anim type="fade-in" delay={200} x={cx - 48} y={260} w={96} h={36}>
-        <Cardbox variant="bordered" x={0} y={0} w={96} h={36}>
-          <Text variant="caption" x={0} y={6} w={96} style={{ textAlign: 'center' }}>Chapter 2</Text>
+      <Anim type="fade-in" delay={200} x={cx - 48} y={260} w={96} h={42}>
+        <Cardbox variant="bordered" x={0} y={0} w={96} h={42}>
+          <Text variant="caption" x={0} y={8} w={96} style={{ textAlign: 'center' }}>Chapter 2</Text>
         </Cardbox>
       </Anim>
 
