@@ -3,6 +3,7 @@
 import { useEffect, useRef } from 'react'
 import { boxStyle } from '@/lib/utils'
 import type { Box } from '@/lib/types'
+import { typography } from '@/components/theme'
 
 interface MermaidProps extends Box {
   chart: string
@@ -25,7 +26,7 @@ export function Mermaid({ chart, ...box }: MermaidProps) {
           lineColor: '#2E3144',
           secondaryColor: '#1A1D2B',
           tertiaryColor: '#0F1117',
-          fontSize: '16px',
+          fontSize: `${typography.body.fontSize}px`,
         },
         mindmap: { padding: 16 },
       })
