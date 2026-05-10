@@ -16,7 +16,7 @@ export function MindMap({ root, nodes, ...box }: MindMapProps) {
   return (
     <div style={{ ...boxStyle(box), display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 16 }}>
       <div style={{ background: colors.brand.primary, borderRadius: 12, padding: '12px 24px' }}>
-        <Text variant="body" style={{ color: '#fff', fontWeight: 700 }}>{root}</Text>
+        <Text variant="body" style={{ color: colors.base.white, fontWeight: 700 }}>{root}</Text>
       </div>
       <div style={{ display: 'flex', gap: 32, flexWrap: 'wrap', justifyContent: 'center' }}>
         {children.map(c => (

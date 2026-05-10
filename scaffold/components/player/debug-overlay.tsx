@@ -2,6 +2,7 @@
 
 import { useSearchParams } from 'next/navigation'
 import { Text } from '@/components/text'
+import { colors } from '@/components/theme'
 
 interface DebugInfo {
   chapterId: string
@@ -10,7 +11,7 @@ interface DebugInfo {
   audioSrc: string | null
 }
 
-const whiteText = { color: '#fff', display: 'block' as const }
+const whiteText = { color: colors.base.white, display: 'block' as const }
 
 export function DebugOverlay({ info }: { info: DebugInfo }) {
   const params = useSearchParams()
@@ -25,7 +26,7 @@ export function DebugOverlay({ info }: { info: DebugInfo }) {
         top: 12,
         right: 12,
         background: 'rgba(239,68,68,0.9)',
-        color: '#fff',
+        color: colors.base.white,
         padding: '12px 16px',
         borderRadius: 8,
         zIndex: 99999,
@@ -33,7 +34,7 @@ export function DebugOverlay({ info }: { info: DebugInfo }) {
         boxShadow: '0 4px 20px rgba(0,0,0,0.5)',
       }}
     >
-      <Text variant="caption" style={{ fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1, opacity: 0.8, color: '#fff', marginBottom: 4, fontSize: 11 }}>
+      <Text variant="caption" style={{ fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1, opacity: 0.8, color: colors.base.white, marginBottom: 4, fontSize: 11 }}>
         Debug Mode
       </Text>
       <Text variant="caption" style={whiteText}>Chapter: {info.chapterId}</Text>

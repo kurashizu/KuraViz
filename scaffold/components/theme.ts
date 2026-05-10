@@ -1,4 +1,8 @@
 export const colors = {
+  base: {
+    white: '#FFFFFF',
+    black: '#000000',
+  },
   brand: {
     primary: '#6366F1',
     secondary: '#06B6D4',
