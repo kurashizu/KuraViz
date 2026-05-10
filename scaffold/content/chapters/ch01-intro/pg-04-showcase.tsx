@@ -54,8 +54,8 @@ export default function Pg04Showcase() {
             <rect x="10" y="10" width="180" height="140" rx="12" fill="none" stroke={colors.brand.secondary} strokeWidth={2} />
             <circle cx="100" cy="50" r="25" fill={colors.brand.primary} opacity={0.6} />
             <rect x="60" y="90" width="80" height="40" rx="6" fill={colors.brand.secondary} opacity={0.4} />
-            <text x="100" y="55" textAnchor="middle" fill={colors.base.white} fontSize={12}>AI</text>
-            <text x="100" y="115" textAnchor="middle" fill={colors.base.white} fontSize={10}>Data</text>
+            <text x="100" y="55" textAnchor="middle" fill={colors.base.white} fontSize={14}>AI</text>
+            <text x="100" y="115" textAnchor="middle" fill={colors.base.white} fontSize={12}>Data</text>
           </SVG>
         </Cardbox>
       </Anim>
@@ -63,15 +63,11 @@ export default function Pg04Showcase() {
       <Anim type="fade-in" delay={650} w={460} h={180} x={960} y={540}>
         <Cardbox variant="default" x={0} y={0} w={460} h={180}>
           <Text variant="h3" x={20} y={16} w={420}>图表示例</Text>
-          <Axis x={20} y={60} w={420} h={100} xLabel="X" yLabel="Y">
-            <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', color: colors.text.dim, fontSize: 14 }}>
-              坐标轴容器
-            </div>
-          </Axis>
+          <Axis x={20} y={60} w={420} h={100} xLabel="X" yLabel="Y" />
         </Cardbox>
       </Anim>
 
-      <Text variant="caption" x={320} y={1020} w={1280} style={{ textAlign: 'center' }}>{script}</Text>
+      <Text variant="caption" x={320} y={1000} w={1280} style={{ textAlign: 'center' }}>{script}</Text>
     </>
   )
 }

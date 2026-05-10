@@ -124,7 +124,7 @@ export function SlidePlayer() {
           }}
         />
         <ProgressBar current={globalPageIdx + 1} total={totalPages} />
-        <Text variant="watermark" x={canvas.width - 320} y={canvas.height - 50} w={300} h={40} style={{ opacity: 0.25, textAlign: 'right' }}>
+        <Text variant="watermark" x={canvas.width - 280} y={canvas.height - 48} w={260} h={40} style={{ opacity: 0.25, textAlign: 'right' }}>
           kurashizu
         </Text>
       </div>

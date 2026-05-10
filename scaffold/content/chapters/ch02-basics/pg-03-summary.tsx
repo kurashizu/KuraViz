@@ -46,7 +46,7 @@ export default function Pg03Summary() {
         ))}
       </div>
 
-      <Text variant="caption" x={320} y={1020} w={1280} style={{ textAlign: 'center' }}>{script}</Text>
+      <Text variant="caption" x={320} y={1000} w={1280} style={{ textAlign: 'center' }}>{script}</Text>
     </>
   )
 }

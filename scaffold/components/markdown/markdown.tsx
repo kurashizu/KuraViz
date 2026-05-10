@@ -17,7 +17,7 @@ export function Markdown({ content, ...box }: MarkdownProps) {
     <div
       style={{
         ...boxStyle(box),
-        overflow: 'auto',
+        overflow: 'hidden',
         fontSize: typography.body.fontSize,
         lineHeight: typography.body.lineHeight,
         color: colors.text.secondary,
