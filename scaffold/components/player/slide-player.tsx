@@ -7,6 +7,7 @@ import { canvas } from '@/config/canvas'
 import { NarrationProvider } from './narration-context'
 import { DebugOverlay } from './debug-overlay'
 import { Text } from '@/components/text'
+import { colors } from '@/lib/theme'
 
 export function SlidePlayer() {
   const [chapterIdx, setChapterIdx] = useState(0)
@@ -90,7 +91,7 @@ export function SlidePlayer() {
     }
   }, [chapterIdx, pageIdx, narrationEntry])
 
-    if (!chapter || !pageDef) {
+  if (!chapter || !pageDef) {
     return <div style={{ padding: 40 }}><Text variant="body" style={{ color: '#EF4444' }}>No chapters loaded.</Text></div>
   }
 
@@ -131,7 +132,6 @@ export function SlidePlayer() {
           padding: 0;
           width: 100vw;
           height: 100vh;
-          background: #000;
           overflow: hidden;
         }
         * {
@@ -154,7 +154,7 @@ function ProgressBar({ current, total }: { current: number; total: number }) {
         left: 0,
         width: '100%',
         height: 3,
-        background: '#2E3144',
+        background: colors.surface.border,
         zIndex: 9999,
       }}
     >
@@ -162,7 +162,7 @@ function ProgressBar({ current, total }: { current: number; total: number }) {
         style={{
           height: '100%',
           width: `${pct}%`,
-          background: 'linear-gradient(90deg, #6366F1, #06B6D4)',
+          background: `linear-gradient(90deg, ${colors.brand.primary}, ${colors.brand.secondary})`,
           transition: 'width 0.3s ease',
         }}
       />
