@@ -5,11 +5,9 @@ import { Text } from '@/components/text'
 import { Cardbox } from '@/components/cardbox'
 import { SVG } from '@/components/svg'
 import { Axis } from '@/components/graph'
-import { Markdown } from '@/components/markdown'
+import { Mermaid } from '@/components/markdown/mermaid'
 import { useNarration } from '@/components/player/narration-context'
 import { colors, typography } from '@/components/theme'
-
-const mindmapChart = 'mindmap\n  AI\n    Machine Learning\n      Supervised\n      Unsupervised\n      Reinforcement\n    NLP\n    Computer Vision'
 
 export default function Pg04Showcase() {
   const { script } = useNarration()
@@ -31,7 +29,7 @@ export default function Pg04Showcase() {
       <Anim type="fade-in" delay={350} w={820} h={420} x={100} y={200}>
         <Cardbox variant="elevated" x={0} y={0} w={820} h={420}>
           <Text variant="h3" x={20} y={16} w={400}>AI 知识体系</Text>
-          <Markdown content={'```mermaid\n' + mindmapChart + '\n```'} x={20} y={55} w={780} h={345} />
+          <Mermaid chart={'mindmap\n  AI\n    Machine Learning\n      Supervised\n      Unsupervised\n      Reinforcement\n    NLP\n    Computer Vision'} x={20} y={55} w={780} h={345} />
         </Cardbox>
       </Anim>
 

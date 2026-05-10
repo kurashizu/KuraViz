@@ -1,12 +1,14 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
+import { boxStyle } from '@/lib/utils'
+import type { Box } from '@/lib/types'
 
-interface MermaidProps {
+interface MermaidProps extends Box {
   chart: string
 }
 
-export function Mermaid({ chart }: MermaidProps) {
+export function Mermaid({ chart, ...box }: MermaidProps) {
   const ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -37,5 +39,5 @@ export function Mermaid({ chart }: MermaidProps) {
     return () => { cancelled = true }
   }, [chart])
 
-  return <div ref={ref} style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }} />
+  return <div ref={ref} style={{ ...boxStyle(box), display: 'flex', alignItems: 'center', justifyContent: 'center' }} />
 }
