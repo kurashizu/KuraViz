@@ -78,6 +78,7 @@ See `references/components.md` for full API documentation of each component.
 - `?debug=1` — shows chapter ID, page ID, audio path, script text in red overlay
 - Arrow keys: ← previous page, → next page
 - Audio plays automatically and advances on end
+- **Collision log**: when `?debug=1` detects overlaps, details are POSTed to `/api/log` and written to `logs/debug.log` in the project root. Tail it to trace layout issues: `tail -f logs/debug.log`
 
 ## Directory Reference
 
