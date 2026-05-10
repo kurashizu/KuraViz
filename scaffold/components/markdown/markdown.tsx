@@ -45,7 +45,7 @@ export function Markdown({ content, ...box }: MarkdownProps) {
           ),
           p: ({ children }) => <p style={{ margin: '8px 0', color: colors.text.secondary }}>{children}</p>,
           code: ({ children, className }) => {
-            if (className === 'language-mermaid') {
+            if (className?.includes('mermaid')) {
               return <Mermaid chart={String(children)} />
             }
             return (
@@ -55,11 +55,11 @@ export function Markdown({ content, ...box }: MarkdownProps) {
             )
           },
           pre: ({ children, className }) => {
-            if (className === 'language-mermaid') {
+            if (className?.includes('mermaid')) {
               return <>{children}</>
             }
             return (
-              <pre style={{ background: colors.surface.card, padding: 16, borderRadius: 8, overflow: 'auto', fontSize: typography.code.fontSize, lineHeight: typography.code.lineHeight }}>
+              <pre style={{ background: colors.surface.card, padding: 16, borderRadius: 8, overflow: 'hidden', fontSize: typography.code.fontSize, lineHeight: typography.code.lineHeight }}>
                 {children}
               </pre>
             )
