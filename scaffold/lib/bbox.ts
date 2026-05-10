@@ -65,7 +65,7 @@ export function scanOverlaps(container: HTMLElement): { a: string; b: string; ra
       if (getComputedStyle(el2).position !== 'absolute') continue
       const rj = el2.getBoundingClientRect()
       if (rj.left <= cr.left + 5 && rj.top <= cr.top + 5 && rj.width >= cr.width * 0.8) continue
-      if (ri.left <= rj.right && ri.right >= rj.left && ri.top <= rj.bottom && ri.bottom >= rj.top) {
+      if (ri.left < rj.right && ri.right > rj.left && ri.top < rj.bottom && ri.bottom > rj.top) {
         const id1 = el.getAttribute('data-box-id') || el.tagName.toLowerCase() + (el.textContent?.slice(0, 20) || '')
         const id2 = el2.getAttribute('data-box-id') || el2.tagName.toLowerCase() + (el2.textContent?.slice(0, 20) || '')
         collisions.push({ a: `${id1}[${Math.round(ri.left)},${Math.round(ri.top)} ${Math.round(ri.width)}x${Math.round(ri.height)}]`, b: `${id2}[${Math.round(rj.left)},${Math.round(rj.top)} ${Math.round(rj.width)}x${Math.round(rj.height)}]`, ra: ri, rb: rj })
@@ -80,6 +80,7 @@ export function scanOverlaps(container: HTMLElement): { a: string; b: string; ra
       const ps = getComputedStyle(parent)
       if (ps.position === 'absolute' || ps.position === 'relative') {
         const pr = parent.getBoundingClientRect()
+        if (pr.width === 0 || pr.height === 0) break // positioning wrapper, skip
         if (item.rect.left + 1 < pr.left || item.rect.top + 1 < pr.top || item.rect.right - 1 > pr.right || item.rect.bottom - 1 > pr.bottom) {
           collisions.push({
             a: `[溢出] ${item.id}`,
