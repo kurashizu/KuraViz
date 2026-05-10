@@ -54,6 +54,19 @@ export function DebugOverlay({ info, totalPages, onNextPage }: DebugOverlayProps
     let prev = ''
     let stable = 0
 
+    async function start() {
+      // auto mode: clear log BEFORE first scan
+      if (auto && !clearedRef.current) {
+        clearedRef.current = true
+        await fetch('/api/log', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ clear: true }),
+        })
+      }
+      raf = requestAnimationFrame(poll)
+    }
+
     function poll() {
       const snapshot = Array.from(vp!.children)
         .filter(el => getComputedStyle(el).position === 'absolute')
@@ -81,7 +94,7 @@ export function DebugOverlay({ info, totalPages, onNextPage }: DebugOverlayProps
       raf = requestAnimationFrame(poll)
     }
 
-    raf = requestAnimationFrame(poll)
+    start()
     return () => cancelAnimationFrame(raf)
   }, [debug, auto, info.chapterId, info.pageId])
 
@@ -110,15 +123,7 @@ export function DebugOverlay({ info, totalPages, onNextPage }: DebugOverlayProps
     return () => clearInterval(interval)
   }, [auto, autoPage, totalPages, autoDone, onNextPage, collisions])
 
-  // auto mode: clear log on mount
-  useEffect(() => {
-    if (!auto) return
-    fetch('/api/log', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ clear: true }),
-    }).catch(() => {})
-  }, [auto])
+  const clearedRef = useRef(false)
 
   if (!debug && !auto) return null
 
