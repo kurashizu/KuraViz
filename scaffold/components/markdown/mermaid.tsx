@@ -17,7 +17,9 @@ export function Mermaid({ chart, ...box }: MermaidProps) {
     async function render() {
       const mermaid = await import('mermaid')
       if (cancelled || !ref.current) return
+
       mermaid.default.initialize({
+        startOnLoad: false,
         theme: 'dark',
         themeVariables: {
           primaryColor: '#6366F1',
@@ -29,42 +31,42 @@ export function Mermaid({ chart, ...box }: MermaidProps) {
         },
         mindmap: { padding: 16 },
       })
-      const el = document.createElement('div')
-      el.textContent = chart
-      ref.current.append(el)
-      await mermaid.default.run({ nodes: [el] }).catch(() => {})
 
-      const svg = ref.current.querySelector('svg')
-      if (!svg) return
+      const id = `mermaid-${Math.random().toString(36).slice(2, 10)}`
 
-      // force SVG to fill container
-      svg.setAttribute('width', '100%')
-      svg.setAttribute('height', '100%')
-      svg.style.width = '100%'
-      svg.style.height = '100%'
-      svg.style.maxWidth = '100%'
-      svg.style.maxHeight = '100%'
+      try {
+        const { svg } = await mermaid.default.render(id, chart)
+        if (cancelled || !ref.current) return
 
-      // create viewBox from original dimensions if missing
-      if (!svg.getAttribute('viewBox')) {
-        const w = parseFloat(svg.getAttribute('width') || '800')
-        const h = parseFloat(svg.getAttribute('height') || '600')
-        svg.setAttribute('viewBox', `0 0 ${w} ${h}`)
-        svg.removeAttribute('width')
-        svg.removeAttribute('height')
+        ref.current.innerHTML = svg
+
+        const svgEl = ref.current.querySelector('svg')
+        if (!svgEl) return
+
+        svgEl.setAttribute('width', '100%')
+        svgEl.setAttribute('height', '100%')
+        svgEl.style.width = '100%'
+        svgEl.style.height = '100%'
+
+        if (!svgEl.getAttribute('viewBox')) {
+          const w = parseFloat(svgEl.getAttribute('width') || '800')
+          const h = parseFloat(svgEl.getAttribute('height') || '600')
+          svgEl.setAttribute('viewBox', `0 0 ${w} ${h}`)
+        }
+
+        svgEl.querySelectorAll('text').forEach(t => {
+          (t as SVGTextElement).style.fontSize = `${typography.body.fontSize}px`
+        })
+        svgEl.querySelectorAll('.root text').forEach(t => {
+          (t as SVGTextElement).style.fontSize = `${typography.h2.fontSize}px`
+          ;(t as SVGTextElement).style.fontWeight = '700'
+        })
+        svgEl.querySelectorAll('.section text').forEach(t => {
+          (t as SVGTextElement).style.fontSize = `${typography.h3.fontSize}px`
+        })
+      } catch (e) {
+        console.error('Mermaid render failed:', e)
       }
-
-      // override inline font-size on all text elements
-      svg.querySelectorAll('text').forEach(t => {
-        (t as SVGTextElement).style.fontSize = `${typography.body.fontSize}px`
-      })
-      svg.querySelectorAll('.root text').forEach(t => {
-        (t as SVGTextElement).style.fontSize = `${typography.h2.fontSize}px`
-        ;(t as SVGTextElement).style.fontWeight = '700'
-      })
-      svg.querySelectorAll('.section text').forEach(t => {
-        (t as SVGTextElement).style.fontSize = `${typography.h3.fontSize}px`
-      })
     }
     render()
     return () => { cancelled = true }
