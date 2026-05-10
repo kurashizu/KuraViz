@@ -89,8 +89,22 @@ function applyTheme(svgEl: SVGSVGElement, type: ChartType) {
         (el as SVGElement).style.fill = `${theme.section}80`
         ;(el as SVGElement).style.stroke = theme.leafBorder
       })
-      svgEl.querySelectorAll('.labelText, .labelBox').forEach(el => {
+      svgEl.querySelectorAll('.labelText').forEach(el => {
+        (el as SVGElement).style.fill = theme.text
+        ;(el as SVGElement).style.stroke = 'none'
+      })
+      svgEl.querySelectorAll('.labelBox').forEach(el => {
         (el as SVGElement).style.fill = theme.section
+        ;(el as SVGElement).style.stroke = theme.primary
+      })
+      svgEl.querySelectorAll('.loopText, .loopText tspan').forEach(el => {
+        (el as SVGElement).style.fill = theme.text
+      })
+      svgEl.querySelectorAll('.messageText').forEach(el => {
+        (el as SVGElement).style.fill = theme.text
+      })
+      svgEl.querySelectorAll('marker path').forEach(el => {
+        (el as SVGElement).style.fill = theme.primary
         ;(el as SVGElement).style.stroke = theme.primary
       })
     },
