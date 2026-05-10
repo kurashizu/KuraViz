@@ -6,8 +6,6 @@ import type { NarrationMap } from '@/lib/types'
 import { canvas } from '@/config/canvas'
 import { NarrationProvider } from './narration-context'
 import { DebugOverlay } from './debug-overlay'
-import { ProgressBar } from './progress-bar'
-import { NavIndicator } from './nav-indicator'
 
 export function SlidePlayer() {
   const [chapterIdx, setChapterIdx] = useState(0)
@@ -107,10 +105,9 @@ export function SlidePlayer() {
           position: 'relative',
           width: canvas.width,
           height: canvas.height,
-          transformOrigin: 'center center',
+          transformOrigin: 'top left',
           overflow: 'hidden',
           background: '#0F1117',
-          margin: 'auto',
         }}
         id="slide-viewport"
       >
@@ -125,12 +122,6 @@ export function SlidePlayer() {
           }}
         />
         <ProgressBar current={globalPageIdx + 1} total={totalPages} />
-        <NavIndicator
-          chapterTitle={chapter.title}
-          chapterIndex={chapterIdx}
-          pageIndex={pageIdx}
-          totalPages={chapter.pages.length}
-        />
       </div>
 
       <style>{`
@@ -140,12 +131,7 @@ export function SlidePlayer() {
           width: 100vw;
           height: 100vh;
           background: #000;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-        #slide-viewport {
-          transform: scale(var(--slide-scale, 1));
+          overflow: hidden;
         }
         * {
           user-select: none;
@@ -157,6 +143,32 @@ export function SlidePlayer() {
   )
 }
 
+function ProgressBar({ current, total }: { current: number; total: number }) {
+  const pct = total > 0 ? (current / total) * 100 : 0
+  return (
+    <div
+      style={{
+        position: 'fixed',
+        bottom: 0,
+        left: 0,
+        width: '100%',
+        height: 3,
+        background: '#2E3144',
+        zIndex: 9999,
+      }}
+    >
+      <div
+        style={{
+          height: '100%',
+          width: `${pct}%`,
+          background: 'linear-gradient(90deg, #6366F1, #06B6D4)',
+          transition: 'width 0.3s ease',
+        }}
+      />
+    </div>
+  )
+}
+
 function SlideResizer() {
   useEffect(() => {
     function resize() {
@@ -164,10 +176,10 @@ function SlideResizer() {
       if (!el) return
       const sw = 1920
       const sh = 1080
-      const sx = window.innerWidth / sw
-      const sy = window.innerHeight / sh
-      const s = Math.min(sx, sy)
-      el.style.setProperty('--slide-scale', String(s))
+      const s = Math.min(window.innerWidth / sw, window.innerHeight / sh)
+      const ox = (window.innerWidth - sw * s) / 2
+      const oy = (window.innerHeight - sh * s) / 2
+      el.style.transform = `translate(${ox}px, ${oy}px) scale(${s})`
     }
     resize()
     window.addEventListener('resize', resize)
