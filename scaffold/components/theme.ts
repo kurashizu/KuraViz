@@ -33,6 +33,7 @@ export const typography = {
   body: { fontSize: 30, fontWeight: 400, lineHeight: 1.6, color: colors.text.secondary },
   caption: { fontSize: 22, fontWeight: 400, lineHeight: 1.5, color: colors.text.dim },
   code: { fontSize: 28, fontWeight: 400, lineHeight: 1.5, color: colors.brand.secondary },
+  watermark: { fontSize: 14, fontWeight: 300, lineHeight: 1.5, color: colors.text.dim },
 } as const
 
 export type TextVariant = keyof typeof typography

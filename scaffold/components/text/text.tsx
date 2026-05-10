@@ -5,7 +5,7 @@ import { typography, fonts } from '@/components/theme'
 import { boxStyle } from '@/lib/utils'
 import type { Box } from '@/lib/types'
 
-type HtmlTag = 'h1' | 'h2' | 'h3' | 'p' | 'span' | 'code'
+type HtmlTag = 'h1' | 'h2' | 'h3' | 'p' | 'span' | 'code' | 'div'
 
 interface TextProps extends Box {
   variant?: TextVariant
@@ -21,6 +21,7 @@ const tagMap: Record<TextVariant, HtmlTag> = {
   body: 'p',
   caption: 'span',
   code: 'code',
+  watermark: 'div',
 }
 
 export function Text({ variant = 'body', children, style, as, ...box }: TextProps) {
