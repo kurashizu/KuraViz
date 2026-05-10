@@ -6,6 +6,7 @@ import type { NarrationMap } from '@/lib/types'
 import { canvas } from '@/config/canvas'
 import { NarrationProvider } from './narration-context'
 import { DebugOverlay } from './debug-overlay'
+import { Text } from '@/components/text'
 
 export function SlidePlayer() {
   const [chapterIdx, setChapterIdx] = useState(0)
@@ -89,8 +90,8 @@ export function SlidePlayer() {
     }
   }, [chapterIdx, pageIdx, narrationEntry])
 
-  if (!chapter || !pageDef) {
-    return <div style={{ padding: 40, color: '#EF4444' }}>No chapters loaded.</div>
+    if (!chapter || !pageDef) {
+    return <div style={{ padding: 40 }}><Text variant="body" style={{ color: '#EF4444' }}>No chapters loaded.</Text></div>
   }
 
   const totalPages = chapters.reduce((s, c) => s + c.pages.length, 0)

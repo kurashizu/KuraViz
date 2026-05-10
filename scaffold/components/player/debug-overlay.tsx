@@ -1,6 +1,7 @@
 'use client'
 
 import { useSearchParams } from 'next/navigation'
+import { Text } from '@/components/text'
 
 interface DebugInfo {
   chapterId: string
@@ -25,22 +26,23 @@ export function DebugOverlay({ info }: { info: DebugInfo }) {
         color: '#fff',
         padding: '12px 16px',
         borderRadius: 8,
-        fontSize: 12,
-        fontFamily: 'monospace',
-        lineHeight: 1.6,
         zIndex: 99999,
         maxWidth: 420,
         boxShadow: '0 4px 20px rgba(0,0,0,0.5)',
       }}
     >
-      <div style={{ fontWeight: 700, marginBottom: 4, fontSize: 11, textTransform: 'uppercase', letterSpacing: 1, opacity: 0.8 }}>
+      <Text variant="caption" style={{ fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1, opacity: 0.8, color: '#fff', marginBottom: 4, fontSize: 11 }}>
         Debug Mode
-      </div>
-      <div>Chapter: {info.chapterId}</div>
-      <div>Page: {info.pageId}</div>
-      {info.audioSrc && <div>Audio: {info.audioSrc}</div>}
+      </Text>
+      <Text variant="caption" style={{ color: '#fff', display: 'block' }}>Chapter: {info.chapterId}</Text>
+      <Text variant="caption" style={{ color: '#fff', display: 'block' }}>Page: {info.pageId}</Text>
+      {info.audioSrc && (
+        <Text variant="caption" style={{ color: '#fff', display: 'block' }}>Audio: {info.audioSrc}</Text>
+      )}
       <div style={{ marginTop: 4, borderTop: '1px solid rgba(255,255,255,0.2)', paddingTop: 4 }}>
-        Script: {info.script || '(none)'}
+        <Text variant="caption" style={{ color: '#fff', display: 'block' }}>
+          Script: {info.script || '(none)'}
+        </Text>
       </div>
     </div>
   )

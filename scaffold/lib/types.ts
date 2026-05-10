@@ -1,8 +1,8 @@
 import type { ComponentType } from 'react'
 
 export interface Box {
-  x: number
-  y: number
+  x?: number
+  y?: number
   w?: number
   h?: number
   z?: number
