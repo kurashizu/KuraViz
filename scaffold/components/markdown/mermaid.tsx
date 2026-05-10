@@ -44,21 +44,20 @@ function applyTheme(svgEl: SVGSVGElement, type: ChartType) {
       svgEl.querySelectorAll('.section text').forEach(t => {
         (t as SVGTextElement).style.fontSize = `${typography.h3.fontSize}px`
       })
-      svgEl.querySelectorAll('g.root > rect, g.root > ellipse, g.root > path').forEach(el => {
+      svgEl.querySelectorAll('.root rect, .root ellipse, .root path, .root circle').forEach(el => {
         (el as SVGElement).style.fill = theme.primary
         ;(el as SVGElement).style.stroke = theme.primaryLight
       })
-      svgEl.querySelectorAll('g.section > rect, g.section > ellipse, g.section > path').forEach(el => {
+      svgEl.querySelectorAll('.section rect, .section ellipse, .section path, .section circle').forEach(el => {
         (el as SVGElement).style.fill = theme.section
         ;(el as SVGElement).style.stroke = theme.primary
       })
-      svgEl.querySelectorAll('g:not(.root):not(.section) > rect, g.leaf > rect').forEach(el => {
+      svgEl.querySelectorAll('.node:not(.root):not(.section) rect, .node:not(.root):not(.section) circle').forEach(el => {
         (el as SVGElement).style.fill = theme.leaf
         ;(el as SVGElement).style.stroke = theme.leafBorder
       })
-      svgEl.querySelectorAll('.edgePath path, .edge-thickness-normal').forEach(el => {
+      svgEl.querySelectorAll('.mindmap-edge, .mindmap-arrow').forEach(el => {
         (el as SVGElement).style.stroke = theme.primary
-        ;(el as SVGElement).style.strokeWidth = '2'
       })
     },
 
