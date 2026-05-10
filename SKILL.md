@@ -84,6 +84,7 @@ See `references/components.md` for full API documentation of each component.
 | `references/components.md` | All component APIs |
 | `references/page-creation.md` | Page creation workflow |
 | `references/narration-system.md` | Narration JSON schema + audio system |
+| `references/design-guide.md` | Visual design rules, layout templates, color assignments |
 
 ## Prohibited Actions
 
