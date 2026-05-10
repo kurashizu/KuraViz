@@ -39,6 +39,7 @@ export function DebugOverlay({ info, totalPages, onNextPage }: DebugOverlayProps
   const [collisions, setCollisions] = useState<ReturnType<typeof scanOverlaps>>([])
   const [autoDone, setAutoDone] = useState(false)
   const [autoPage, setAutoPage] = useState(0)
+  const scannedRef = useRef(false)
   const panelRef = useRef<HTMLDivElement>(null)
 
   // scan once after DOM stabilizes
@@ -47,6 +48,7 @@ export function DebugOverlay({ info, totalPages, onNextPage }: DebugOverlayProps
     const vp = document.getElementById('slide-viewport')
     if (!vp) return
 
+    scannedRef.current = false
     let raf: number
     let prev = ''
     let stable = 0
@@ -65,6 +67,7 @@ export function DebugOverlay({ info, totalPages, onNextPage }: DebugOverlayProps
           const result = scanOverlaps(vp!)
           setCollisions(result)
           if (result.length > 0) logToFile(result, info)
+          scannedRef.current = true
           return
         }
       } else {
@@ -78,7 +81,7 @@ export function DebugOverlay({ info, totalPages, onNextPage }: DebugOverlayProps
     return () => cancelAnimationFrame(raf)
   }, [debug, auto, info.chapterId, info.pageId])
 
-  // auto mode: advance after scan completes
+  // auto mode: advance after scan completes (poll scannedRef)
   useEffect(() => {
     if (!auto || autoDone) return
     if (autoPage >= totalPages) {
@@ -90,11 +93,15 @@ export function DebugOverlay({ info, totalPages, onNextPage }: DebugOverlayProps
       }).catch(() => {})
       return
     }
-    const t = setTimeout(() => {
-      setAutoPage(p => p + 1)
-      onNextPage?.()
-    }, 3000)
-    return () => clearTimeout(t)
+    const interval = setInterval(() => {
+      if (scannedRef.current) {
+        scannedRef.current = false
+        clearInterval(interval)
+        setAutoPage(p => p + 1)
+        onNextPage?.()
+      }
+    }, 200)
+    return () => clearInterval(interval)
   }, [auto, autoPage, totalPages, autoDone, onNextPage, collisions])
 
   // auto mode: clear log on mount
