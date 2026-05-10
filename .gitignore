@@ -7,3 +7,4 @@ next-env.d.ts
 test/
 __pycache__/
 *.pyc
+logs/

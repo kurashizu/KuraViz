@@ -13,6 +13,18 @@ interface DebugInfo {
   audioSrc: string | null
 }
 
+function logToFile(collisions: ReturnType<typeof scanOverlaps>, info: DebugInfo) {
+  const lines = [
+    `Page: ${info.chapterId}/${info.pageId}`,
+    ...collisions.map(c => `  ${c.a}  vs  ${c.b}`),
+  ]
+  fetch('/api/log', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ lines }),
+  }).catch(() => {})
+}
+
 export function DebugOverlay({ info }: { info: DebugInfo }) {
   const params = useSearchParams()
   const debug = params.get('debug') === '1'
@@ -23,7 +35,11 @@ export function DebugOverlay({ info }: { info: DebugInfo }) {
     if (!debug) return
     const vp = document.getElementById('slide-viewport')
     if (!vp) return
-    const check = () => setCollisions(scanOverlaps(vp))
+    const check = () => {
+      const result = scanOverlaps(vp)
+      setCollisions(result)
+      if (result.length > 0) logToFile(result, info)
+    }
     check()
     const timer = setInterval(check, 500)
     return () => clearInterval(timer)

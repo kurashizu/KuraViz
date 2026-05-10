@@ -38,10 +38,16 @@ effective_h = h - borderTop - borderBottom
 | Cardbox bordered | 2px | 36px |
 | Cardbox elevated | 1px | 38px |
 
-For `Cardbox variant="bordered"` containing 1-line caption text (33px):
+With `box-sizing: border-box`, `position: absolute` children are positioned relative to the **padding box** (after border). So a child at `top: 8` starts at 8px inside the content area, not 8px from the element edge.
+
+For `Cardbox variant="bordered"` (2px border) containing 1-line caption text:
 ```
-Minimum h = 33 + 2 + 2 = 37px  →  use h={42} for safety
+h=42 → content area after border = 42-2(top)-2(bottom) = 38px  (y=2 to y=40)
+Text at y=8 with lineHeight 33 → bottom at 41 → overflows by 1px
+Fix: h=44 → content area = 40px → text bottom at 41 → 1px margin
 ```
+
+**Formula**: `h ≥ textLineHeight + borderTop + borderBottom + y`
 
 ## Spacing Checklist for Content Pages
 
