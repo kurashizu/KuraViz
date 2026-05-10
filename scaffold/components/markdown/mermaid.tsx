@@ -44,14 +44,19 @@ function applyTheme(svgEl: SVGSVGElement, type: ChartType) {
       svgEl.querySelectorAll('.section text').forEach(t => {
         (t as SVGTextElement).style.fontSize = `${typography.h3.fontSize}px`
       })
-      svgEl.querySelectorAll('.mindmap-node rect, .mindmap-node path, .mindmap-node ellipse').forEach(el => {
-        const e = el as SVGElement
-        const c = ((el as Element).className?.toString() || '') + (el.closest?.('.root') ? ' root' : '') + (el.closest?.('.section') ? ' section' : '')
-        if (c.includes('root')) { e.style.fill = theme.primary; e.style.stroke = theme.primaryLight }
-        else if (c.includes('section')) { e.style.fill = theme.section; e.style.stroke = theme.primary }
-        else { e.style.fill = theme.leaf; e.style.stroke = theme.leafBorder }
+      svgEl.querySelectorAll('g.root > rect, g.root > ellipse, g.root > path').forEach(el => {
+        (el as SVGElement).style.fill = theme.primary
+        ;(el as SVGElement).style.stroke = theme.primaryLight
       })
-      svgEl.querySelectorAll('.mindmap-edge path').forEach(el => {
+      svgEl.querySelectorAll('g.section > rect, g.section > ellipse, g.section > path').forEach(el => {
+        (el as SVGElement).style.fill = theme.section
+        ;(el as SVGElement).style.stroke = theme.primary
+      })
+      svgEl.querySelectorAll('g:not(.root):not(.section) > rect, g.leaf > rect').forEach(el => {
+        (el as SVGElement).style.fill = theme.leaf
+        ;(el as SVGElement).style.stroke = theme.leafBorder
+      })
+      svgEl.querySelectorAll('.edgePath path, .edge-thickness-normal').forEach(el => {
         (el as SVGElement).style.stroke = theme.primary
         ;(el as SVGElement).style.strokeWidth = '2'
       })
