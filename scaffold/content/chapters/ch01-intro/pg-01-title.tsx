@@ -20,13 +20,13 @@ export default function Pg01Title() {
         }} />
       </Anim>
 
-      <Anim type="fade-in" delay={200} x={cx - 40} y={340} w={80} h={32}>
-        <Cardbox variant="bordered" x={0} y={0} w={80} h={32}>
+      <Anim type="fade-in" delay={200} x={cx - 40} y={260} w={80} h={36}>
+        <Cardbox variant="bordered" x={0} y={0} w={80} h={36}>
           <Text variant="caption" x={0} y={7} w={80} style={{ textAlign: 'center' }}>Ch01</Text>
         </Cardbox>
       </Anim>
 
-      <Anim type="scale-in" delay={300} w={640} h={4} x={cx - 320} y={388}>
+      <Anim type="scale-in" delay={300} w={640} h={4} x={cx - 320} y={312}>
         <div style={{
           width: '100%', height: '100%',
           background: `linear-gradient(90deg, transparent, ${colors.brand.primary}, transparent)`,
@@ -34,13 +34,13 @@ export default function Pg01Title() {
         }} />
       </Anim>
 
-      <Anim type="slide-up" delay={400} x={cx - 600} y={420} w={1200} h={80}>
+      <Anim type="slide-up" delay={400} x={cx - 600} y={350} w={1200} h={100}>
         <Text variant="h1" x={0} y={0} w={1200} style={{ textAlign: 'center' }}>
           机器学习入门
         </Text>
       </Anim>
 
-      <Anim type="fade-in" delay={700} x={cx - 400} y={510} w={800} h={40}>
+      <Anim type="fade-in" delay={700} x={cx - 400} y={500} w={800} h={60}>
         <Text variant="h3" x={0} y={0} w={800} style={{ textAlign: 'center', color: colors.text.secondary }}>
           Introduction to Machine Learning
         </Text>

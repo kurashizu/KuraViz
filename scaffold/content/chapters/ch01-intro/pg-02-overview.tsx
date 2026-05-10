@@ -19,29 +19,29 @@ export default function Pg02Overview() {
 
   return (
     <>
-      <Anim type="slide-left" delay={0} w={8} h={64} x={100} y={88}>
+      <Anim type="slide-left" delay={0} w={8} h={70} x={100} y={80}>
         <div style={{ width: '100%', height: '100%', background: colors.brand.primary, borderRadius: 4 }} />
       </Anim>
 
-      <Anim type="fade-in" delay={100} x={168} y={92} w={500} h={48}>
+      <Anim type="fade-in" delay={100} x={128} y={82} w={500} h={70}>
         <Text variant="h2" x={0} y={0}>课程概览</Text>
       </Anim>
 
-      <Anim type="fade-in" delay={200} x={168} y={138} w={500} h={24}>
+      <Anim type="fade-in" delay={200} x={128} y={148} w={600} h={30}>
         <Text variant="caption" x={0} y={0}>本章将介绍以下核心内容</Text>
       </Anim>
 
-      <div style={{ position: 'absolute', left: 160, top: 200 }}>
+      <div style={{ position: 'absolute', left: 160, top: 210 }}>
         {items.map((item, i) => (
-          <Anim key={i} type="slide-right" delay={400 + i * 250} w={760} h={88} x={0} y={i * 100}>
-            <Cardbox variant="default" x={0} y={0} w={760} h={88}>
-              <SVG x={24} y={20} w={48} h={48} viewBox="0 0 48 48">
+          <Anim key={i} type="slide-right" delay={400 + i * 250} w={760} h={96} x={0} y={i * 112}>
+            <Cardbox variant="default" x={0} y={0} w={760} h={96}>
+              <SVG x={24} y={24} w={48} h={48} viewBox="0 0 48 48">
                 <circle cx="24" cy="24" r="24" fill={colors.surface.card} />
                 <circle cx="24" cy="24" r="20" fill="none" stroke={colors.brand.primary} strokeWidth={1} />
                 <text x="24" y="29" textAnchor="middle" fill={colors.brand.primary} fontSize={16} fontWeight={700}>{item.num}</text>
               </SVG>
               <Text variant="body" x={88} y={16} w={640}>{item.label}</Text>
-              <Text variant="caption" x={88} y={52} w={640}>{item.desc}</Text>
+              <Text variant="caption" x={88} y={58} w={640}>{item.desc}</Text>
             </Cardbox>
           </Anim>
         ))}

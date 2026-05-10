@@ -20,13 +20,13 @@ export default function Pg01Title() {
         }} />
       </Anim>
 
-      <Anim type="fade-in" delay={200} x={cx - 48} y={340} w={96} h={32}>
-        <Cardbox variant="bordered" x={0} y={0} w={96} h={32}>
+      <Anim type="fade-in" delay={200} x={cx - 48} y={260} w={96} h={36}>
+        <Cardbox variant="bordered" x={0} y={0} w={96} h={36}>
           <Text variant="caption" x={0} y={7} w={96} style={{ textAlign: 'center' }}>Ch02</Text>
         </Cardbox>
       </Anim>
 
-      <Anim type="scale-in" delay={300} w={480} h={4} x={cx - 240} y={388}>
+      <Anim type="scale-in" delay={300} w={480} h={4} x={cx - 240} y={312}>
         <div style={{
           width: '100%', height: '100%',
           background: `linear-gradient(90deg, transparent, ${colors.brand.secondary}, transparent)`,
@@ -34,13 +34,13 @@ export default function Pg01Title() {
         }} />
       </Anim>
 
-      <Anim type="slide-up" delay={400} x={cx - 500} y={420} w={1000} h={80}>
+      <Anim type="slide-up" delay={400} x={cx - 500} y={350} w={1000} h={100}>
         <Text variant="h1" x={0} y={0} w={1000} style={{ textAlign: 'center' }}>
           第二章 · 核心概念
         </Text>
       </Anim>
 
-      <Anim type="fade-in" delay={700} x={cx - 350} y={510} w={700} h={40}>
+      <Anim type="fade-in" delay={700} x={cx - 350} y={500} w={700} h={60}>
         <Text variant="h3" x={0} y={0} w={700} style={{ textAlign: 'center', color: colors.text.secondary }}>
           Core Concepts
         </Text>
