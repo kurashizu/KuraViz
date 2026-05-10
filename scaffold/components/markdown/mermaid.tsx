@@ -31,19 +31,8 @@ function applyTheme(svgEl: SVGSVGElement, type: ChartType) {
     textMuted: colors.mermaid.leafText,
   }
 
-  svgEl.querySelectorAll('text').forEach(t => {
-    (t as SVGTextElement).style.fontSize = `${typography.body.fontSize}px`
-  })
-
   const handlers: Record<ChartType, () => void> = {
     mindmap() {
-      svgEl.querySelectorAll('.root text').forEach(t => {
-        (t as SVGTextElement).style.fontSize = `${typography.h2.fontSize}px`
-        ;(t as SVGTextElement).style.fontWeight = '700'
-      })
-      svgEl.querySelectorAll('.section text').forEach(t => {
-        (t as SVGTextElement).style.fontSize = `${typography.h3.fontSize}px`
-      })
       svgEl.querySelectorAll('.root rect, .root ellipse, .root path, .root circle').forEach(el => {
         (el as SVGElement).style.fill = theme.primary
         ;(el as SVGElement).style.stroke = theme.primaryLight
@@ -83,19 +72,26 @@ function applyTheme(svgEl: SVGSVGElement, type: ChartType) {
     },
 
     sequence() {
-      svgEl.querySelectorAll('.actor').forEach(el => {
+      svgEl.querySelectorAll('rect.actor').forEach(el => {
         (el as SVGElement).style.fill = theme.section
         ;(el as SVGElement).style.stroke = theme.primary
+      })
+      svgEl.querySelectorAll('text.actor').forEach(el => {
+        (el as SVGElement).style.fill = theme.text
+      })
+      svgEl.querySelectorAll('.actor-line').forEach(el => {
+        (el as SVGElement).style.stroke = theme.leafBorder
       })
       svgEl.querySelectorAll('.messageLine0, .messageLine1').forEach(el => {
         (el as SVGElement).style.stroke = theme.primary
       })
-      svgEl.querySelectorAll('.labelBox').forEach(el => {
-        (el as SVGElement).style.fill = theme.leaf
+      svgEl.querySelectorAll('rect.rect').forEach(el => {
+        (el as SVGElement).style.fill = `${theme.section}80`
         ;(el as SVGElement).style.stroke = theme.leafBorder
       })
-      svgEl.querySelectorAll('.loopLine').forEach(el => {
-        (el as SVGElement).style.stroke = theme.leafBorder
+      svgEl.querySelectorAll('.labelText, .labelBox').forEach(el => {
+        (el as SVGElement).style.fill = theme.section
+        ;(el as SVGElement).style.stroke = theme.primary
       })
     },
 
@@ -135,9 +131,20 @@ export function Mermaid({ chart, ...box }: MermaidProps) {
       const mermaid = await import('mermaid')
       if (cancelled || !ref.current) return
 
+      const type = detectType(chart)
+
       mermaid.default.initialize({
         startOnLoad: false,
         theme: 'dark',
+        fontFamily: 'system-ui, sans-serif',
+        fontSize: 20,
+        sequence: {
+          actorFontSize: 20,
+          noteFontSize: 18,
+          messageFontSize: 18,
+          actorFontWeight: 600,
+          boxTextMargin: 10,
+        },
         mindmap: { padding: 16 },
       })
 
@@ -151,7 +158,6 @@ export function Mermaid({ chart, ...box }: MermaidProps) {
         const svgEl = ref.current.querySelector('svg')
         if (!svgEl) return
 
-        // read original dimensions before overriding
         const origW = parseFloat(svgEl.getAttribute('width') || '800')
         const origH = parseFloat(svgEl.getAttribute('height') || '600')
 
@@ -164,7 +170,7 @@ export function Mermaid({ chart, ...box }: MermaidProps) {
         svgEl.style.width = '100%'
         svgEl.style.height = '100%'
 
-        applyTheme(svgEl, detectType(chart))
+        applyTheme(svgEl, type)
       } catch (e) {
         console.error('Mermaid render failed:', e)
       }
