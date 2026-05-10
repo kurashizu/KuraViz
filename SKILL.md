@@ -1,3 +1,20 @@
+---
+name: web-video-tutorial
+description: >-
+  Build PPT-style video tutorials using HTML slides (Next.js/React) + TTS audio.
+  Generates narrated slide decks rendered in a 1920x1080 canvas with auto-advance driven by audio playback.
+use_when: >-
+  User asks to create a video tutorial, slide-based course, narrated presentation,
+  or e-learning content using web technologies. Also use when building or modifying
+  slide pages, narration scripts, or TTS audio for video lessons.
+config:
+  canvas_width: 1920
+  canvas_height: 1080
+  server_host: 0.0.0.0
+  server_port: 9999
+  debug_flag: "?debug=1"
+---
+
 # Web Video Tutorial Skill
 
 ## Overview
