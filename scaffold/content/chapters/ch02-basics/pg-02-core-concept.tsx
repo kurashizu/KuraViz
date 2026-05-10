@@ -43,22 +43,22 @@ export default function Pg02CoreConcept() {
         </Cardbox>
       </Anim>
 
-      <Anim type="slide-right" delay={500} w={420} h={280} x={920} y={220}>
-        <Cardbox variant="bordered" x={0} y={0} w={420} h={280}>
+      <Anim type="slide-right" delay={500} w={420} h={400} x={920} y={220}>
+        <Cardbox variant="bordered" x={0} y={0} w={420} h={400}>
           <SVG x={24} y={24} w={28} h={28} viewBox="0 0 24 24">
             <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" fill={colors.semantic.success} />
           </SVG>
           <Text variant="h3" x={24} y={64} w={372}>关键发现</Text>
-          <Text variant="body" x={24} y={118} w={372}>
+          <Text variant="body" x={24} y={130} w={372}>
             神经网络以 92% 的准确率领先。XGBoost 其次，适合结构化数据。
           </Text>
-          <Text variant="caption" x={24} y={210} w={372}>
+          <Text variant="caption" x={24} y={340} w={372}>
             * 基于相同测试集，超参数已调优
           </Text>
         </Cardbox>
       </Anim>
 
-      <Text variant="caption" x={80} y={1030} w={800}>{script}</Text>
+      <Text variant="caption" x={660} y={1020} w={600} style={{ textAlign: "center" }}>{script}</Text>
     </>
   )
 }
