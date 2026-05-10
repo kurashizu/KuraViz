@@ -37,3 +37,15 @@ export function boxStyle(box: Box): React.CSSProperties {
   }
   return style
 }
+
+export function detectOverlaps(boxes: { id: string; box: Box }[]): string[] {
+  const warnings: string[] = []
+  for (let i = 0; i < boxes.length; i++) {
+    for (let j = i + 1; j < boxes.length; j++) {
+      if (overlaps(boxes[i].box, boxes[j].box)) {
+        warnings.push(`${boxes[i].id} <-> ${boxes[j].id}`)
+      }
+    }
+  }
+  return warnings
+}

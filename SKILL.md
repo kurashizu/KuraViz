@@ -31,6 +31,8 @@ This skill builds PPT-style video tutorials using HTML slides + TTS audio. Each 
 6. **Pages**: Each page is a default-exported component in `content/chapters/{ch}/pg-NN-{name}.tsx`.
 7. **Registration**: Every page must be registered in its chapter's `index.ts`.
 8. **Narration**: Every page must have an entry in `public/narration.json`. `script` field is required.
+9. **Icons**: Use `<SVG>` component only. No emoji characters anywhere (not in text, not in code).
+10. **Box height**: Always set `h` on components containing text, tall enough for the font size (`h1`=72px needs ≥110px, `body`=30px needs ≥48px per line).
 
 ## Project Structure
 
@@ -93,3 +95,5 @@ See `references/components.md` for full API documentation of each component.
 - ❌ Do not bypass the SlidePlayer — all pages must be registered in the chapter system
 - ❌ Do not modify `lib/theme.ts` canvas config — 1920×1080 is fixed
 - ❌ Do not add `npm install` of new packages without verifying with the user
+- ❌ Do not use emoji characters anywhere — use `<SVG>` for icons
+- ❌ Do not leave Box `h` undersized for text content — text will overflow silently

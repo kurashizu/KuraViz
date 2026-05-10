@@ -23,7 +23,7 @@ export default function Pg03Summary() {
         <div style={{ width: '100%', height: '100%', background: colors.brand.accent, borderRadius: 4 }} />
       </Anim>
 
-      <Anim type="fade-in" delay={100} x={148} y={74} w={600} h={70}>
+      <Anim type="fade-in" delay={100} x={148} y={72} w={600} h={70}>
         <Text variant="h2" x={0} y={0}>本章小结</Text>
       </Anim>
 
@@ -31,22 +31,22 @@ export default function Pg03Summary() {
         <Text variant="caption" x={0} y={0}>回顾本章核心知识点</Text>
       </Anim>
 
-      <div style={{ position: 'absolute', left: 160, top: 200 }}>
+      <div style={{ position: 'absolute', left: 160, top: 210 }}>
         {points.map((p, i) => (
-          <Anim key={i} type="slide-left" delay={350 + i * 250} w={760} h={84} x={0} y={i * 100}>
-            <Cardbox variant="default" x={0} y={0} w={760} h={84}>
-              <SVG x={24} y={26} w={32} h={32} viewBox="0 0 32 32">
-                <circle cx="16" cy="16" r="16" fill={colors.brand.accent} fillOpacity={0.15} />
-                <circle cx="16" cy="16" r="10" fill="none" stroke={colors.brand.accent} strokeWidth={1.5} />
-                <path d="M11 16l3 3 7-7" fill="none" stroke={colors.brand.accent} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+          <Anim key={i} type="slide-left" delay={350 + i * 260} w={760} h={96} x={0} y={i * 112}>
+            <Cardbox variant="default" x={0} y={0} w={760} h={96}>
+              <SVG x={24} y={28} w={36} h={36} viewBox="0 0 36 36">
+                <circle cx="18" cy="18" r="18" fill={colors.brand.accent} fillOpacity={0.15} />
+                <circle cx="18" cy="18" r="11" fill="none" stroke={colors.brand.accent} strokeWidth={1.5} />
+                <path d="M12 18l4 4 8-8" fill="none" stroke={colors.brand.accent} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
               </SVG>
-              <Text variant="body" x={72} y={22} w={660}>{p}</Text>
+              <Text variant="body" x={76} y={26} w={660}>{p}</Text>
             </Cardbox>
           </Anim>
         ))}
       </div>
 
-      <Text variant="caption" x={80} y={1020} w={800}>{script}</Text>
+      <Text variant="caption" x={80} y={1030} w={800}>{script}</Text>
     </>
   )
 }
