@@ -21,7 +21,7 @@ interface DebugOverlayProps {
 
 function logToFile(collisions: ReturnType<typeof scanOverlaps>, info: DebugInfo) {
   const lines = [
-    `Page: ${info.chapterId}/${info.pageId}`,
+    `PAGE ${info.chapterId}/${info.pageId}`,
     ...collisions.map(c => `  ${c.a}  vs  ${c.b}`),
   ]
   fetch('/api/log', {

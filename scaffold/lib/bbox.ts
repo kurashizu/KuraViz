@@ -68,13 +68,15 @@ export function scanOverlaps(container: HTMLElement): { a: string; b: string; ra
       if (ri.left < rj.right - 1 && ri.right > rj.left + 1 && ri.top < rj.bottom - 1 && ri.bottom > rj.top + 1) {
         const id1 = el.getAttribute('data-box-id') || el.tagName.toLowerCase() + (el.textContent?.slice(0, 20) || '')
         const id2 = el2.getAttribute('data-box-id') || el2.tagName.toLowerCase() + (el2.textContent?.slice(0, 20) || '')
-        collisions.push({ a: `${id1}[${Math.round(ri.left)},${Math.round(ri.top)} ${Math.round(ri.width)}x${Math.round(ri.height)}]`, b: `${id2}[${Math.round(rj.left)},${Math.round(rj.top)} ${Math.round(rj.width)}x${Math.round(rj.height)}]`, ra: ri, rb: rj })
+        collisions.push({ a: `OVERLAP ${id1}[${Math.round(ri.left)},${Math.round(ri.top)} ${Math.round(ri.width)}x${Math.round(ri.height)}]`, b: `${id2}[${Math.round(rj.left)},${Math.round(rj.top)} ${Math.round(rj.width)}x${Math.round(rj.height)}]`, ra: ri, rb: rj })
       }
     }
   }
 
   // overflow: every absolutely-positioned element must stay within its positioned parent
   for (const item of allPos) {
+    // skip KaTeX rendering artifacts (1x1px helper spans)
+    if (item.rect.width < 3 && item.rect.height < 3) continue
     let parent: HTMLElement | null = item.el.parentElement
     while (parent && parent !== container) {
       const ps = getComputedStyle(parent)
@@ -82,9 +84,10 @@ export function scanOverlaps(container: HTMLElement): { a: string; b: string; ra
         const pr = parent.getBoundingClientRect()
         if (pr.width === 0 || pr.height === 0) break // positioning wrapper, skip
         if (item.rect.left + 0.5 < pr.left || item.rect.top + 0.5 < pr.top || item.rect.right - 0.5 > pr.right || item.rect.bottom - 0.5 > pr.bottom) {
+          const parentId = parent.getAttribute('data-box-id') || parent.tagName.toLowerCase() + (parent.textContent?.slice(0, 20) || '')
           collisions.push({
-            a: `[溢出] ${item.id}`,
-            b: `父容器[${Math.round(pr.left)},${Math.round(pr.top)} ${Math.round(pr.width)}x${Math.round(pr.height)}]`,
+            a: `OVERFLOW ${item.id}`,
+            b: `${parentId}[${Math.round(pr.left)},${Math.round(pr.top)} ${Math.round(pr.width)}x${Math.round(pr.height)}]`,
             ra: item.rect,
             rb: pr,
           })
@@ -92,6 +95,19 @@ export function scanOverlaps(container: HTMLElement): { a: string; b: string; ra
         break
       }
       parent = parent.parentElement
+    }
+  }
+
+  // canvas overflow: every absolutely-positioned element must stay within canvas (container)
+  for (const item of allPos) {
+    if (item.rect.left + 0.5 < cr.left || item.rect.top + 0.5 < cr.top ||
+        item.rect.right - 0.5 > cr.right || item.rect.bottom - 0.5 > cr.bottom) {
+      collisions.push({
+        a: `EXCEED ${item.id}`,
+        b: `canvas[${Math.round(cr.left)},${Math.round(cr.top)} ${Math.round(cr.width)}x${Math.round(cr.height)}]`,
+        ra: item.rect,
+        rb: cr,
+      })
     }
   }
 

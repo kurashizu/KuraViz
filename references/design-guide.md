@@ -6,319 +6,202 @@
 - Content safe zone: leave ≥80px padding on all edges (max content width ≈ 1760)
 - For centered content: use `cx = (1920 - width) / 2` to calculate x
 
+## Page Content Capacity
+
+### Text Content
+| Scenario | Lines of text | Max chars (English) | Vertical space |
+|---|---|---|---|
+| Title page subtitle | 1 line (h3, 42px) | ~30 words | 59px |
+| Card body paragraph | 3-5 lines (body, 30px) | ~15 words/line | 150-250px |
+| Bottom caption | 1 line (caption, 22px) | ~85 chars at w=1200 | 33px |
+| Bottom caption | 2 lines | ~170 chars at w=1200 | 66px |
+| Bottom caption | 3 lines | ~255 chars at w=1200 | 99px |
+
+**Caption y formula**: `y = 1080 - (lineCount × 33) - 20`
+- 1 line: `y=1027` (bottom=1060)
+- 2 lines: `y=994` (bottom=1060)
+- 3 lines: `y=961` (bottom=1060)
+
+### Cards per Page
+| Card type | Max per page | Spacing |
+|---|---|---|
+| List items (h=130) | 5 items | y += 160 |
+| Timeline steps (w=440, h=240) | 3 steps | x += 540 |
+| Two-column cards (h=420) | 2 cards | side by side |
+| Full-width card (w=1720) | 1 card | — |
+
+### Continue Pages
+When content exceeds one page, create a **continue page** (no accent bar, no title — content starts at y=80 to use full canvas):
+
+```tsx
+export default function PgXXContinue() {
+  return (
+    <>
+      {/* No accent bar, no title — content continues from previous page */}
+      <Anim type="fade-in" delay={0} w={1720} h={920} x={100} y={80}>
+        <Cardbox variant="default" x={0} y={0} w={1720} h={920}>
+          ...
+        </Cardbox>
+      </Anim>
+      <Text variant="caption" x={360} y={1027} w={1200} style={{ textAlign: 'center' }}>{script}</Text>
+    </>
+  )
+}
+```
+
+Continue pages can also use multiple small items (like checklist cards) starting at y=80 for full canvas coverage.
+
+### SVG Chart Sizes
+SVG text must match Text component sizing for visual consistency:
+
+| Element | Font size | Matches Text variant |
+|---|---|---|
+| Chart axis labels | 22px | caption |
+| Bar/line labels | 22px | caption |
+| Data values | 22px bold | caption (bold) |
+| Chart title | 30px | body |
+
+### Diagram Container Sizing
+
+Before placing a diagram, analyze its **natural shape** and choose a matching container aspect ratio. A mismatched box clips content or wastes space.
+
+| Diagram Type | Natural Shape | Recommended Container | Layout |
+|---|---|---|---|
+| **Flowchart** (LR) | Wide, short | Left-to-right orientation in a wide box (e.g. w=1680, h=640) | Full-width card, or left column |
+| **Flowchart** (TB) | Tall, narrow | Top-to-bottom orientation in a tall box (e.g. w=800, h=800) | Center column, or standalone page |
+| **Sequence diagram** | Tall, narrow | Left column (w≈1100) + text legend (w≈560) — two-column layout | Split page: diagram left, legend right |
+| **Mindmap** | Circular, balanced | Square-ish aspect ratio (e.g. w=1680, h=800 in full card) | Full-width card, evenly padded |
+| **Gantt chart** | Wide, short | Full-width short card (e.g. w=1720, h=400) with text cards below | Top: chart card. Bottom: explanation cards |
+
+**Rule**: If a diagram fully uses one dimension but not the other, pair it with text content (legend, explanation, or data table) in the remaining space rather than stretching the diagram to fill an ill-fitting box.
+
+### Citation
+
+Use `<Text variant="citation">` for source attribution inside cardboxes. Place at the cardbox's bottom-right corner (e.g. `x={cardbox_w - text_w - 20}` `y={cardbox_h - 40}`). Same size as caption (22px, dim color) but semantically distinct.
+
 ## Layout Principles
 
-### 1. Title Pages
+### 1. Title Page
 
-A title page should have this vertical rhythm (from top to bottom):
+Centered layout with gradient background, chapter badge, and title stacked vertically.
 
-```
-y=  0  ┌──────────────────────────────────────┐
-        │   background gradient (full canvas)   │
-y=320  │       ┌──────┐                       │
-        │       │ Ch01 │  ← chapter badge      │
-        │       └──────┘                       │
-y=360  │  ────── accent line ──────            │
-y=400  │     Machine Learning 入门              │  ← h1 (48px)
-y=490  │   Introduction to ML   ← h3 (28px)   │
-y=580  │    ┌──────────────┐                  │
-        │    │ → 键继续      │  ← hint box     │
-        │    └──────────────┘                  │
-y=1080 └──────────────────────────────────────┘
-```
+| Element | Component | y | Align |
+|---|---|---|---|
+| Background | `div` with `radial-gradient` | 0 | full canvas |
+| Chapter badge | `Cardbox variant="bordered" w={200} h={48}`, caption "Chapter 01" | 320 | center |
+| Accent line | `Anim type="scale-in" w={600} h={4}` | 376 | center |
+| Main title | `Text variant="h1" w={1000}` | 420 | center |
+| Subtitle | `Text variant="h3" w={800}`, color `colors.text.secondary` | 620 | center |
+| Caption | `Text variant="caption"` | 1080 - h - 20 | center, x=360 |
 
-**Element spacing:**
-- Between badge and accent line: ~32px
-- Between accent line and h1 title: ~36px
-- Between h1 and h3 subtitle: ~50px
-- Between subtitle and hint box: ~50px
-- Between hint box and bottom: ≥400px (leave room for caption)
+Chapter badge uses `w={200}` `h={48}` with text `w={190}` — the bordered cardbox subtracts 4px for 2px border, so text width (190) fits within content area (196). Use full "Chapter 01" text, not "Ch01".
 
-### 2. Content Pages
+Caption: centered at `x={360}` `w={1200}` (center=960, canvas center). Right edge 1500 clears watermark at x=1640. `h = lineCount × 33`, `y = 1080 - h - 20`. Use `\n` in script to control line breaks.
 
-Every content page follows: **left accent bar + title + content**
+Spacing: badge→accent line ~56px, accent line→h1 44px, h1→h3 ~200px, h3→caption ≥400px.
 
-```
-x= 80  │▌  Section Title (h2, 36px)           ← y=80
-       │▌  Subtitle/description (caption)      ← y=~130
-       │
-       │  ┌────────────────────────────────┐   ← y=180
-       │  │  Content card / list / chart   │
-       │  │                                │
-       │  └────────────────────────────────┘
-       │
-       │  Side panel (optional)            → x≈940
-       │
-```
+Badge and accent line centered using `cx = canvas.width / 2` for x. Gradient uses chapter's brand color at 15% opacity (append `26` hex alpha suffix to color: `` `${color}26` ``).
 
-**Left accent bar specs:**
-- Width: 8px
-- Height: 56–64px (matches h2 line height)
-- Color: chapter's brand color (ch01=#6366F1, ch02=#06B6D4, etc.)
-- Position: x=80~100, y aligned with h2 baseline
-- Border radius: 4px on right edge
+### 2. Section Page with Accent Bar
 
-### 3. List Items
+Standard content page with a colored accent bar, title, subtitle, and content area.
 
-```
-┌─────────────────────────────────────────┐  h=76~88
-│  ┌──────┐  01. Item title               │
-│  │ icon │  Description text (caption)   │
-│  └──────┘                               │
-└─────────────────────────────────────────┘
-  ↑ padding 24px
-```
+| Element | Component | x | y |
+|---|---|---|---|
+| Accent bar | `Anim type="slide-left" w={8} h={70}`, `borderRadius: 4` | 100 | 70 |
+| Section title | `Text variant="h2"` | 128 | 72 |
+| Subtitle | `Text variant="caption"` | 128 | 152 |
+| Content | Cards / chart / list | 160 | 210+ |
 
-- Each item: 76–88px tall, spaced 88–100px apart
-- Icon: 32–48px, sits at y=20~24 from card top
-- Title: x=72~88 from card left, y=16~22
-- Description (if present): x=same, y=title_y + 36
-- Cards use `variant="default"` (bg-surface-card)
+The accent bar's height (70px) matches the h2 line box (54 × 1.3 = 70). Bar color uses the chapter's brand color (`colors.brand.*`). The ~10px gap between h2 bottom (142) and subtitle top (152) prevents sub-pixel overlap.
+
+### 3. Two-Column Layout (Main + Side)
+
+| Zone | Width | x | y |
+|---|---|---|---|
+| Main content | 1000px | 160 | 210+ |
+| Side panel | 500px | 1260 | 210+ |
+
+Total width 1600px, centered on canvas (160px margin each side). Main content holds cards, charts, or lists. Side panel holds supplementary info (key points, summary badges, supporting chart).
+
+### 4. Two-Column Layout (Equal Split)
+
+| Zone | Width | x | y |
+|---|---|---|---|
+| Left column | 840px | 100 | 210+ |
+| Right column | 840px | 980 | 210+ |
+
+40px gap between columns. Total width 1720px, centered (100px margin each side). Use for side-by-side comparisons (before/after, two charts, code + output).
+
+### 5. List / Checklist Page
+
+A vertical stack of cards, each with an icon and text.
+
+| Part | Spec |
+|---|---|
+| Card | `Cardbox variant="default" w={1400} h={130}` |
+| Icon | `SVG` or inline `<svg>`, 52px, at x=36, y=30 within card |
+| Title | `Text variant="body"`, at x=108, y=26 within card |
+| Description | `Text variant="caption"` (optional), same x, y = 78 |
+| Stacking | First card at y=200, each subsequent card at y += 160 (gap ~30px) |
+| Animation | `Anim type="slide-left" delay={350 + i * 250}` for staggered entry |
+
+On continue pages (no title/accent), cards start at y=80 to use full canvas.
+
+### 6. Full-Width Card Page
+
+A single large content area spanning most of the canvas width.
+
+| Element | Component | x | y | w |
+|---|---|---|---|---|
+| Accent bar | As in section page | 100 | 70 | 8 |
+| Title | `Text variant="h2"` | 128 | 72 | — |
+| Large card | `Cardbox variant="default"` | 100 | 210 | 1720 |
+
+Use when content needs maximum space: large markdown blocks, one big chart, detailed code walkthroughs.
+
+### 7. Chart / Data Page
+
+Chart on the left, insight card on the right. Centered on canvas.
+
+| Zone | Component | x | y | w | h |
+|---|---|---|---|---|---|
+| Chart | `BarChart` / `LineChart` inside `Cardbox variant="elevated"` | 140 | 210 | 1100 | 460 |
+| Insight card | `Cardbox variant="bordered"` with key finding | 1300 | 210 | 480 | 400 |
+
+Total width 1580px, centered (170px margin each side). Chart height ~420px with SVG text at 22px. Insight card contains title at y=58, finding text at y=110, recommendation at y=290.
+
+### 8. Timeline / Process Flow
+
+Horizontal steps from left to right, evenly spaced.
+
+| Step | Component | y | w | Gap |
+|---|---|---|---|---|
+| Each step | `Cardbox variant="default" w={440} h={240}` | 240 | 440 | 100px between cards |
+| Step badge | `Cardbox variant="bordered" w={90} h={44}`, text w={80} | 18 (inside) | — | — |
+
+Cards start at x=160. For N steps, layout: step 0 at x=160, step 1 at x=700, step 2 at x=1240. Each step has a number badge at y=18, title at y=76, description at y=136 within the card.
 
 ## Design Tokens Usage
 
-### Colors
+All colors are defined in `@/components/theme` `colors.*`. Do not hardcode hex values. Key tokens:
 
-| Token | Usage | Example |
-|---|---|---|
-| `#6366F1` (Indigo) | Ch01 accent, primary buttons | badges, accent bars, highlights |
-| `#06B6D4` (Cyan) | Ch02 accent, code highlights | chapter badges, secondary charts |
-| `#F59E0B` (Amber) | Ch03 accent, warnings | summary checkmarks |
-| `#22C55E` (Green) | Success indicators | key findings icons |
-| `#0F1117` | Canvas background | body bg |
-| `#1A1D2B` | Card background | Cardbox default |
-| `#2E3144` | Borders/dividers | Cardbox borders |
-| `#F1F3F9` | Primary text | h1, h2, h3 |
-| `#9CA3AF` | Secondary text | body text |
-| `#6B7280` | Dim text | captions, hints |
-
-### Accent Bars Code Pattern
-
-```tsx
-<Anim type="slide-left" delay={0} w={8} h={64} x={100} y={88}>
-  <div style={{
-    width: '100%', height: '100%',
-    background: '#6366F1',
-    borderRadius: 4,
-  }} />
-</Anim>
-```
+| Token | Usage |
+|---|---|
+| `colors.surface.bg` | Canvas background |
+| `colors.surface.card` | Cardbox background |
+| `colors.surface.border` | Cardbox borders |
+| `colors.text.primary` | h1, h2, h3 text |
+| `colors.text.secondary` | body text |
+| `colors.text.dim` | captions, hints |
+| `colors.brand.*` | Chapter accents, badges, highlights (see assignment below) |
 
 ### Gradient Background Pattern
 
-```tsx
-<Anim type="fade-in" delay={0} x={0} y={0} w={1920} h={1080}>
-  <div style={{
-    width: '100%', height: '100%',
-    background: 'radial-gradient(ellipse at 50% 35%, rgba(99,102,241,0.15), transparent 65%)',
-  }} />
-</Anim>
-```
-
-- Chapter 1: `rgba(99,102,241,0.15)` (Indigo)
-- Chapter 2: `rgba(6,182,212,0.12)` (Cyan)
-- Chapter 3: `rgba(245,158,11,0.12)` (Amber)
-
-### Accent Line Pattern
+Title page background uses `radial-gradient` with the chapter's brand color at low opacity — the `26` hex suffix represents 15% opacity:
 
 ```tsx
-<Anim type="scale-in" delay={300} w={640} h={4} x={cx - 320} y={384}>
-  <div style={{
-    width: '100%', height: '100%',
-    background: 'linear-gradient(90deg, transparent, #6366F1, transparent)',
-    borderRadius: 2,
-  }} />
-</Anim>
-```
-
-### Chapter Badge Pattern
-
-```tsx
-<Cardbox variant="bordered" x={0} y={0} w={80} h={32}>
-  <Text variant="caption" x={0} y={7} w={80} style={{ textAlign: 'center' }}>
-    Ch01
-  </Text>
-</Cardbox>
-```
-
-- Placed above the accent line, centered
-- Badge width: auto (fit text + 16px padding)
-- Variant: `bordered` (uses brand color)
-
-## Component Usage Rules
-
-### Text
-
-| Variant | Font Size | Weight | Usage | Visual |
-|---|---|---|---|---|
-| `h1` | 48px | 700 | Main title, page titles | `#F1F3F9` |
-| `h2` | 36px | 600 | Section headings | `#F1F3F9` |
-| `h3` | 28px | 600 | Subheadings, subtitles | `#9CA3AF` for subtitles |
-| `body` | 20px | 400 | Content text | `#9CA3AF` |
-| `caption` | 14px | 400 | Metadata, hints, labels | `#6B7280` |
-| `code` | 18px | 400 | Inline code | `#06B6D4` |
-
-**DO NOT** set `color` manually — use the variant's default. Exception: subtitles use `<Text variant="h3" style={{ color: '#9CA3AF' }}>`.
-
-### Anim
-
-| Type | Usage |
-|---|---|
-| `fade-in` | Full page transitions, title content |
-| `slide-up` | Main title entrance |
-| `slide-left` | Content cards, list items |
-| `slide-right` | Side panels, secondary content |
-| `scale-in` | Hint buttons, accent lines |
-
-Delay increments: title fade 0→200→300→400, list items spaced 250–300ms apart.
-
-### Cardbox
-
-| Variant | Usage |
-|---|---|
-| `default` | Content cards, list items (bg-surface-card + border) |
-| `elevated` | Highlight cards, charts, hint boxes (adds shadow) |
-| `bordered` | Chapter badges, key findings (colored border) |
-
-## Page Templates
-
-### Template A: Title Page
-
-```tsx
-import { Anim } from '@/components/anim'
-import { Text } from '@/components/text'
-import { Cardbox } from '@/components/cardbox'
-import { SVG } from '@/components/svg'
-import { canvas } from '@/components/theme'
-import { useNarration } from '@/components/player/narration-context'
-
-const cx = canvas.width / 2
-
-export default function PgXXTitle() {
-  const { script } = useNarration()
-  return (
-    <>
-      <Anim type="fade-in" delay={0} x={0} y={0} w={1920} h={1080}>
-        <div style={{
-          width: '100%', height: '100%',
-          background: 'radial-gradient(ellipse at 50% 35%, rgba(99,102,241,0.15), transparent 65%)',
-        }} />
-      </Anim>
-
-      {/* chapter badge */}
-      <Anim type="fade-in" delay={200} x={cx - 40} y={320} w={80} h={32}>
-        <Cardbox variant="bordered" x={0} y={0} w={80} h={32}>
-          <Text variant="caption" x={0} y={7} w={80} style={{ textAlign: 'center' }}>Ch01</Text>
-        </Cardbox>
-      </Anim>
-
-      {/* accent line */}
-      <Anim type="scale-in" delay={300} w={600} h={4} x={cx - 300} y={368}>
-        <div style={{ width:'100%',height:'100%',background:'linear-gradient(90deg,transparent,#6366F1,transparent)',borderRadius:2 }} />
-      </Anim>
-
-      {/* main title */}
-      <Anim type="slide-up" delay={400} x={cx - 500} y={400} w={1000} h={80}>
-        <Text variant="h1" x={0} y={0} w={1000} style={{ textAlign: 'center' }}>Title Text</Text>
-      </Anim>
-
-      {/* subtitle */}
-      <Anim type="fade-in" delay={700} x={cx - 400} y={490} w={800} h={40}>
-        <Text variant="h3" x={0} y={0} w={800} style={{ textAlign: 'center', color: '#9CA3AF' }}>Subtitle Text</Text>
-      </Anim>
-
-      {/* hint */}
-      <Anim type="scale-in" delay={1100} x={cx - 200} y={580} w={400} h={56}>
-        <Cardbox variant="elevated" x={0} y={0} w={400} h={56}>
-          <Text variant="caption" x={0} y={18} w={400} style={{ textAlign: 'center' }}>按 → 键继续</Text>
-        </Cardbox>
-      </Anim>
-
-      <Text variant="caption" x={80} y={1020} w={800}>{script}</Text>
-    </>
-  )
-}
-```
-
-### Template B: Section Page with Accent Bar
-
-```tsx
-import { Anim } from '@/components/anim'
-import { Text } from '@/components/text'
-// ... other imports
-
-export default function PgXXContent() {
-  return (
-    <>
-      {/* accent bar */}
-      <Anim type="slide-left" delay={0} w={8} h={64} x={100} y={88}>
-        <div style={{ width:'100%',height:'100%',background:'#6366F1',borderRadius:4 }} />
-      </Anim>
-
-      {/* title */}
-      <Anim type="fade-in" delay={100} x={128} y={92} w={600} h={48}>
-        <Text variant="h2" x={0} y={0}>Section Title</Text>
-      </Anim>
-
-      {/* caption */}
-      <Anim type="fade-in" delay={200} x={128} y={138} w={600} h={24}>
-        <Text variant="caption" x={0} y={0}>Subtitle description text</Text>
-      </Anim>
-
-      {/* content cards at y=200+ */}
-    </>
-  )
-}
-```
-
-### Template C: Summary/Checklist Page
-
-```tsx
-{items.map((item, i) => (
-  <Anim key={i} type="slide-left" delay={350 + i * 250} w={760} h={76} x={160} y={190 + i * 88}>
-    <Cardbox variant="default" x={0} y={0} w={760} h={76}>
-      {/* checkmark icon at x=24, y=22 */}
-      <SVG x={24} y={22} w={32} h={32} viewBox="0 0 32 32">
-        <circle cx="16" cy="16" r="16" fill="rgba(245,158,11,0.15)" />
-        <path d="M11 16l3 3 7-7" fill="none" stroke="#F59E0B" strokeWidth={2} strokeLinecap="round" />
-      </SVG>
-      <Text variant="body" x={72} y={22} w={660}>{item}</Text>
-    </Cardbox>
-  </Anim>
-))}
-```
-
-### Template D: Chart/Data Page
-
-- Chart card (left): width ~760px, height ~420px
-- Insight card (right): width ~380px, height ~240px, positioned at x≈940
-- Use `BarChart` or `LineChart` inside `Cardbox variant="elevated"`
-- Insight card uses `variant="bordered"` with a success icon
-
-## Horizontal Layout Examples
-
-### Two-Column Layout
-
-```
-│  ┌──────────────┐    ┌────────┐
-│  │  Main content │    │ Side   │
-│  │  (760w)      │    │ (380w) │
-│  │              │    │        │
-│  └──────────────┘    └────────┘
-│  x=100              x=940
-```
-
-### Single Column with List
-
-```
-│  ┌──────────────────────────────────────┐
-│  │  Item 1  (760w, 88h)                │
-│  ├──────────────────────────────────────┤
-│  │  Item 2                             │
-│  ├──────────────────────────────────────┤
-│  │  Item 3                             │
-│  └──────────────────────────────────────┘
-│  x=160, items start at y=190, spaced 88px apart
+background: `radial-gradient(ellipse at 50% 35%, ${colors.brand.primary}26, transparent 65%)`
 ```
 
 ## Prohibited Visual Patterns
@@ -328,14 +211,17 @@ export default function PgXXContent() {
 - ❌ Mixed layout approaches (don't combine flex + absolute)
 - ❌ Overlapping elements without z-index control
 - ❌ Fixed pixel values that don't account for 1920×1080 centering
-- ❌ <div> without a component wrapper when a slide component exists
+- ❌ `<div>` without a component wrapper when a slide component exists
 - ❌ `<br>` for spacing (use explicit y positioning)
+- ❌ Emoji characters — use inline `<SVG>` for icons
 
 ## Color Assignment by Chapter
 
-| Chapter | Accent | Gradient | Icon Color |
-|---|---|---|---|
-| Ch01 | #6366F1 (Indigo) | rgba(99,102,241,0.15) | #6366F1 |
-| Ch02 | #06B6D4 (Cyan) | rgba(6,182,212,0.12) | #06B6D4 |
-| Ch03 | #F59E0B (Amber) | rgba(245,158,11,0.12) | #F59E0B |
-| Ch04+ | #22C55E / #3B82F6 / #EC4899 | (use hex + 0.12 opacity) | same as accent |
+Use `colors.brand.*` tokens from `@/components/theme`. Each chapter picks one brand color for its accents, badges, and gradient backgrounds.
+
+| Chapter | Token |
+|---|---|
+| Ch01 | `colors.brand.primary` |
+| Ch02 | `colors.brand.secondary` |
+| Ch03 | `colors.brand.accent` |
+| Ch04+ | Cycle from Ch01 |

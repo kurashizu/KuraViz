@@ -39,6 +39,7 @@ export const typography = {
   h3: { fontSize: 42, fontWeight: 600, lineHeight: 1.4, color: colors.text.primary },
   body: { fontSize: 30, fontWeight: 400, lineHeight: 1.6, color: colors.text.secondary },
   caption: { fontSize: 22, fontWeight: 400, lineHeight: 1.5, color: colors.text.dim },
+  citation: { fontSize: 22, fontWeight: 400, lineHeight: 1.5, color: colors.text.dim },
   code: { fontSize: 28, fontWeight: 400, lineHeight: 1.5, color: colors.brand.secondary },
   watermark: { fontSize: 28, fontWeight: 300, lineHeight: 1.5, color: colors.text.dim },
 } as const

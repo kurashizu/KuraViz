@@ -1,42 +1,94 @@
 {
-  "ch01-intro": {
+  "ch01-title-content": {
     "pg-01-title": {
-      "script": "欢迎来到机器学习入门课程。本章我们将了解机器学习的基本概念和学习路径。",
-      "audioSrc": "/audio/ch01-intro/pg-01-title.wav"
+      "script": "This chapter demonstrates page layouts: title, section, and full-width card.",
+      "audioSrc": null
     },
-    "pg-02-overview": {
-      "script": "本节课我们将了解四个核心主题：什么是机器学习、监督学习和无监督学习的区别、常见算法概览，以及本课程的学习路径。",
-      "audioSrc": "/audio/ch01-intro/pg-02-overview.wav"
+    "pg-02-section": {
+      "script": "The section page features a colored accent bar, title, subtitle, and a full-width content card.",
+      "audioSrc": null
     },
-    "pg-03-charts": {
-      "script": "本章我们将展示数据可视化与核心公式。左侧柱状图对比了五种模型的准确率，右侧折线图显示训练损失的变化趋势。",
-      "audioSrc": "/audio/ch01-intro/pg-03-charts.wav"
-    },
-    "pg-04-showcase": {
-      "script": "首先展示 Mermaid 思维导图，它概括了人工智能的主要分支，包括机器学习、自然语言处理和计算机视觉。",
-      "audioSrc": "/audio/ch01-intro/pg-04-showcase.wav"
-    },
-    "pg-05-flowchart": {
-      "script": "接下来是流程图示例，展示一个数据处理流程中的条件判断和循环分支。",
-      "audioSrc": "/audio/ch01-intro/pg-05-flowchart.wav"
-    },
-    "pg-06-sequence": {
-      "script": "最后是时序图示例，展示用户、应用和数据库三者之间的交互过程，包括正常流程和异常处理。",
-      "audioSrc": "/audio/ch01-intro/pg-06-sequence.wav"
+    "pg-03-fullwidth": {
+      "script": "A full-width card layout for code samples and large text blocks via Markdown.",
+      "audioSrc": null
     }
   },
-  "ch02-basics": {
+  "ch02-columns-lists": {
     "pg-01-title": {
-      "script": "接下来进入第二章，核心概念部分。我们将深入探讨组件系统的使用。",
-      "audioSrc": "/audio/ch02-basics/pg-01-title.wav"
+      "script": "This chapter showcases multi-column and list layouts with cyan theme.",
+      "audioSrc": null
     },
-    "pg-02-components": {
-      "script": "本章展示 Cardbox 的三种变体以及完整的文字层级系统，包括从 h1 到 caption 的全部样式。",
-      "audioSrc": "/audio/ch02-basics/pg-02-components.wav"
+    "pg-02-main-side": {
+      "script": "Two-column layout placing main content on the left and key insights on the right.",
+      "audioSrc": null
     },
-    "pg-03-summary": {
-      "script": "最后做一个本章小结。机器学习是人工智能的核心分支，包含三大范式。模型选择取决于数据规模和任务类型，而实践出真知，动手 coding 是关键。",
-      "audioSrc": "/audio/ch02-basics/pg-03-summary.wav"
+    "pg-03-equal-split": {
+      "script": "Side-by-side comparison of two programming approaches.",
+      "audioSrc": null
+    },
+    "pg-04-checklist": {
+      "script": "A vertical checklist with numbered items.\nEach card has an icon, title, and description.\nWide cards fill the canvas horizontally.",
+      "audioSrc": null
+    }
+  },
+  "ch03-data-timeline": {
+    "pg-01-title": {
+      "script": "This chapter demonstrates chart, timeline, and content showcase layouts with amber theme.",
+      "audioSrc": null
+    },
+    "pg-02-chart": {
+      "script": "Bar chart comparing model accuracy with an insight card on the right.",
+      "audioSrc": null
+    },
+    "pg-03-timeline": {
+      "script": "A horizontal timeline showing the software development lifecycle.\nEach step card includes a number badge, title, and description.",
+      "audioSrc": null
+    },
+    "pg-04-markdown": {
+      "script": "Markdown component rendering LaTeX formulas, GFM tables, and task lists.",
+      "audioSrc": null
+    },
+    "pg-05-markdown-continue": {
+      "script": "Code block with syntax highlighting and a comparison table of sorting algorithms.",
+      "audioSrc": null
+    },
+    "pg-06-mermaid": {
+      "script": "A Mermaid flowchart showing input validation logic with retry branching.",
+      "audioSrc": null
+    },
+    "pg-07-sequence-continue": {
+      "script": "A sequence diagram showing user, app, and database interaction with success and error paths.",
+      "audioSrc": null
+    },
+    "pg-08-mindmap-continue": {
+      "script": "A mindmap showing the structure of web development technologies across frontend, backend, and DevOps.",
+      "audioSrc": null
+    },
+    "pg-09-gantt-continue": {
+      "script": "A Gantt chart showing a project timeline with planning, development, and launch phases.",
+      "audioSrc": null
+    },
+    "pg-10-checklist-continue": {
+      "script": "A standalone checklist page with task items and resource links rendered via Markdown.",
+      "audioSrc": null
+    }
+  },
+  "ch04-collision": {
+    "pg-01-overlap": {
+      "script": "This page tests sibling OVERLAP detection. Two boxes intentionally overlap.",
+      "audioSrc": null
+    },
+    "pg-02-canvas-overflow": {
+      "script": "This page tests canvas EXCEED detection. Boxes extend beyond 1920x1080.",
+      "audioSrc": null
+    },
+    "pg-03-parent-overflow": {
+      "script": "This page tests parent OVERFLOW detection. Child box extends beyond its parent.",
+      "audioSrc": null
+    },
+    "pg-04-clean": {
+      "script": "Clean control page — zero collisions expected.",
+      "audioSrc": null
     }
   }
 }

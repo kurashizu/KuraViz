@@ -1,6 +1,6 @@
 # Components Reference
 
-All components use explicit Box positioning (`x`, `y`, `w`, `h`) within the 1920×1080 canvas. **No flex/grid at page level**. All colors must come from `@/components/theme` `colors.*` — no hardcoded hex values anywhere.
+All components use explicit Box positioning (`x`, `y`, `w`, `h`) within the 1920×1080 canvas. **No flex/grid at page level**. All colors must come from `@/components/theme` `colors.*` — no hardcoded hex values anywhere. Raw `<div>` must not be used for layout — always use Box-based components.
 
 ## Text — `@/components/text`
 
@@ -19,10 +19,26 @@ import { Text } from '@/components/text'
 |---|---|---|
 | variant | `h1 \| h2 \| h3 \| body \| caption \| code \| watermark` | `body` |
 | x, y, w, h, z | number (px) | — |
-| className | string | — |
 | style | React.CSSProperties | merged after variant defaults |
 | as | HTML tag override | inferred from variant |
 | children | ReactNode | required |
+
+**HTML tag mapping** (in `components/text/text.tsx` `tagMap`):
+
+| variant | renders as |
+|---|---|
+| `h1` | `<h1>` |
+| `h2` | `<h2>` |
+| `h3` | `<h3>` |
+| `body` | `<p>` |
+| `caption` | `<div>` |
+| `citation` | `<div>` |
+| `code` | `<code>` |
+| `watermark` | `<div>` |
+
+When `x`/`y` are provided, `boxStyle` adds `position: absolute` to the tag.
+
+**data-box-id**: Auto-generated as `text-{variant}-{textSnippet}-{useId}` for collision debug.
 
 **Font metrics** (in `components/theme.ts` `typography`):
 
@@ -33,6 +49,7 @@ import { Text } from '@/components/text'
 | h3 | 42 | 1.4 | **59** |
 | body | 30 | 1.6 | **48** |
 | caption | 22 | 1.5 | **33** |
+| citation | 22 | 1.5 | **33** |
 | code | 28 | 1.5 | **42** (mono font) |
 | watermark | 28 | 1.5 | **42** |
 
@@ -40,6 +57,11 @@ import { Text } from '@/components/text'
 - 1-line caption: `h ≥ 33` → use `h={35}`
 - 1-line h2: `h ≥ 70` → use `h={70}` or `h={80}`
 - 2-line body: `h ≥ 96` → use `h={100}`
+
+**Text**: Use `<Text variant="...">` — never raw `<h1>`, `<p>`, etc.
+**Box height**: Always set `h` on components containing text, tall enough for the font size (`h1`=72px needs ≥86px, `body`=30px needs ≥48px per line).
+
+**Citation**: Use `<Text variant="citation">` for source attribution inside cardboxes. Place at the cardbox's bottom-right corner (e.g. `x={cardbox_w - text_w - 20}` `y={cardbox_h - 40}`). Same size as caption but semantically distinct.
 
 ## Anim — `@/components/anim`
 
@@ -63,6 +85,9 @@ import { Anim } from '@/components/anim'
 | x, y, w, h, z | number (px) | — |
 
 Anim wraps its children with framer-motion. The wrapper itself is `position: absolute` at the given Box, children should use `x={0} y={0}` to fill the wrapper.
+**Animation**: Use `<Anim type="..." delay={ms}>` — never direct framer-motion.
+
+**data-box-id**: Auto-generated as `anim-{type}-{useId}` for collision debug.
 
 ## Cardbox — `@/components/cardbox`
 
@@ -83,6 +108,8 @@ Anim wraps its children with framer-motion. The wrapper itself is `position: abs
 Example: badge text in `bordered` Cardbox:
 - `h=44, border=2px → content area = 40px`
 - `Text y=8, lineHeight=33 → bottom at 41 → fits with 1px margin`
+
+**data-box-id**: Auto-generated as `cardbox-{variant}-{useId}` for collision debug.
 
 ## Markdown — `@/components/markdown`
 

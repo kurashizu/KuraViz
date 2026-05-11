@@ -1,86 +1,68 @@
 ---
-name: web-video-tutorial
+name: web-video
 description: >-
-  Build PPT-style video tutorials using HTML slides (Next.js/React) + TTS audio.
+  Build PPT-style videos using HTML slides (Next.js/React) + TTS audio.
   Generates narrated slide decks rendered in a 1920x1080 canvas with auto-advance driven by audio playback.
 use_when: >-
   User asks to create a video tutorial, slide-based course, narrated presentation,
   or e-learning content using web technologies. Also use when building or modifying
   slide pages, narration scripts, or TTS audio for video lessons.
-config:
-  canvas_width: 1920
-  canvas_height: 1080
-  server_host: 0.0.0.0
-  server_port: 9999
-  debug_flag: "?debug=1"
 ---
 
 # Web Video Tutorial Skill
 
 ## Overview
 
-This skill builds PPT-style video tutorials using HTML slides + TTS audio. Each slide is a React component rendered in a 1920×1080 canvas, with auto-advance driven by audio playback.
+Build PPT-style videos as narrated HTML slides. Each slide is a React component in a 1920×1080 canvas; audio playback drives auto-advance.
 
 ## Core Constraints
 
-1. **Canvas**: 1920×1080 fixed — defined in `components/theme.ts`. Do not change.
-2. **Layout**: All elements use Box absolute positioning (`x`, `y`, `w`, `h`). No `flex`/`grid` at page level.
-3. **Colors**: Must use CSS variables (`var(--brand-primary)`) or `@/components/theme` constants. No hardcoded hex values.
-4. **Text**: Use `<Text variant="...">` — never raw `<h1>`, `<p>`, etc.
-5. **Animation**: Use `<Anim type="..." delay={ms}>` — never direct framer-motion.
-6. **Pages**: Each page is a default-exported component in `content/chapters/{ch}/pg-NN-{name}.tsx`.
-7. **Registration**: Every page must be registered in its chapter's `index.ts`.
-8. **Narration**: Every page must have an entry in `public/narration.json`. `script` field is required.
-9. **Icons**: Use inline `<svg>` for small decorative icons (circles, checkmarks, numbered badges). No emoji anywhere.
-10. **Box height**: Always set `h` on components containing text, tall enough for the font size (`h1`=72px needs ≥110px, `body`=30px needs ≥48px per line).
-11. **Mermaid container**: `w` and `h` must both be ≥ 540px (`canvas` half-minimum). Smaller boxes make diagram text unreadable.
-
-## Project Structure
-
-```
-scaffold/
-├── lib/theme.ts                # colors, typography, canvas (1920×1080)
-├── app/                        # Next.js App Router
-├── components/
-│   ├── player/                 # SlidePlayer, narration, debug, progress
-│   ├── text/                   # <Text variant="h1|h2|h3|body|caption|code">
-│   ├── anim/                   # <Anim type="fade-in|slide-*|scale-in" delay={ms}>
-│   ├── markdown/               # Markdown renderer (LaTeX, GFM tables)
-│   │   └── mermaid.tsx          # Mermaid diagram renderer (standalone)
-│   ├── graph/                  # BarChart, LineChart, Axis
-│   ├── cardbox/                # Card container
-│   ├── theme.ts                # colors, typography, fonts, canvas
-├── lib/                        # types, utils, bbox
-├── content/chapters/           # Page components organized by chapter
-├── public/
-│   ├── narration.json          # All narration scripts + audio paths
-│   └── audio/                  # Generated audio files
-└── tools/tts.py                # TTS adapter (placeholder)
-```
-
-## Component System
-
-See `references/components.md` for full API documentation of each component.
+- **File access**: After running `tools/scaffold.py --dir /path/to/workspace`, you can only modify files in `scaffold/content/*`, `scaffold/public/narration.json`, and `scaffold/logs/debug.log`. Do not read or modify any other scaffold files. Do not read or modify any tool files.
+- **Theme**: `scaffold/components/theme.ts` is read-only — reference it for colors/typography/canvas config.
 
 ## Workflow
 
-### Creating a New Lesson
+### 1. Project Setup
 
-1. Create chapter folder: `content/chapters/chXX-name/`
-2. Add `index.ts` with chapter metadata
-3. Create slide files: `pg-01-title.tsx`, `pg-02-xxx.tsx`, ...
-4. Add narration entries to `public/narration.json`
-5. Generate audio: `python tools/tts.py --json ...`
-6. Place audio: `public/audio/chXX-name/pg-NN-xxx.wav`
-7. Test: `npm run dev` → open `http://0.0.0.0:9999?debug=1`
+1. Create a directory named after your video content. This is your `WORKSPACE`.
+2. Run `tools/scaffold.py --dir /PATH/TO/WORKSPACE` to generate the scaffold.
 
-### Testing
+```
+WORKSPACE/
+└── scaffold/
+    ├── content/chapters/      # Page components (modify here)
+    ├── public/
+    │   ├── narration.json     # Narration scripts (modify here)
+    │   └── audio/
+    └── ...                    # Do not modify other files
+```
 
-- `?debug=1` or `?debug=true` — shows chapter ID, page ID, audio path, script text in red overlay
-- `?debug=auto` — auto-scans ALL pages, logs collisions to `logs/debug.log`, shows green banner when done
-- Arrow keys: ← previous page, → next page
-- Audio plays automatically and advances on end
-- **Collision log**: when `?debug=1` detects overlaps, details are POSTed to `/api/log` and written to `logs/debug.log` in the project root. Tail it to trace layout issues: `tail -f logs/debug.log`
+### 2. Source Collection & Outline
+
+**You MUST collect real reference materials — never make up content.** If the user provided source materials, convert them to markdown files and save them in `WORKSPACE/sources/`. Otherwise, use web search to find relevant materials, write them as markdown files, and save them to `WORKSPACE/sources/`. Do not proceed without concrete source material.
+
+1. Collect 3-6 relevant reference materials and save as markdown files in `WORKSPACE/sources/`.
+2. Create `WORKSPACE/outline.md` with chapters and pages. Each page must have a title and a description of its content. See `references/outline-example.md` for an example.
+3. Generate narration JSON at `WORKSPACE/scaffold/public/narration.json`. Use `\n` to manually control line breaks in scripts — this determines the caption `h` on each page. Estimate line count from actual text length (e.g. a short word-heavy script may fit fewer lines than dense Chinese). Follow `references/narration-system.md` for the schema.
+
+**STOP HERE AND ASK USER TO APPROVE THE OUTLINE AND NARRATION BEFORE PROCEEDING.**
+
+### 3. Page Creation
+
+Write each chapter one at a time. For each chapter:
+
+1. Create `content/chapters/chXX-name/` (e.g. `ch01-intro`).
+2. Create page components as `pg-NN-name.tsx` (e.g. `pg-01-title.tsx`). Follow `references/page-creation.md`.
+3. Register each page in the chapter's `index.ts`.
+
+### 4. Collision Testing & Fixing
+
+1. Run `rm -rf .next && npm run build && npm run start`, then open `http://127.0.0.1:9999?debug=auto` with a headless browser. Collisions are logged to `logs/debug.log`. Wait until the log contains the summary line (e.g. `SCAN 10 pages 2 collisions` or `SCAN 10 pages all clean`), then close the browser. Three detection types: `OVERLAP` (siblings), `OVERFLOW` (child exceeds parent), `EXCEED` (beyond canvas). Each entry includes `data-box-id` for component identification.
+2. Fix collisions using `references/collision-prevention.md`. If a page has many collisions, rewrite it from scratch rather than patching.
+
+**STOP HERE AND ASK USER TO APPROVE THE PAGES BEFORE PROCEEDING.**
+
+### 5. Audio Generation (Yet to be implemented)
 
 ## Directory Reference
 
@@ -88,17 +70,10 @@ See `references/components.md` for full API documentation of each component.
 |---|---|
 | `references/components.md` | All component APIs |
 | `references/page-creation.md` | Page creation workflow |
-| `references/narration-system.md` | Narration JSON schema + audio system |
-| `references/design-guide.md` | Visual design rules, layout templates, color assignments |
-| `references/collision-prevention.md` | Font metrics, box sizing, spacing rules, debug workflow |
-| `references/lessons-learned.md` | Concrete mistakes + fixes from building this scaffold |
+| `references/narration-system.md` | Narration JSON schema |
+| `references/design-guide.md` | Visual design rules, layout templates |
+| `references/collision-prevention.md` | Font metrics, box sizing, debug workflow |
+| `references/lessons-learned.md` | Concrete mistakes + fixes |
+| `references/outline-example.md` | Example chapter outline |
 
-## Prohibited Actions
 
-- ❌ Do not use raw `<div>` for layout — always use Box-based components
-- ❌ Do not hardcode colors — use `@/components/theme` or CSS variables
-- ❌ Do not bypass the SlidePlayer — all pages must be registered in the chapter system
-- ❌ Do not modify `components/theme.ts` canvas config — 1920×1080 is fixed
-- ❌ Do not add `npm install` of new packages without verifying with the user
-- ❌ Do not use emoji characters anywhere — use `<SVG>` for icons
-- ❌ Do not leave Box `h` undersized for text content — text will overflow silently

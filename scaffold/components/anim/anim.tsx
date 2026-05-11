@@ -1,5 +1,6 @@
 'use client'
 
+import { useId } from 'react'
 import { motion } from 'framer-motion'
 import { boxStyle } from '@/lib/utils'
 import type { Box } from '@/lib/types'
@@ -25,8 +26,10 @@ function getAnimProps(type: AnimType) {
 }
 
 export function Anim({ type = 'fade-in', delay = 0, duration = 0.5, children, ...box }: AnimProps) {
+  const uid = useId()
   return (
     <motion.div
+      data-box-id={`anim-${type}-${uid}`}
       style={boxStyle(box)}
       transition={{ duration, delay: delay / 1000, ease: 'easeOut' }}
       {...getAnimProps(type)}

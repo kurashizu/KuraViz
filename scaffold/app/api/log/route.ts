@@ -21,9 +21,7 @@ export async function POST(req: NextRequest) {
       const total = body.total ?? 0
       const tc = body.totalCollisions ?? 0
       const ts = new Date().toISOString().replace('T', ' ').slice(0, 19)
-      const line = tc > 0
-        ? `[${ts}] SCAN COMPLETE: ${total} pages checked, ${tc} collision(s) found`
-        : `[${ts}] SCAN COMPLETE: ${total} pages checked, all clean`
+      const line = `[${ts}] SCAN ${total} pages ${tc > 0 ? tc + ' collisions' : 'all clean'}`
       await fs.appendFile(LOG_FILE, line + '\n', 'utf-8')
       return new Response('ok', { status: 200 })
     }

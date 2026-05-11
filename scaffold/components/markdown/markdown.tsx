@@ -4,10 +4,11 @@ import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import remarkMath from 'remark-math'
 import rehypeKatex from 'rehype-katex'
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
+import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
 import { boxStyle } from '@/lib/utils'
 import type { Box } from '@/lib/types'
 import { colors, typography } from '@/components/theme'
-
 
 interface MarkdownProps extends Box {
   content: string
@@ -44,16 +45,26 @@ export function Markdown({ content, ...box }: MarkdownProps) {
             </h3>
           ),
           p: ({ children }) => <p style={{ margin: '8px 0', color: colors.text.secondary }}>{children}</p>,
-          code: ({ children }) => (
-            <code style={{ background: colors.surface.card, padding: '2px 6px', borderRadius: 4, fontSize: typography.code.fontSize, color: colors.brand.secondary }}>
-              {children}
-            </code>
-          ),
-          pre: ({ children }) => (
-            <pre style={{ background: colors.surface.card, padding: 16, borderRadius: 8, overflow: 'hidden', fontSize: typography.code.fontSize, lineHeight: typography.code.lineHeight }}>
-              {children}
-            </pre>
-          ),
+          code({ className, children }) {
+            const match = /language-(\w+)/.exec(className || '')
+            const code = String(children).replace(/\n$/, '')
+            if (match) {
+              return (
+                <SyntaxHighlighter
+                  language={match[1]}
+                  style={oneDark}
+                  customStyle={{ fontSize: typography.code.fontSize, borderRadius: 8, padding: 16, margin: '8px 0' }}
+                >
+                  {code}
+                </SyntaxHighlighter>
+              )
+            }
+            return (
+              <code style={{ background: colors.surface.card, padding: '2px 6px', borderRadius: 4, fontSize: typography.code.fontSize, color: colors.brand.secondary }}>
+                {children}
+              </code>
+            )
+          },
           table: ({ children }) => (
             <div style={{ overflow: 'auto' }}>
               <table style={{ borderCollapse: 'collapse', width: '100%' }}>{children}</table>
@@ -71,7 +82,18 @@ export function Markdown({ content, ...box }: MarkdownProps) {
           ),
           ul: ({ children }) => <ul style={{ paddingLeft: 24, margin: '8px 0' }}>{children}</ul>,
           ol: ({ children }) => <ol style={{ paddingLeft: 24, margin: '8px 0' }}>{children}</ol>,
-          li: ({ children }) => <li style={{ margin: '4px 0', color: colors.text.secondary }}>{children}</li>,
+          li: ({ children, ...props }: any) => {
+            const isTask = props.checked !== undefined
+            if (isTask) {
+              return (
+                <li style={{ margin: '4px 0', color: colors.text.secondary, listStyle: 'none', paddingLeft: 0 }}>
+                  <span style={{ marginRight: 10 }}>{props.checked ? '☑' : '☐'}</span>
+                  {children}
+                </li>
+              )
+            }
+            return <li style={{ margin: '4px 0', color: colors.text.secondary }}>{children}</li>
+          },
           a: ({ href, children }) => <a href={href} style={{ color: colors.brand.primary }}>{children}</a>,
           blockquote: ({ children }) => (
             <blockquote style={{ borderLeft: `4px solid ${colors.brand.primary}`, paddingLeft: 16, margin: '12px 0', color: colors.text.secondary, fontStyle: 'italic' }}>

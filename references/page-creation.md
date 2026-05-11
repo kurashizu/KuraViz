@@ -6,6 +6,11 @@
 
 File: `content/chapters/{chapter-folder}/pg-NN-{name}.tsx`
 
+**IMPORTANT**: You must follow each page's description as specified in `WORKSPACE/outline.md`. Refer to `references/components.md` for available component APIs, `references/design-guide.md` for layout templates and design rules, and `references/collision-prevention.md` for font metrics and spacing rules.
+
+The page layout should follow the standard structure outlined below, with the accent bar, title, subtitle, content cards, and caption in their respective positions.
+Here is a template to get you started:
+
 ```tsx
 'use client'
 
@@ -40,8 +45,8 @@ export default function PgNNName() {
         </Cardbox>
       </Anim>
 
-      {/* Caption: centered, 2/3 width, at y=1000 */}
-      <Text variant="caption" x={320} y={1000} w={1280} style={{ textAlign: 'center' }}>{script}</Text>
+      {/* Caption: use \n in narration.json to control line breaks. h = lineCount × 33, y = 1080 - h - 20 */}
+      <Text variant="caption" x={360} y={1027} w={1200} style={{ textAlign: 'center' }}>{script}</Text>
     </>
   )
 }
@@ -64,38 +69,6 @@ const chapter: ChapterDef = {
 }
 ```
 
-### Step 3: Add narration script
-
-Edit `public/narration.json`:
-
-```json
-{
-  "chXX-name": {
-    "pg-NN-name": {
-      "script": "What to say during this slide.",
-      "audioSrc": "/audio/chXX-name/pg-NN-name.wav"
-    }
-  }
-}
-```
-
-### Step 4: Generate audio (placeholder)
-
-```bash
-python tools/tts.py --json '{"chXX-name":{"pg-NN-name":{"script":"..."}}}' --output ./public/audio
-```
-
-Place generated `pg-NN-name.wav` into `public/audio/chXX-name/`.
-
-### Step 5: Verify no collisions
-
-```bash
-npm run dev
-# Open http://0.0.0.0:9999/?debug=auto
-# Navigate through all pages → check logs/debug.log
-# Must end with: SCAN COMPLETE: N pages, all clean
-```
-
 ## Rules
 
 1. **File naming**: `pg-NN-{kebab-name}.tsx` where NN is zero-padded (01, 02, ...)
@@ -103,8 +76,9 @@ npm run dev
 3. **No props**: Pages receive no props — use `useNarration()` for script access
 4. **Box only**: All elements must use explicit x/y/w/h — no flex/grid at page level
 5. **First page**: Each chapter's first page should be a title/intro slide
-6. **Caption line**: Always include centered caption: `<Text variant="caption" x={320} y={1000} w={1280} style={{ textAlign: 'center' }}>{script}</Text>`
-7. **Collision check**: After creating a page, run `?debug=auto` and verify `logs/debug.log`
+6. **Caption line**: Always include centered bottom caption. Use `\n` in `narration.json` to control line breaks. Set `h = lineCount × 33` and `y = 1080 - h - 20`. Use `x={360}` `w={1200}` (center=960, canvas center).
+7. **Registration**: All pages must be registered in the chapter's `index.ts` — the SlidePlayer only loads pages from the chapter registry.
+8. **Citation**: Use `<Text variant="citation">` for source attribution inside cardboxes, positioned at the bottom-right corner.
 
 ## Section Layout Template
 
@@ -114,10 +88,31 @@ Content pages follow this rhythm:
 y= 70  │ accent bar + h2 title     h=70 (matches h2 line box)
 y=152  │ subtitle (caption)        h=35 (≥ caption 33px)  ← gap 12px from h2
 y=210+ │ content cards             h varies by content
-y=1000 │ bottom caption            centered, 2/3 width
+y=1027 │ bottom caption            centered, x=360 w=1200, h = lineCount × 33, y = 1080 - h - 20
 ```
 
 The 12px gap between h2 bottom (142) and caption top (152) is critical — prevents 1px overlap from CSS scale subpixel rounding.
+
+## Continue Page Template
+
+When content overflows, create a continue page (no accent bar, no title). Content starts at y=80 to use full canvas:
+
+```tsx
+export default function PgXXContinue() {
+  return (
+    <>
+      <Anim type="fade-in" delay={0} w={1720} h={920} x={100} y={80}>
+        <Cardbox variant="default" x={0} y={0} w={1720} h={920}>
+          {/* Content continues here */}
+        </Cardbox>
+      </Anim>
+      <Text variant="caption" x={360} y={1027} w={1200} style={{ textAlign: 'center' }}>{script}</Text>
+    </>
+  )
+}
+```
+
+For multi-item layouts (e.g. checklist), place items directly starting at y=80 without a wrapping cardbox.
 
 ## Bounding Box Reminder
 
@@ -129,4 +124,4 @@ The 12px gap between h2 bottom (142) and caption top (152) is critical — preve
 | body (30px) | 48 | 50 per line |
 | caption (22px) | 33 | 35 per line |
 
-For `Cardbox variant="bordered"` (2px border), subtract 4px from h to get content area.
+For `Cardbox variant="bordered"` (2px border), subtract 4px from h to get content area. Inner Text w must be ≤ cardbox_w - 4 to avoid overflow.
