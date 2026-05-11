@@ -40,6 +40,8 @@ Then ask the user for video language, which you will use when writing narration 
 
 ```
 WORKSPACE/
+├── outline.md               # ✏️ Chapter outline
+├── sources/                  # ✏️ Reference materials
 └── scaffold/
     ├── content/chapters/      # ✏️ Page components (create/edit here)
     ├── public/
