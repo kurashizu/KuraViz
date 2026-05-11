@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback, useRef } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { chapters } from '@/content/chapters/index'
 import type { NarrationMap } from '@/lib/types'
 import { canvas } from '@/components/theme'
@@ -15,6 +16,16 @@ export function SlidePlayer() {
   const [narration, setNarration] = useState<NarrationMap | null>(null)
   const [started, setStarted] = useState(false)
   const audioRef = useRef<HTMLAudioElement | null>(null)
+  const params = useSearchParams()
+  const record = params.get('record') === '1' || params.get('record') === 'true'
+
+  // record mode: auto-start after narration loads (2s delay for fullscreen)
+  useEffect(() => {
+    if (record && narration) {
+      setStarted(true)
+      setTimeout(() => audioRef.current?.play().catch(() => {}), 2000)
+    }
+  }, [record, narration])
 
   const chapter = chapters[chapterIdx]
   const pageDef = chapter?.pages[pageIdx]
@@ -67,6 +78,12 @@ export function SlidePlayer() {
     setPageIdx(p)
   }, [chapterIdx, pageIdx, chapter])
 
+  // Log current slide in record mode
+  useEffect(() => {
+    if (!record || !narration) return
+    console.log(`[record] ${chapter.id}/${pageDef?.id}`)
+  }, [chapterIdx, pageIdx, record, narration])
+
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
       if (e.key === 'ArrowRight') navigate(1)
@@ -76,27 +93,37 @@ export function SlidePlayer() {
     return () => window.removeEventListener('keydown', onKey)
   }, [navigate])
 
+  // Audio lifecycle — create + onended for current page
   useEffect(() => {
     if (!narrationEntry?.audioSrc) return
 
     const audio = new Audio(narrationEntry.audioSrc)
     audioRef.current = audio
 
-    const playTimer = setTimeout(() => {
-      if (started) audio.play().catch(() => {})
-    }, 500)
-
     audio.onended = () => {
-      setTimeout(() => navigate(1), 500)
+      setTimeout(() => {
+        const isLast = chapterIdx === chapters.length - 1 && pageIdx === chapter.pages.length - 1
+        if (isLast) {
+          if (record) console.log('[record] done')
+          return
+        }
+        navigate(1)
+      }, 500)
     }
 
     return () => {
-      clearTimeout(playTimer)
       audio.pause()
       audio.onended = null
       if (audioRef.current === audio) audioRef.current = null
     }
-  }, [chapterIdx, pageIdx, narrationEntry, started])
+  }, [chapterIdx, pageIdx, narrationEntry])
+
+  // Playback — 500ms delay after page transition (once started)
+  useEffect(() => {
+    if (!started || !narrationEntry?.audioSrc) return
+    const t = setTimeout(() => audioRef.current?.play().catch(() => {}), 500)
+    return () => clearTimeout(t)
+  }, [chapterIdx, pageIdx])
 
   if (!chapter || !pageDef) {
     return <div style={{ padding: 40 }}><Text variant="body" style={{ color: colors.semantic.error }}>No chapters loaded.</Text></div>
@@ -127,7 +154,7 @@ export function SlidePlayer() {
       >
         {PageComponent && <PageComponent />}
 
-        {!started && (
+        {!started && !record && (
           <div
             style={{
               position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',

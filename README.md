@@ -38,6 +38,22 @@ npm run dev
 
 Open `http://localhost:9999?debug=1` to preview slides with the debug overlay.
 
+### Audio Generation
+
+```bash
+cd scaffold
+python tools/generate_audio.py
+```
+
+Reads `public/narration.json` and generates `.wav` files to `public/audio/` via the TTS adapter (`tools/tts.py`).
+
+### Playback Modes
+
+| URL Parameter | Behavior |
+|---|---|
+| *(none)* | Click anywhere to start. Audio auto-advances through slides. |
+| `?record=1` | Recording mode. Waits for `window.__recordingStart = true` in console, then plays through. Sets `window.__recordingDone = true` on last slide. |
+
 ## Core Components
 
 | Component | Purpose |
@@ -53,7 +69,7 @@ Open `http://localhost:9999?debug=1` to preview slides with the debug overlay.
 
 - Fixed 1920×1080, 16:9 aspect ratio
 - Absolute positioning only (no flex/grid at page level)
-- Three collision detection types: `OVERLAP` (sibling), `OVERFLOW` (child vs parent), `EXCEED` (beyond canvas)
+- Three collision detection types: `OVERLAP` (sibling), `OVERFLOW` (child vs parent), `CONTENT_OVERFLOW` (content exceeds overflow:hidden container), `EXCEED` (beyond canvas)
 - Auto-generated `data-box-id` on all components for easy debugging
 
 ## License

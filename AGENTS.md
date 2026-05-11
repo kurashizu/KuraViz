@@ -13,11 +13,13 @@ To create a new project: `python tools/scaffold.py --dir /path/to/workspace --po
 Run in `scaffold/`:
 
 | Command | Purpose |
-|---|---|
+|---|---|---|
 | `npm run dev` | Dev server at `0.0.0.0:9999` |
 | `npm run build` | Build + typecheck (there is no separate typecheck script) |
+| `python tools/generate_audio.py` | Batch TTS: reads `public/narration.json`, outputs `.wav` to `public/audio/` |
 | `?debug=1` | Append to URL to show chapter/page/audio/script debug overlay |
 | `?debug=auto` | Auto-scan ALL pages, logs collisions to `logs/debug.log` |
+| `?record=1` | Recording mode: waits for `window.__recordingStart`, auto-plays through, sets `window.__recordingDone` on last slide |
 
 If `scaffold/node_modules` is missing, run `cd scaffold && npm install`.
 
@@ -52,7 +54,7 @@ If `scaffold/node_modules` is missing, run `cd scaffold && npm install`.
 
 - `?debug=1` — collision banner + info panel. `?debug=auto` — auto-scans all pages.
 - Collision log: `logs/debug.log` after `?debug=auto`.
-- Detection: three types — `OVERLAP` (siblings), `OVERFLOW` (child beyond parent), `EXCEED` (beyond canvas).
+- Detection: four types — `OVERLAP` (siblings), `OVERFLOW` (child beyond parent), `CONTENT_OVERFLOW` (content hidden by `overflow:hidden`), `EXCEED` (beyond canvas).
 - 1px tolerance for touching edges. 0.5px tolerance for overflow/exceed checks.
 - Elements <3×3px are skipped (filters KaTeX helper spans).
 - `data-box-id` auto-generated on Text/Cardbox/Anim for readable collision reports.
@@ -60,4 +62,4 @@ If `scaffold/node_modules` is missing, run `cd scaffold && npm install`.
 
 ## Navigation
 
-Arrow keys ← → to navigate slides. Audio auto-advances. Wraps around at first/last slide.
+Arrow keys ← → to navigate slides. Audio auto-advances. Stops at last slide (no wrap-around).
