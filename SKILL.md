@@ -25,10 +25,8 @@ use_when: >-
 ### 0. Configuration
 
 First, check if `KuraViz/MEMORY.md` exists.
-- If **yes**: read saved preferences (`language`, `style`) and skip configuration.
-- If **no**: create `KuraViz/MEMORY.md`, then **ask the user** for:
-  - Video language (`Chinese` / `English` / `Japanese` / etc.)
-  - Narration style (`formal` / `conversational` / `tutorial`)
+- If **yes**: read saved preferences and skip configuration.
+- If **no**: create `KuraViz/MEMORY.md` and follow `references/config-guide.md` to ask the user for configuration.
 
 Save answers to `MEMORY.md`. See `references/config-guide.md` for format and options.
 

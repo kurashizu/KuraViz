@@ -8,9 +8,9 @@
 
 ## User Preferences (stored in `MEMORY.md`)
 
-Preferences listed below. The agent creates `MEMORY.md` on first run and reads it on subsequent runs.
+When creating or updating `MEMORY.md`, ask the user for these values:
 
-| Field | Example | Description |
+| Field | Examples | Description |
 |---|---|---|
 | `language` | `Chinese`, `English`, `Japanese` | Video content and narration language |
 | `style` | `formal`, `conversational`, `tutorial` | Narration and page design tone |
