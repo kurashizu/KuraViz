@@ -50,7 +50,7 @@ async function main() {
 
   console.log(`Opening http://127.0.0.1:${port}/?debug=auto — waiting for scan...`)
   const browser = await chromium.launch({ headless: true })
-  const page = await browser.newPage()
+  const page = await browser.newPage({ viewport: { width: 1920, height: 1080 } })
   await page.goto(`http://127.0.0.1:${port}/?debug=auto`, {
     waitUntil: 'networkidle',
     timeout: 30000,
