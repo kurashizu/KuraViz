@@ -16,9 +16,11 @@ use_when: >-
 - **Node.js** ≥ 18 + **npm**
 - **Python 3** (standard library — no extra packages required)
 - **Git**
-- **Playwright Chromium** — install after `npm install` in scaffold:
+- **ffmpeg** — for screen recording and encoding
+- **pulseaudio-utils** — for virtual audio sink (`pactl`)
+- **Playwright Firefox** — install after `npm install` in scaffold:
   ```bash
-  cd scaffold && npx playwright install chromium
+  cd scaffold && npx playwright install firefox
   ```
 
 ## Overview
@@ -94,8 +96,25 @@ Each subagent, for each of its chapters:
 
 Run the batch TTS orchestrator from `scaffold/`:
 ```bash
-cd scaffold && python tools/generate_audio.py
+python tools/generate_audio.py
 ```
+After this, audio files will be generated in `scaffold/public/audio/` so `narration.json` can find them.
+
+### **PAUSE POINT**
+
+### 6. Video Capture
+
+Run the video capture script from `scaffold/`:
+```bash
+node tools/capture.mjs ../video.mp4
+```
+This will generate `WORKSPACE/video.mp4`.
+
+### 7. Final Report
+
+Write a final report summarizing the work you did, including:
+- A summary of the video content and structure (chapters/pages).
+- Any challenges you faced and how you overcame them.
 
 ## Directory Reference
 
