@@ -20,6 +20,8 @@ Nearly all OVERFLOW errors come from one cause: text inside an Anim or Cardbox w
 
 If you set `Anim h` to the single-line value but your text wraps, the Text's bounding box will exceed the Anim wrapper — this is always an OVERFLOW.
 
+**Right-sizing**: The content should sit comfortably inside its container — not overflowing (`h` too small) and not floating with excessive empty space below (`h` too large). Aim for 10-30px of padding between the last content line and the container's bottom edge. For a body text block at y=30 that wraps to 5 lines (5×48=240px), the content bottom is y=270, so a Cardbox `h` of 280-300 gives a reasonable 10-30px margin.
+
 ## Collision Detection System
 
 `lib/bbox.ts` — `scanOverlaps(container)` checks three types of layout violations:
