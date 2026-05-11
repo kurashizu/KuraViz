@@ -11,6 +11,16 @@ use_when: >-
 
 # Web Video Tutorial Skill
 
+## Prerequisites
+
+- **Node.js** ≥ 18 + **npm**
+- **Python 3** (standard library — no extra packages required)
+- **Git**
+- **Playwright Chromium** — install after `npm install` in scaffold:
+  ```bash
+  cd scaffold && npx playwright install chromium
+  ```
+
 ## Overview
 
 Build PPT-style videos as narrated HTML slides. Each slide is a React component in a 1920×1080 canvas; audio playback drives auto-advance.
@@ -57,8 +67,8 @@ Write each chapter one at a time. For each chapter:
 
 ### 4. Collision Testing & Fixing
 
-1. Run `rm -rf .next && npm run build && npm run start`, then open `http://127.0.0.1:9999?debug=auto` with a headless browser. Collisions are logged to `logs/debug.log`. Wait until the log contains the summary line (e.g. `SCAN 10 pages 2 collisions` or `SCAN 10 pages all clean`), then close the browser. Three detection types: `OVERLAP` (siblings), `OVERFLOW` (child exceeds parent), `EXCEED` (beyond canvas). Each entry includes `data-box-id` for component identification.
-2. Fix collisions using `references/collision-prevention.md`. If a page has many collisions, rewrite it from scratch rather than patching.
+1. Run `node tools/test-collisions.mjs` from `scaffold/` to test all pages for layout collisions.
+2. Read the output to find which pages have issues, then fix them using `references/collision-prevention.md`.
 
 **STOP HERE AND ASK USER TO APPROVE THE PAGES BEFORE PROCEEDING.**
 

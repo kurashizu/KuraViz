@@ -31,8 +31,8 @@ gantt
         </Cardbox>
       </Anim>
 
-      <Anim type="fade-in" delay={200} x={100} y={520} w={840} h={440}>
-        <Cardbox variant="default" x={0} y={0} w={840} h={440}>
+      <Anim type="fade-in" delay={200} x={100} y={520} w={840} h={500}>
+        <Cardbox variant="default" x={0} y={0} w={840} h={500}>
           <Text variant="body" x={20} y={20} w={800} style={{ fontWeight: 600, color: colors.brand.accent }}>
             Project Phases
           </Text>
@@ -44,8 +44,8 @@ gantt
         </Cardbox>
       </Anim>
 
-      <Anim type="fade-in" delay={300} x={1000} y={520} w={820} h={440}>
-        <Cardbox variant="default" x={0} y={0} w={820} h={440}>
+      <Anim type="fade-in" delay={300} x={1000} y={520} w={820} h={500}>
+        <Cardbox variant="default" x={0} y={0} w={820} h={500}>
           <Text variant="body" x={20} y={20} w={780} style={{ fontWeight: 600, color: colors.brand.accent }}>
             Task Status
           </Text>

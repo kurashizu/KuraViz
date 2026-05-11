@@ -72,6 +72,18 @@ effective_h = h - borderTop - borderBottom
 
 **Critical for bordered cardboxes**: A `Cardbox variant="bordered"` has 2px border on each side, reducing the content area by 4px in both width and height. Any `Text` child inside must have `w ≤ cardbox_w - 4` to avoid OVERFLOW detection.
 
+**Anim wrapper height**: When wrapping content in `<Anim>`, the Anim's `h` must be ≥ the content's `h`. Common values:
+
+| Content | Line box / h | Anim h (minimum) |
+|---|---|---|
+| `<Text variant="h1" h={86}>` | 86px | **90** |
+| `<Text variant="h2" h={70}>` | 70px | **75** |
+| `<Text variant="h3" h={59}>` | 59px | **65** |
+| `<Text variant="body" h={48}>` | 48px | **50** |
+| `<Text variant="caption" h={33}>` | 33px | **35** |
+
+Setting Anim `h` smaller than the content's line box causes OVERFLOW — the Text element's bounding box exceeds the Anim wrapper.
+
 Example: chapter badge with `w={200}` `h={48}`:
 - Content area: 196w × 44h
 - Text `w={190}` fits within 196 ✓

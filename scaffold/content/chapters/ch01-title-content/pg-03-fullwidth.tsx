@@ -33,11 +33,11 @@ export default function Pg03Fullwidth() {
         <Text variant="h2" x={0} y={0}>Code Showcase</Text>
       </Anim>
 
-      <Anim type="fade-in" delay={200} x={128} y={152} w={600} h={35}>
-        <Text variant="caption" x={0} y={0}>Full-width card with syntax-highlighted code via Markdown</Text>
+      <Anim type="fade-in" delay={200} x={128} y={152} w={600} h={70}>
+        <Text variant="caption" x={0} y={0}>Full-width card for code and long-form content</Text>
       </Anim>
 
-      <Anim type="fade-in" delay={350} x={100} y={210} w={1720} h={700}>
+      <Anim type="fade-in" delay={350} x={100} y={230} w={1720} h={700}>
         <Cardbox variant="default" x={0} y={0} w={1720} h={700}>
           <Markdown x={30} y={20} w={1660} h={660} content={code} />
         </Cardbox>
