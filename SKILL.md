@@ -17,19 +17,17 @@ use_when: >-
 - **Python 3** (standard library — no extra packages required)
 - **Git**
 - **ffmpeg** — for screen recording and encoding
+- **vaapi** - for hardware-accelerated video encoding on Linux (optional but recommended for performance otherwise encoding will be on CPU)
 - **pulseaudio-utils** — for virtual audio sink (`pactl`)
 - **Playwright Firefox** — install after `npm install` in scaffold:
   ```bash
   cd scaffold && npx playwright install firefox
   ```
 
-## Overview
-
-Build PPT-style videos as narrated HTML slides. Each slide is a React component in a 1920×1080 canvas; audio playback drives auto-advance.
-
 ## Core Constraints
 
-- **File access**: After running `tools/scaffold.py --dir /path/to/workspace`, you can only modify files in `scaffold/content/*` and `scaffold/public/narration.json`. Do not read or modify any other scaffold files. Do not read or modify any tool files.
+File access is governed by `references/file-permissions.md`. Follow it strictly — the agent may only read or write files at the permission levels listed there.
+
 - **Theme**: `scaffold/components/theme.ts` is read-only — reference it for colors/typography/canvas config.
 
 ## Workflow
@@ -120,10 +118,10 @@ Write a final report summarizing the work you did, including:
 
 | Path | Description |
 |---|---|
+| `references/file-permissions.md` | File access permissions for agents |
 | `references/components.md` | All component APIs |
 | `references/page-creation.md` | Page creation workflow |
 | `references/narration-system.md` | Narration JSON schema |
 | `references/design-guide.md` | Visual design rules, layout templates |
 | `references/collision-prevention.md` | Font metrics, box sizing, debug workflow |
-| `references/lessons-learned.md` | Concrete mistakes + fixes |
 | `references/outline-example.md` | Example chapter outline |
