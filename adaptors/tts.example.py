@@ -2,12 +2,11 @@
 """
 TTS adapter template.
 
-Copy this file to your own adapter (e.g., tts.myengine.py) and implement
-the --text / --output interface. Point KURAVIZ_TTS_ADAPTOR env var at it.
+Implement this and save it as tts.py.
+Point KURAVIZ_TTS_ADAPTOR env var at it.
 
 Usage:
-    export KURAVIZ_TTS_ADAPTOR=/path/to/tts.myengine.py
-    python tools/generate_audio.py
+    tts.py --text "Hello, world!" --output output.wav
 """
 
 import argparse
@@ -17,7 +16,9 @@ import os
 def main():
     parser = argparse.ArgumentParser(description="TTS adapter")
     parser.add_argument("--text", type=str, required=True, help="Text to synthesize")
-    parser.add_argument("--output", type=str, required=True, help="Output audio file path")
+    parser.add_argument(
+        "--output", type=str, required=True, help="Output audio file path"
+    )
     args = parser.parse_args()
 
     os.makedirs(os.path.dirname(args.output), exist_ok=True)

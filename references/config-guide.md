@@ -12,6 +12,10 @@ For each variable in the table below, tell the user its purpose and ask if they 
 |---|---|
 | `KURAVIZ_TTS_ADAPTOR` | Path to a TTS adapter script (e.g. `/home/user/adaptors/tts.py`). Without this, audio synthesis is skipped. |
 
+The TTS adapter script must accept command-line arguments `--text "narration content" --output path.wav`.
+For guidance on writing a TTS adapter, refer to `adaptors/adaptors.example.py` and and save it as `adaptors/tts.py` (set the absolute path as `KURAVIZ_TTS_ADAPTOR`).
+Test the adapter by running `python adaptors/tts.py --text "Hello, world!" --output test.wav` and ensure it generates `test.wav` with the correct content.
+
 ### Step 2 — User Preferences
 
 Ask the user for each of these and write to `MEMORY.md`:
@@ -29,17 +33,7 @@ Write all collected values to `KuraViz/MEMORY.md` in the following format:
 # KuraViz Preferences
 language: Chinese
 style: conversational
+
+# Environment Variables
+KURAVIZ_TTS_ADAPTOR=/home/user/adaptors/tts.py
 ```
-
-## Environment Variable Reference
-
-| Variable | Required | Description |
-|---|---|---|
-| `KURAVIZ_TTS_ADAPTOR` | No | Path to a TTS adapter script. The script must accept `--text "..." --output path.wav`. Set to skip if no TTS is available. |
-
-## User Preference Reference
-
-| Field | Examples | Description |
-|---|---|---|
-| `language` | `Chinese`, `English`, `Japanese` | Language used for narration scripts and page content |
-| `style` | `formal`, `conversational`, `tutorial` | Tone for narration writing and page design |
