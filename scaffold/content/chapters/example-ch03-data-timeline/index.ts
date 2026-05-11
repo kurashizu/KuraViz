@@ -11,7 +11,7 @@ import Pg10ChecklistContinue from './pg-10-checklist-continue'
 import type { ChapterDef } from '@/lib/types'
 
 const chapter: ChapterDef = {
-  id: 'ch03-data-timeline',
+  id: 'example-ch03-data-timeline',
   title: 'Data & Timeline',
   pages: [
     { id: 'pg-01-title', component: Pg01Title },

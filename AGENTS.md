@@ -42,7 +42,7 @@ If `scaffold/node_modules` is missing, run `cd scaffold && npm install`.
 | Path | Purpose |
 |---|---|
 | `@/components/text` | `<Text variant="h1\|h2\|h3\|body\|caption\|citation\|code\|watermark">` — auto `data-box-id` |
-| `@/components/anim` | `<Anim type="fade-in\|slide-*\|scale-in" delay={ms}>` — auto `data-box-id` |
+| `@/components/anim` | `<Anim type="fade-in\|slide-*\|scale-in" delay={ms}>` — auto `data-box-id` (prefix `wrapper-`, e.g. `wrapper-1`) |
 | `@/components/cardbox` | Card container (default/elevated/bordered) — auto `data-box-id` |
 | `@/components/markdown` | Markdown renderer (LaTeX, GFM tables, task lists with Unicode ☐/☑, syntax-highlighted code blocks) |
 | `@/components/markdown/mermaid` | Mermaid diagram renderer (mindmap/flowchart/sequence/class/gantt) |

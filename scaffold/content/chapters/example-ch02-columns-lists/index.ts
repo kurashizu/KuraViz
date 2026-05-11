@@ -6,7 +6,7 @@ import Pg05ChecklistContinue from './pg-05-checklist-continue'
 import type { ChapterDef } from '@/lib/types'
 
 const chapter: ChapterDef = {
-  id: 'ch02-columns-lists',
+  id: 'example-ch02-columns-lists',
   title: 'Columns & Lists',
   pages: [
     { id: 'pg-01-title', component: Pg01Title },

@@ -1,6 +1,5 @@
 'use client'
 
-import { useId } from 'react'
 import { boxStyle } from '@/lib/utils'
 import type { Box } from '@/lib/types'
 import { colors } from '@/components/theme'
@@ -16,11 +15,12 @@ const variantStyle: Record<string, React.CSSProperties> = {
   bordered: { background: 'transparent', border: `2px solid ${colors.brand.primary}` },
 }
 
+let _cardboxUid = 0
+
 export function Cardbox({ children, variant = 'default', ...box }: CardboxProps) {
-  const uid = useId()
   return (
     <div
-      data-box-id={`cardbox-${variant}-${uid}`}
+      data-box-id={`cardbox-${variant}-${++_cardboxUid}`}
       style={{ ...boxStyle(box), borderRadius: 12, overflow: 'hidden', ...variantStyle[variant] }}
     >
       {children}

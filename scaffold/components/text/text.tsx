@@ -1,6 +1,5 @@
 'use client'
 
-import { useId } from 'react'
 import type { TextVariant } from '@/components/theme'
 import { typography, fonts } from '@/components/theme'
 import { boxStyle } from '@/lib/utils'
@@ -26,15 +25,16 @@ const tagMap: Record<TextVariant, HtmlTag> = {
   watermark: 'div',
 }
 
+let _textUid = 0
+
 export function Text({ variant = 'body', children, style, as, ...box }: TextProps) {
   const t = typography[variant]
   const Tag = as ?? tagMap[variant]
-  const uid = useId()
   const label = typeof children === 'string' ? children.replace(/\s+/g, ' ').trim() : ''
 
   return (
     <Tag
-      data-box-id={`text-${variant}${label ? '-' + label : ''}-${uid}`}
+      data-box-id={`text-${variant}${label ? '-' + label : ''}-${++_textUid}`}
       style={{
         ...boxStyle(box),
         fontSize: t.fontSize,

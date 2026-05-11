@@ -34,6 +34,27 @@ If you set `Anim h` to the single-line value but your text wraps, the Text's bou
 
 Each collision entry shows `{type} {element-id}[x,y w×h] vs {other-id}[x,y w×h]`.
 
+### Reading Collision Reports
+
+A collision log entry tells you exactly which page, which elements, and what kind of violation:
+
+```
+PAGE ch01-intro/pg-02-section            ← the file to fix
+  OVERFLOW text-h2-The Black Box Problem-1[85,48 400x94]
+  vs  wrapper-3[85,48 400x47]            ← text exceeds wrapper height
+```
+
+| Part | What it means |
+|---|---|
+| `PAGE ch01-intro/pg-02-section` | Fix this file: `content/chapters/ch01-intro/pg-02-section.tsx` |
+| `OVERFLOW` | Detection type (OVERLAP / OVERFLOW / EXCEED) |
+| `text-h2-The Black Box Problem-1` | The overflowing element: `Text variant="h2"`, content "...", instance #1 |
+| `[85,48 400x94]` | Its bounding box (browser coords): left=85, top=48, width=400, height=94 |
+| `wrapper-3` | The parent container: 3rd Anim/Cardbox on the page |
+| `400x47` | Parent's size matches the outline, but the text box (94px tall) is 2× larger — it wrapped |
+
+**How to fix**: The text "The Black Box Problem" wraps to 2 lines at w=400 (h2, 54px font). The Anim wrapper only has h=47 (1 line). From the table below, h2 at 2 lines needs `h=145`. Increase the Anim's `h` to 145.
+
 ### False-positive prevention
 
 - Elements covering ≥80% of the canvas are skipped (background/full-screen elements).
@@ -47,9 +68,9 @@ Core components (Text, Cardbox, Anim) automatically generate a `data-box-id` att
 
 | Component | data-box-id format | Example |
 |---|---|---|
-| `<Text variant="h1">Layout Basics</Text>` | `text-{variant}-{snippet}-{useId}` | `text-h1-Layout Basics-:r0:` |
-| `<Cardbox variant="default">` | `cardbox-{variant}-{useId}` | `cardbox-default-:r1:` |
-| `<Anim type="fade-in">` | `anim-{type}-{useId}` | `anim-fade-in-:r2:` |
+| `<Text variant="h1">Layout Basics</Text>` | `text-{variant}-{snippet}-{counter}` | `text-h1-Layout Basics-1` |
+| `<Cardbox variant="default">` | `cardbox-{variant}-{counter}` | `cardbox-default-1` |
+| `<Anim type="fade-in">` | `wrapper-{counter}` | `wrapper-1` |
 
 Custom raw `<div>` elements without `data-box-id` fall back to `tagName + textContent.slice(0, 20)`.
 

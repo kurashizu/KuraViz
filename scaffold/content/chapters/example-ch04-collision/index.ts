@@ -5,7 +5,7 @@ import Pg04Clean from './pg-04-clean'
 import type { ChapterDef } from '@/lib/types'
 
 const chapter: ChapterDef = {
-  id: 'ch04-collision',
+  id: 'example-ch04-collision',
   title: 'Collision Detection Tests',
   pages: [
     { id: 'pg-01-overlap', component: Pg01Overlap },

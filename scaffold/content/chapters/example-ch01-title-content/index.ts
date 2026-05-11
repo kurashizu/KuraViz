@@ -4,7 +4,7 @@ import Pg03Fullwidth from './pg-03-fullwidth'
 import type { ChapterDef } from '@/lib/types'
 
 const chapter: ChapterDef = {
-  id: 'ch01-title-content',
+  id: 'example-ch01-title-content',
   title: 'Title & Content Pages',
   pages: [
     { id: 'pg-01-title', component: Pg01Title },
