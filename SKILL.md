@@ -47,14 +47,8 @@ WORKSPACE/
     ├── content/chapters/      # Page components (create/edit here)
     ├── public/
     │   ├── narration.json     # Narration scripts (edit here)
-    │   ├── audio/             # Do not touch
-    │   └── ...                # Do not touch
-    ├── components/            # Read only
-    ├── lib/                   # Read only
-    ├── tools/                 # Run only — do not read or edit
-    ├── app/                   # Do not touch
-    ├── package.json           # Do not touch
-    └── ...                    # Do not touch
+    │   └── audio/             # Do not touch
+    └── ...                    # Everything else — do not touch
 ```
 
 ### 2. Source Collection & Outline
