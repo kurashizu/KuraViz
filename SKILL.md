@@ -52,7 +52,8 @@ WORKSPACE/
     ├── tools/                 # Run scripts only - No read/write
     │   ├── generate_audio.py   # Batch TTS generation
     │   ├── capture.mjs         # Video recording (Playwright + FFmpeg)
-    │   └── test-collisions.mjs # Collision detection scan
+    │   ├── test-collisions.mjs # Collision detection scan
+    │   └── tts.py              # Single-call TTS adapter
     └── ...                    # Everything else — No access
 ```
 
