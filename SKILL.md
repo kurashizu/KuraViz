@@ -50,6 +50,9 @@ WORKSPACE/
     │   ├── narration.json     # Narration scripts - Read/Write
     │   └── audio/             # Auto-generated TTS audio files - No access
     ├── tools/                 # Run scripts only - No read/write
+    │   ├── generate_audio.py   # Batch TTS generation
+    │   ├── capture.mjs         # Video recording (Playwright + FFmpeg)
+    │   └── test-collisions.mjs # Collision detection scan
     └── ...                    # Everything else — No access
 ```
 
