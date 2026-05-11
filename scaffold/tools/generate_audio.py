@@ -28,15 +28,20 @@ def _resolve_path(*parts):
 def main():
     default_json = _resolve_path('public', 'narration.json')
     default_output = _resolve_path('public', 'audio')
+    tts_default = os.environ.get('KURAVIZ_TTS_ADAPTOR')
 
     parser = argparse.ArgumentParser(description='Batch TTS orchestrator')
     parser.add_argument('--json', type=str, default=default_json,
                         help='Narration JSON (default: %(default)s)')
     parser.add_argument('--output', type=str, default=default_output,
                         help='Output directory for audio files (default: %(default)s)')
-    parser.add_argument('--tts-script', type=str, default=_resolve_path('tools', 'tts.py'),
-                        help='Path to tts.py adapter (default: %(default)s)')
+    parser.add_argument('--tts-script', type=str, default=tts_default,
+                        help='Path to TTS adapter script (default: $KURAVIZ_TTS_ADAPTOR)')
     args = parser.parse_args()
+
+    if not args.tts_script:
+        print('[generate] $KURAVIZ_TTS_ADAPTOR not set — skipping TTS synthesis', file=sys.stderr)
+        return
 
     # Read narration data
     try:

@@ -45,7 +45,7 @@ cd scaffold
 python tools/generate_audio.py
 ```
 
-Reads `public/narration.json` and generates `.wav` files to `public/audio/` via the TTS adapter (`tools/tts.py`).
+Reads `public/narration.json` and generates `.wav` files to `public/audio/` via the TTS adapter. Requires `KURAVIZ_TTS_ADAPTOR` env var set to the adapter script path.
 
 ### Video Capture
 
