@@ -1,5 +1,6 @@
 ---
-name: web-video
+name: KuraViz
+description: >-
 description: >-
   Build PPT-style videos using HTML slides (Next.js/React) + TTS audio.
   Generates narrated slide decks rendered in a 1920x1080 canvas with auto-advance driven by audio playback.
@@ -9,7 +10,7 @@ use_when: >-
   slide pages, narration scripts, or TTS audio for video lessons.
 ---
 
-# Web Video Tutorial Skill
+# KuraViz Skill
 
 ## Prerequisites
 
@@ -59,24 +60,15 @@ WORKSPACE/
 
 ### 3. Page Creation
 
-Chapters can be **written in parallel by subagents**. Each subagent handles one chapter with its own pages independently, with all the context it needs:
+Read `references/collision-prevention.md` before creating pages to understand how to avoid collisions, then write chapters one at a time. For each chapter:
 
-**Inject into each subagent (every subagent should read these files independently):**
-- `WORKSPACE/sources/` — research content the pages are based on
-- `WORKSPACE/outline.md` — current chapter's page descriptions (each subagent should only read and follow the relevant chapter's page descriptions)
-- `WORKSPACE/scaffold/public/narration.json` — scripts with line counts (read-only, do not modify)
-- `references/design-guide.md` — brand colors, layout types
-- `references/components.md` — component APIs
-- `references/page-creation.md` — templates
-- `references/collision-prevention.md` — read before setting any `h` value
-
-Each subagent:
-1. Creates pages as `pg-NN-name.tsx` following `references/page-creation.md`
-2. Registers them in the chapter's `index.ts`
+1. Read the relevant page descriptions from `WORKSPACE/outline.md` and the matching `narration.json` entries (caption heights).
+2. Create pages as `pg-NN-name.tsx` in `content/chapters/chXX-name/`. Follow `references/page-creation.md`, `references/design-guide.md`, and `references/components.md` for layout templates and component APIs.
+3. Register each page in the chapter's `index.ts`.
 
 ### 4. Collision Testing & Fixing
 
-1. Run `node tools/test-collisions.mjs` from `scaffold/`, this will build the application and test for layout collisions.
+1. Run `node tools/test-collisions.mjs` from `scaffold/`, no need to run `npm run build` as this script will build and test in one step.
 2. Read the output to find which pages have issues, then fix them using `references/collision-prevention.md`.
 3. Repeat until no collisions remain.
 
