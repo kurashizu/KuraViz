@@ -16,10 +16,13 @@ Run in `scaffold/`:
 |---|---|---|
 | `npm run dev` | Dev server at `0.0.0.0:9999` |
 | `npm run build` | Build + typecheck (there is no separate typecheck script) |
+| `npm install` | Installs deps + auto-runs `playwright install firefox` |
 | `python tools/generate_audio.py` | Batch TTS: reads `public/narration.json`, outputs `.wav` to `public/audio/` |
-| `?debug=1` | Append to URL to show chapter/page/audio/script debug overlay |
-| `?debug=auto` | Auto-scan ALL pages, logs collisions to `logs/debug.log` |
-| `?record=1` | Recording mode: waits for `window.__recordingStart`, auto-plays through, sets `window.__recordingDone` on last slide |
+| `node tools/capture.mjs <output.mp4>` | Record video via Firefox + FFmpeg (requires Xvfb + pulseaudio) |
+| `node tools/test-collisions.mjs` | Auto-scan ALL pages for collisions, logs to `logs/debug.log` |
+| `?debug=1` | Show chapter/page/audio/script debug overlay |
+| `?debug=auto` | Auto-scan all pages, logs collisions to `logs/debug.log` |
+| `?record=1` | Recording mode: auto-plays from page 1, logs `[record] ch/pg` progress
 
 If `scaffold/node_modules` is missing, run `cd scaffold && npm install`.
 

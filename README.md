@@ -47,12 +47,21 @@ python tools/generate_audio.py
 
 Reads `public/narration.json` and generates `.wav` files to `public/audio/` via the TTS adapter (`tools/tts.py`).
 
+### Video Capture
+
+```bash
+cd scaffold
+node tools/capture.mjs output.mp4
+```
+
+Captures a 1920×1080 video of the automated playback using Firefox + FFmpeg. Requires Xvfb and pulseaudio-utils for headless recording.
+
 ### Playback Modes
 
 | URL Parameter | Behavior |
 |---|---|
 | *(none)* | Click anywhere to start. Audio auto-advances through slides. |
-| `?record=1` | Recording mode. Waits for `window.__recordingStart = true` in console, then plays through. Sets `window.__recordingDone = true` on last slide. |
+| `?record=1` | No click needed. Page auto-plays from page 1, logs `[record] ch/pg` progress to console. |
 
 ## Core Components
 
@@ -69,7 +78,7 @@ Reads `public/narration.json` and generates `.wav` files to `public/audio/` via 
 
 - Fixed 1920×1080, 16:9 aspect ratio
 - Absolute positioning only (no flex/grid at page level)
-- Three collision detection types: `OVERLAP` (sibling), `OVERFLOW` (child vs parent), `CONTENT_OVERFLOW` (content exceeds overflow:hidden container), `EXCEED` (beyond canvas)
+- Four collision detection types: `OVERLAP` (sibling), `OVERFLOW` (child vs parent), `CONTENT_OVERFLOW` (content exceeds overflow:hidden container), `EXCEED` (beyond canvas)
 - Auto-generated `data-box-id` on all components for easy debugging
 
 ## License
