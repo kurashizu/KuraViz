@@ -59,11 +59,17 @@ WORKSPACE/
 
 ### 3. Page Creation
 
-Read `references/collision-prevention.md` before creating pages to understand how to avoid collisions, then write chapters one at a time. For each chapter:
+Split chapters evenly across **2 subagents** for parallel development. Each subagent reads the same reference files independently and follows the same process:
 
-1. Read the relevant page descriptions from `WORKSPACE/outline.md` and the matching `narration.json` entries (caption heights).
-2. Create pages as `pg-NN-name.tsx` in `content/chapters/chXX-name/`. Follow `references/page-creation.md`, `references/design-guide.md`, and `references/components.md` for layout templates and component APIs.
-3. Register each page in the chapter's `index.ts`.
+- `WORKSPACE/sources/` — research content
+- `WORKSPACE/outline.md` — relevant chapters
+- `WORKSPACE/scaffold/public/narration.json` — scripts (read-only)
+- `references/page-creation.md`, `references/design-guide.md`, `references/components.md`
+- `references/collision-prevention.md` — read before setting any `h`
+
+Each subagent, for each of its chapters:
+1. Creates pages as `pg-NN-name.tsx` in `content/chapters/chXX-name/`.
+2. Registers each page in the chapter's `index.ts`.
 
 ### 4. Collision Testing & Fixing
 
