@@ -50,8 +50,7 @@ WORKSPACE/
     ├── tools/
     │   ├── generate_audio.py   # Batch TTS generation - Execute-only
     │   ├── capture.mjs         # Video capturing script - Execute-only
-    │   ├── test-collisions.mjs # Collision detection scan - Execute-only
-    │   └── tts.py              # Single-call TTS adapter - No access
+    │   └── test-collisions.mjs # Collision detection scan - Execute-only
     └── ...                    # Everything else — No access
 ```
 
