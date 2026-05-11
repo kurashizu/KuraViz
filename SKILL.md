@@ -26,13 +26,7 @@ use_when: >-
 
 First, check if `KuraViz/MEMORY.md` exists.
 - If **yes**: read saved preferences and skip configuration.
-- If **no**: create `KuraViz/MEMORY.md` and follow `references/config-guide.md` to ask the user for configuration.
-
-Save answers to `MEMORY.md`. See `references/config-guide.md` for format and options.
-
-Then ask the user if they want you to do the workflow step-by-step with pauses for review.
-- If yes, immediately ****STOP**** at each **PAUSE POINT** and ask for confirmation before proceeding.
-- If no, ****IGNORE**** all pause points and proceed through all steps and provide a final summary of changes.
+- If **no**: create `KuraViz/MEMORY.md` and follow `references/config-guide.md` to ask the user for configuration. Remember to load all environment variables from `MEMORY.md` before executing any related tools.
 
 ### 1. Project Setup
 
