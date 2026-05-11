@@ -26,7 +26,9 @@ use_when: >-
 
 First, check if `KuraViz/MEMORY.md` exists.
 - If **yes**: read saved preferences and skip configuration.
-- If **no**: create `KuraViz/MEMORY.md` and follow `references/config-guide.md` to ask the user for configuration. Remember to load all environment variables from `MEMORY.md` before executing any related tools.
+- If **no**: create `KuraViz/MEMORY.md` and follow `references/config-guide.md` to ask the user for configuration. 
+ 
+**Remember** to load all environment variables from `MEMORY.md` before executing any related tools.
 
 ### 1. Project Setup
 
