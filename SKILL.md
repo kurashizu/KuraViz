@@ -25,12 +25,10 @@ use_when: >-
 ### 0. Configuration
 
 First, check if `KuraViz/MEMORY.md` exists.
-- If **yes**: read saved preferences (`language`, `style`, `voice`, `model`) and skip configuration.
+- If **yes**: read saved preferences (`language`, `style`) and skip configuration.
 - If **no**: create `KuraViz/MEMORY.md`, then **ask the user** for:
   - Video language (`zh` / `en` / `ja` / etc.)
   - Narration style (`formal` / `conversational` / `tutorial`)
-  - TTS voice and model (if a TTS server is available)
-  - Any other `KURAVIZ_*` environment variables they want to set
 
 Save answers to `MEMORY.md`. See `references/config-guide.md` for format and options.
 
