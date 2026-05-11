@@ -26,9 +26,26 @@ use_when: >-
 
 ## Core Constraints
 
-File access is governed by `references/file-permissions.md`. Follow it strictly — the agent may only read or write files at the permission levels listed there.
+### File Permissions
 
-- **Theme**: `scaffold/components/theme.ts` is read-only — reference it for colors/typography/canvas config.
+| Path | Read | Write | Notes |
+|---|---|---|---|
+| `scaffold/content/chapters/` | ✅ | ✅ | Create/edit page components (`pg-*.tsx`) and chapter `index.ts` |
+| `scaffold/public/narration.json` | ✅ | ✅ | Narration scripts and audio source paths |
+| `references/` | ✅ | ❌ | Component API, design guide, collision prevention — reference only |
+| `scaffold/components/` | ✅ | ❌ | Slide primitives — read to understand API, never modify |
+| `scaffold/lib/` | ✅ | ❌ | Utilities and types — read only |
+| `scaffold/components/theme.ts` | ✅ | ❌ | Colors, typography, canvas config — reference only |
+| `scaffold/public/audio/` | ❌ | ❌ | Generated audio files; see `tools/generate_audio.py` |
+| `scaffold/tools/` | ❌ | ❌ | Run scripts from here but do not read or modify |
+| `scaffold/app/` | ❌ | ❌ | Next.js app router — do not touch |
+| `scaffold/package.json` | ❌ | ❌ | Do not modify |
+| `scaffold/tsconfig.json` | ❌ | ❌ | Do not modify |
+| `tools/` | ❌ | ❌ | Project-level tools — do not read or modify |
+| `tts/` | ❌ | ❌ | TTS configuration — do not modify |
+| `AGENTS.md` | ❌ | ❌ | Agent configuration |
+| `SKILL.md` | ❌ | ❌ | Skill definition |
+| `README.md` | ❌ | ❌ | Project readme |
 
 ## Workflow
 
@@ -118,7 +135,6 @@ Write a final report summarizing the work you did, including:
 
 | Path | Description |
 |---|---|
-| `references/file-permissions.md` | File access permissions for agents |
 | `references/components.md` | All component APIs |
 | `references/page-creation.md` | Page creation workflow |
 | `references/narration-system.md` | Narration JSON schema |
