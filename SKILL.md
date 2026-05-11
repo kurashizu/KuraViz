@@ -59,6 +59,8 @@ WORKSPACE/
 
 ### 3. Page Creation
 
+First, rewrite `scaffold/content/chapters/index.ts` to make sure you unlink all example chapters and pages.
+
 Split chapters evenly across **2 subagents** for parallel development. Each subagent reads the same reference files independently and follows the same process:
 
 - `WORKSPACE/sources/` — research content

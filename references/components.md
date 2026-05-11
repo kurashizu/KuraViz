@@ -6,9 +6,7 @@ All components use explicit Box positioning (`x`, `y`, `w`, `h`) within the 1920
 
 ## Text — `@/components/text`
 
-**Use only for**: titles (h1/h2/h3), section labels, captions, watermarks, and citations.
-
-**Do not use for**: body paragraphs, multi-line descriptions, inline code, or any content that would require multiple Text elements stacked together. Use `<Markdown>` with `` `backticks` `` for inline code and code blocks.
+**Use only for**: titles (h1/h2/h3), section labels, captions, watermarks, and citations. For body paragraphs, inline code, or multi-line content, use `<Markdown>` instead.
 
 ```tsx
 import { Text } from '@/components/text'
@@ -50,10 +48,6 @@ When `x`/`y` are provided, `boxStyle` adds `position: absolute`.
 ### Font metrics
 
 See `references/collision-prevention.md` for line box values and `h` calculation.
-
-### ❌ Do not use Text for content body
-
-Titles, labels, and captions → use `<Text>`. Multi-line body content → use `<Markdown>` inside a Cardbox. This avoids y-position miscalculations when text wraps.
 
 ### Citation
 
@@ -112,7 +106,7 @@ The wrapper is `position: absolute` at the given Box. Children should use `x={0}
 
 ## Markdown — `@/components/markdown`
 
-Rich text renderer for mixed-styled content inside a Cardbox. **Use this instead of multiple Text components** — it handles vertical spacing automatically.
+Rich text renderer for body content inside a Cardbox. **Use this instead of Text for any multi-line content, mixed styles, inline code, or body paragraphs.**
 
 ```tsx
 import { Markdown } from '@/components/markdown'
