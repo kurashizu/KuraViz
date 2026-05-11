@@ -12,14 +12,14 @@ Preferences listed below. The agent creates `MEMORY.md` on first run and reads i
 
 | Field | Example | Description |
 |---|---|---|
-| `language` | `zh`, `en`, `ja` | Video content and narration language |
+| `language` | `Chinese`, `English`, `Japanese` | Video content and narration language |
 | `style` | `formal`, `conversational`, `tutorial` | Narration and page design tone |
 
 ## MEMORY.md Format
 
 ```markdown
 # KuraViz Preferences
-language: zh
+language: Chinese
 style: conversational
 ```
 
