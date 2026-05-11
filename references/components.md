@@ -6,9 +6,9 @@ All components use explicit Box positioning (`x`, `y`, `w`, `h`) within the 1920
 
 ## Text — `@/components/text`
 
-**Use only for**: titles (h1/h2/h3), section labels, captions, watermarks, inline code, and citations.
+**Use only for**: titles (h1/h2/h3), section labels, captions, watermarks, and citations.
 
-**Do not use for**: body paragraphs, multi-line descriptions, or any content that would require multiple Text elements stacked together. Use `<Markdown>` instead.
+**Do not use for**: body paragraphs, multi-line descriptions, inline code, or any content that would require multiple Text elements stacked together. Use `<Markdown>` with `` `backticks` `` for inline code and code blocks.
 
 ```tsx
 import { Text } from '@/components/text'
