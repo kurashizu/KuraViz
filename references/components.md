@@ -6,7 +6,9 @@ All components use explicit Box positioning (`x`, `y`, `w`, `h`) within the 1920
 
 ## Text — `@/components/text`
 
-Single-variant text element. For mixed-styled content (bold heading + body + italic) inside a Cardbox, use `<Markdown>` instead — it avoids manual y-position collisions.
+**Use only for**: titles (h1/h2/h3), section labels, captions, watermarks, inline code, and citations.
+
+**Do not use for**: body paragraphs, multi-line descriptions, or any content that would require multiple Text elements stacked together. Use `<Markdown>` instead.
 
 ```tsx
 import { Text } from '@/components/text'
@@ -47,47 +49,11 @@ When `x`/`y` are provided, `boxStyle` adds `position: absolute`.
 
 ### Font metrics
 
-| Variant | fontSize | lineHeight | line box (px) |
-|---|---|---|---|
-| h1 | 72 | 1.2 | **86** |
-| h2 | 54 | 1.3 | **70** |
-| h3 | 42 | 1.4 | **59** |
-| body | 30 | 1.6 | **48** |
-| caption | 22 | 1.5 | **33** |
-| citation | 22 | 1.5 | **33** |
-| code | 28 | 1.5 | **42** (mono font) |
-| watermark | 28 | 1.5 | **42** |
+See `references/collision-prevention.md` for line box values and `h` calculation.
 
-**Rule**: `h ≥ line box × line count`. Examples:
-- 1-line caption: `h ≥ 33` → use `h={35}`
-- 2-line body: `h ≥ 96` → use `h={100}`
-- 1-line h2: `h ≥ 70` → use `h={75}`
+### ❌ Do not use Text for content body
 
-**❌ Never place multiple Text components inside a single Cardbox.** Each Text needs its own `y` offset, and if any text wraps, the `y` of the next element becomes incorrect. Use `<Markdown>` instead — it handles spacing, wrapping, and mixed styles automatically in one box.
-
-```tsx
-// ❌ Wrong — multiple Text with manual y offsets (breaks when text wraps)
-<Cardbox ...>
-  <Text variant="body" x={20} y={20} w={700}>...</Text>
-  <Text variant="body" x={20} y={140} w={700}>...</Text>
-  <Text variant="caption" x={20} y={260} w={700}>...</Text>
-</Cardbox>
-
-// ✅ Right — single Markdown, text flows naturally
-<Cardbox ...>
-  <Markdown x={20} y={20} w={700} h={400} content={`
-Paragraph one.
-
-Paragraph two.
-
-Some **bold** and *italic* and a caption at the end.
-  `} />
-</Cardbox>
-```
-
-### data-box-id
-
-Auto-generated as `text-{variant}-{textSnippet}-{counter}` for collision debug.
+Titles, labels, and captions → use `<Text>`. Multi-line body content → use `<Markdown>` inside a Cardbox. This avoids y-position miscalculations when text wraps.
 
 ### Citation
 
@@ -97,7 +63,7 @@ Auto-generated as `text-{variant}-{textSnippet}-{counter}` for collision debug.
 
 ## Anim — `@/components/anim`
 
-Positioning wrapper with entry animation. The wrapper has `position: absolute` at the given Box; children should use `x={0} y={0}` to fill the wrapper.
+Positioning wrapper with entry animation.
 
 ```tsx
 import { Anim } from '@/components/anim'
@@ -120,15 +86,11 @@ import { Anim } from '@/components/anim'
 | duration | number (seconds) | 0.5 |
 | x, y, w, h, z | number (px) | — |
 
-### data-box-id
-
-Auto-generated as `wrapper-{counter}` for collision debug (prefix `wrapper-`, not `anim-`, to avoid confusion with animation issues).
+The wrapper is `position: absolute` at the given Box. Children should use `x={0} y={0}` to fill the wrapper. The `data-box-id` prefix is `wrapper-` (not `anim-`), to avoid confusion with animation issues in collision reports.
 
 ---
 
 ## Cardbox — `@/components/cardbox`
-
-Card container with three visual variants.
 
 ```tsx
 <Cardbox variant="default"  x={120} y={200} w={400} h={300}>...</Cardbox>
@@ -144,26 +106,13 @@ Card container with three visual variants.
 | elevated | `surface.card` | 1px + drop shadow |
 | bordered | transparent | 2px `brand.primary` |
 
-### Border sizing
-
-`box-sizing: border-box` is global. The content area shrinks by border width each side:
-
-| Variant | Border | Content area (h=100) |
-|---|---|---|
-| default / elevated | 1px | 98px |
-| bordered | 2px | 96px |
-
-For bordered cardboxes, any Text child must have `w ≤ cardbox_w - 4` and `y + lineHeight ≤ h - 4` to avoid OVERFLOW.
-
-### data-box-id
-
-Auto-generated as `cardbox-{variant}-{counter}` for collision debug.
+`box-sizing: border-box` is global. For border sizing and content area calculation, see `references/collision-prevention.md`.
 
 ---
 
 ## Markdown — `@/components/markdown`
 
-Rich text renderer for mixed-styled content inside a Cardbox. **Prefer Markdown over multiple Text components when you need bold headings, body text, lists, and captions in the same box** — it handles vertical spacing automatically and avoids y-position collisions.
+Rich text renderer for mixed-styled content inside a Cardbox. **Use this instead of multiple Text components** — it handles vertical spacing automatically.
 
 ```tsx
 import { Markdown } from '@/components/markdown'
@@ -172,15 +121,14 @@ import { Markdown } from '@/components/markdown'
   <Markdown x={20} y={20} w={1240} h={460} content={`
 ## Heading
 
-**Bold text**, regular text, and *italic*.
+**Bold**, regular, and *italic*.
 
 | Col1 | Col2 |
 |------|------|
 | A    | B    |
 
-- Task lists
-  - [x] Done
-  - [ ] Pending
+- [x] Done
+- [ ] Pending
 
 $$ E = mc^2 $$
 
@@ -217,58 +165,35 @@ flowchart TB
 `} />
 ```
 
-### Supported diagram types
-
-mindmap, flowchart (LR/TB), sequence, gantt, class
-
 ### Requirements
 
 - **`w ≥ 540`** AND **`h ≥ 540`** — below this, labels overflow and become unreadable
-- Recommended: one diagram per page at `w=1720, h=760`
 - Font sizes configured at `mermaid.initialize()` — **do not** override post-render
-
-### Diagram shape → container matching
-
-| Diagram | Natural shape | Container advice |
-|---|---|---|
-| Flowchart LR | Wide, short | Full-width card. Or pair with text legend. |
-| Flowchart TB | Tall, narrow | Center column, or standalone page |
-| Sequence | Tall, narrow | Left column (w≈1100) + text legend right |
-| Mindmap | Circular, balanced | Full-width card, evenly padded |
-| Gantt | Wide, short | Full-width card (w=1720, h≈400), text cards below |
+- For diagram shape → container matching, see `references/design-guide.md`
 
 ---
 
 ## Graph — `@/components/graph`
-
-### BarChart / LineChart
 
 ```tsx
 import { BarChart, LineChart } from '@/components/graph'
 
 <BarChart  data={[{ label: 'A', value: 45 }]} x={120} y={200} w={700} h={400} />
 <LineChart data={[{ label: 'Jan', value: 30 }]} x={120} y={200} w={700} h={400} />
-```
-
-`color` defaults to `colors.brand.primary` / `colors.brand.secondary`. SVG text uses 22px to match the caption variant.
-
-### Axis
-
-```tsx
 <Axis x={100} y={200} w={800} h={500} xLabel="X" yLabel="Y" />
 ```
+
+`color` defaults to `colors.brand.primary` / `colors.brand.secondary`.
 
 ---
 
 ## Inline SVG
 
-For small decorative icons inside cards (badges, checkmarks, glyphs). For diagrams, use `<Mermaid>`.
+For small decorative icons inside cards. For diagrams, use `<Mermaid>`.
 
 ```tsx
-<svg
-  style={{ position: 'absolute', left: 24, top: 22, width: 48, height: 48 }}
-  viewBox="0 0 48 48"
->
+<svg style={{ position: 'absolute', left: 24, top: 22, width: 48, height: 48 }}
+  viewBox="0 0 48 48">
   <circle cx="24" cy="24" r="24" fill={colors.brand.primary} />
   <text x="24" y="29" textAnchor="middle" fill={colors.base.white}
     fontSize={typography.caption.fontSize} fontWeight={700}>01</text>
@@ -282,5 +207,5 @@ For small decorative icons inside cards (badges, checkmarks, glyphs). For diagra
 Internal — agents should not edit these directly:
 
 - `components/player/slide-player.tsx` — keyboard navigation, audio playback, page state
-- `components/player/narration-context.tsx` — `useNarration()` hook returns `{ script, audioSrc }`
+- `components/player/narration-context.tsx` — `useNarration()` hook
 - `components/player/debug-overlay.tsx` — `?debug=1` and `?debug=auto` overlays
