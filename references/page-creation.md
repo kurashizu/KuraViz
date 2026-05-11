@@ -79,7 +79,7 @@ const chapter: ChapterDef = {
 6. **Caption line**: Always include centered bottom caption. Use `\n` in `narration.json` to control line breaks. Set `h = lineCount × 33` and `y = 1080 - h - 20`. Use `x={360}` `w={1200}` (center=960, canvas center).
 7. **Registration**: All pages must be registered in the chapter's `index.ts` — the SlidePlayer only loads pages from the chapter registry.
 8. **Citation**: Use `<Text variant="citation">` for source attribution inside cardboxes, positioned at the bottom-right corner.
-9. **Anim h matches content**: When wrapping content in `<Anim>`, the Anim's `h` must be ≥ the content's `h`. For a `<Text variant="h1">` (line box 86px), use `Anim h={90}` at minimum. For `<Text variant="h3">` (59px), use `Anim h={65}`. Never set Anim `h` smaller than the content it wraps.
+9. **Anim h matches content**: When wrapping content in `<Anim>`, the Anim's `h` must be ≥ the content's actual rendered height. If text wraps to multiple lines at the given width, each additional line adds a full line box (h1=86px, h2=70px, h3=59px, body=48px, caption=33px). For example, a 2-line h1 at w=1200 needs `Anim h≥172` (86×2), not 86. Never set Anim `h` smaller than the content it wraps.
 
 ## Section Layout Template
 

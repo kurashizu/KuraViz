@@ -27,7 +27,7 @@ Build PPT-style videos as narrated HTML slides. Each slide is a React component 
 
 ## Core Constraints
 
-- **File access**: After running `tools/scaffold.py --dir /path/to/workspace`, you can only modify files in `scaffold/content/*`, `scaffold/public/narration.json`, and `scaffold/logs/debug.log`. Do not read or modify any other scaffold files. Do not read or modify any tool files.
+- **File access**: After running `tools/scaffold.py --dir /path/to/workspace`, you can only modify files in `scaffold/content/*` and `scaffold/public/narration.json`. Do not read or modify any other scaffold files. Do not read or modify any tool files.
 - **Theme**: `scaffold/components/theme.ts` is read-only — reference it for colors/typography/canvas config.
 
 ## Workflow
@@ -53,22 +53,32 @@ WORKSPACE/
 
 1. Collect 3-6 relevant reference materials and save as markdown files in `WORKSPACE/sources/`.
 2. Create `WORKSPACE/outline.md` with chapters and pages. Each page must have a title and a description of its content. See `references/outline-example.md` for an example.
-3. Generate narration JSON at `WORKSPACE/scaffold/public/narration.json`. Use `\n` to manually control line breaks in scripts — this determines the caption `h` on each page. Estimate line count from actual text length (e.g. a short word-heavy script may fit fewer lines than dense Chinese). Follow `references/narration-system.md` for the schema.
+3. Generate narration JSON at `WORKSPACE/scaffold/public/narration.json`. Use `\n` to manually control line breaks in scripts — this determines the caption `h` on each page. Follow `references/narration-system.md` for the schema.
 
 **STOP HERE AND ASK USER TO APPROVE THE OUTLINE AND NARRATION BEFORE PROCEEDING.**
 
 ### 3. Page Creation
 
-Write each chapter one at a time. For each chapter:
+Chapters can be **written in parallel by subagents**. Each subagent handles one chapter with its own pages independently, with all the context it needs:
 
-1. Create `content/chapters/chXX-name/` (e.g. `ch01-intro`).
-2. Create page components as `pg-NN-name.tsx` (e.g. `pg-01-title.tsx`). Follow `references/page-creation.md`.
-3. Register each page in the chapter's `index.ts`.
+**Inject into each subagent (every subagent should read these files independently):**
+- `WORKSPACE/sources/` — research content the pages are based on
+- `WORKSPACE/outline.md` — current chapter's page descriptions (each subagent should only read and follow the relevant chapter's page descriptions)
+- `WORKSPACE/scaffold/public/narration.json` — scripts with line counts (read-only, do not modify)
+- `references/design-guide.md` — brand colors, layout types
+- `references/components.md` — component APIs
+- `references/page-creation.md` — templates
+- `references/collision-prevention.md` — read before setting any `h` value
+
+Each subagent:
+1. Creates pages as `pg-NN-name.tsx` following `references/page-creation.md`
+2. Registers them in the chapter's `index.ts`
 
 ### 4. Collision Testing & Fixing
 
-1. Run `node tools/test-collisions.mjs` from `scaffold/` to test all pages for layout collisions.
+1. Run `node tools/test-collisions.mjs` from `scaffold/`, this will build the application and test for layout collisions.
 2. Read the output to find which pages have issues, then fix them using `references/collision-prevention.md`.
+3. Repeat until no collisions remain.
 
 **STOP HERE AND ASK USER TO APPROVE THE PAGES BEFORE PROCEEDING.**
 
@@ -85,5 +95,3 @@ Write each chapter one at a time. For each chapter:
 | `references/collision-prevention.md` | Font metrics, box sizing, debug workflow |
 | `references/lessons-learned.md` | Concrete mistakes + fixes |
 | `references/outline-example.md` | Example chapter outline |
-
-

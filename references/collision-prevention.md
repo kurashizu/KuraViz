@@ -1,5 +1,25 @@
 # Collision Prevention Guide
 
+## 🔴 #1 Most Common Mistake: Wrapper Too Small for Wrapped Text
+
+Nearly all OVERFLOW errors come from one cause: text inside an Anim or Cardbox wraps to multiple lines, but the wrapper's `h` only accounts for one line.
+
+**Before writing each page, check whether each piece of text fits on one line at its chosen width.** If it wraps, multiply the line box height by the number of lines.
+
+| Wrapper | Line box | 1 line | 2 lines | 3 lines |
+|---|---|---|---|---|
+| `<Text variant="h1">` | 86px | h=90 | h=175 | h=260 |
+| `<Text variant="h2">` | 70px | h=75 | h=145 | h=215 |
+| `<Text variant="h3">` | 59px | h=65 | h=120 | h=180 |
+| `<Text variant="body">` | 48px | h=50 | h=100 | h=150 |
+| `<Text variant="caption">` | 33px | h=35 | h=70 | h=105 |
+
+**Real examples of this mistake** (title at w=1000, h2 at w=600):
+- `"Natural Language Autoencoders"` (28 chars at 72px ≈ 1120px) → wraps at w=1000 → needs **h≈175**, not 86
+- `"Auditing Hidden Motivations"` (25 chars at 54px ≈ 675px) → wraps at w=600 → needs **h≈145**, not 70
+
+If you set `Anim h` to the single-line value but your text wraps, the Text's bounding box will exceed the Anim wrapper — this is always an OVERFLOW.
+
 ## Collision Detection System
 
 `lib/bbox.ts` — `scanOverlaps(container)` checks three types of layout violations:
@@ -72,17 +92,17 @@ effective_h = h - borderTop - borderBottom
 
 **Critical for bordered cardboxes**: A `Cardbox variant="bordered"` has 2px border on each side, reducing the content area by 4px in both width and height. Any `Text` child inside must have `w ≤ cardbox_w - 4` to avoid OVERFLOW detection.
 
-**Anim wrapper height**: When wrapping content in `<Anim>`, the Anim's `h` must be ≥ the content's `h`. Common values:
+**Anim wrapper height**: When wrapping content in `<Anim>`, the Anim's `h` must be ≥ the content's `h`. If text wraps to multiple lines, multiply by line count.
 
-| Content | Line box / h | Anim h (minimum) |
-|---|---|---|
-| `<Text variant="h1" h={86}>` | 86px | **90** |
-| `<Text variant="h2" h={70}>` | 70px | **75** |
-| `<Text variant="h3" h={59}>` | 59px | **65** |
-| `<Text variant="body" h={48}>` | 48px | **50** |
-| `<Text variant="caption" h={33}>` | 33px | **35** |
+| Content | Line box per line | Anim h (1 line) | Anim h (2 lines) | Anim h (3 lines) |
+|---|---|---|---|---|
+| `<Text variant="h1">` | 86px | **90** | **175** | **260** |
+| `<Text variant="h2">` | 70px | **75** | **145** | **215** |
+| `<Text variant="h3">` | 59px | **65** | **120** | **180** |
+| `<Text variant="body">` | 48px | **50** | **100** | **150** |
+| `<Text variant="caption">` | 33px | **35** | **70** | **105** |
 
-Setting Anim `h` smaller than the content's line box causes OVERFLOW — the Text element's bounding box exceeds the Anim wrapper.
+**Always check whether your text fits on one line at the given width.** For h1 at 72px font, English chars are ~43px each. "Natural Language Autoencoders" (27 chars) needs ~1161px, so it wraps at w=1000 but fits at w=1200.
 
 Example: chapter badge with `w={200}` `h={48}`:
 - Content area: 196w × 44h

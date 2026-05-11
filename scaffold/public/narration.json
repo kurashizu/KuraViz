@@ -1,94 +1,98 @@
 {
-  "ch01-title-content": {
+  "example-ch01-title-content": {
     "pg-01-title": {
       "script": "This chapter demonstrates page layouts: title, section, and full-width card.",
-      "audioSrc": null
+      "audioSrc": "/audio/example-ch01-title-content/pg-01-title.wav"
     },
     "pg-02-section": {
       "script": "The section page features a colored accent bar, title, subtitle, and a full-width content card.",
-      "audioSrc": null
+      "audioSrc": "/audio/example-ch01-title-content/pg-02-section.wav"
     },
     "pg-03-fullwidth": {
       "script": "A full-width card layout for code samples and large text blocks via Markdown.",
-      "audioSrc": null
+      "audioSrc": "/audio/example-ch01-title-content/pg-03-fullwidth.wav"
     }
   },
-  "ch02-columns-lists": {
+  "example-ch02-columns-lists": {
     "pg-01-title": {
       "script": "This chapter showcases multi-column and list layouts with cyan theme.",
-      "audioSrc": null
+      "audioSrc": "/audio/example-ch02-columns-lists/pg-01-title.wav"
     },
     "pg-02-main-side": {
       "script": "Two-column layout placing main content on the left and key insights on the right.",
-      "audioSrc": null
+      "audioSrc": "/audio/example-ch02-columns-lists/pg-02-main-side.wav"
     },
     "pg-03-equal-split": {
       "script": "Side-by-side comparison of two programming approaches.",
-      "audioSrc": null
+      "audioSrc": "/audio/example-ch02-columns-lists/pg-03-equal-split.wav"
     },
     "pg-04-checklist": {
       "script": "A vertical checklist with numbered items.\nEach card has an icon, title, and description.\nWide cards fill the canvas horizontally.",
-      "audioSrc": null
+      "audioSrc": "/audio/example-ch02-columns-lists/pg-04-checklist.wav"
+    },
+    "pg-05-checklist-continue": {
+      "script": "Continue page with more checklist items.",
+      "audioSrc": "/audio/example-ch02-columns-lists/pg-05-checklist-continue.wav"
     }
   },
-  "ch03-data-timeline": {
+  "example-ch03-data-timeline": {
     "pg-01-title": {
       "script": "This chapter demonstrates chart, timeline, and content showcase layouts with amber theme.",
-      "audioSrc": null
+      "audioSrc": "/audio/example-ch03-data-timeline/pg-01-title.wav"
     },
     "pg-02-chart": {
       "script": "Bar chart comparing model accuracy with an insight card on the right.",
-      "audioSrc": null
+      "audioSrc": "/audio/example-ch03-data-timeline/pg-02-chart.wav"
     },
     "pg-03-timeline": {
       "script": "A horizontal timeline showing the software development lifecycle.\nEach step card includes a number badge, title, and description.",
-      "audioSrc": null
+      "audioSrc": "/audio/example-ch03-data-timeline/pg-03-timeline.wav"
     },
     "pg-04-markdown": {
       "script": "Markdown component rendering LaTeX formulas, GFM tables, and task lists.",
-      "audioSrc": null
+      "audioSrc": "/audio/example-ch03-data-timeline/pg-04-markdown.wav"
     },
     "pg-05-markdown-continue": {
       "script": "Code block with syntax highlighting and a comparison table of sorting algorithms.",
-      "audioSrc": null
+      "audioSrc": "/audio/example-ch03-data-timeline/pg-05-markdown-continue.wav"
     },
     "pg-06-mermaid": {
       "script": "A Mermaid flowchart showing input validation logic with retry branching.",
-      "audioSrc": null
+      "audioSrc": "/audio/example-ch03-data-timeline/pg-06-mermaid.wav"
     },
     "pg-07-sequence-continue": {
       "script": "A sequence diagram showing user, app, and database interaction with success and error paths.",
-      "audioSrc": null
+      "audioSrc": "/audio/example-ch03-data-timeline/pg-07-sequence-continue.wav"
     },
     "pg-08-mindmap-continue": {
       "script": "A mindmap showing the structure of web development technologies across frontend, backend, and DevOps.",
-      "audioSrc": null
+      "audioSrc": "/audio/example-ch03-data-timeline/pg-08-mindmap-continue.wav"
     },
     "pg-09-gantt-continue": {
       "script": "A Gantt chart showing a project timeline with planning, development, and launch phases.",
-      "audioSrc": null
+      "audioSrc": "/audio/example-ch03-data-timeline/pg-09-gantt-continue.wav"
     },
     "pg-10-checklist-continue": {
       "script": "A standalone checklist page with task items and resource links rendered via Markdown.",
-      "audioSrc": null
+      "audioSrc": "/audio/example-ch03-data-timeline/pg-10-checklist-continue.wav"
     }
   },
-  "ch04-collision": {
+  "example-ch04-collision": {
     "pg-01-overlap": {
       "script": "This page tests sibling OVERLAP detection. Two boxes intentionally overlap.",
-      "audioSrc": null
+      "audioSrc": "/audio/example-ch04-collision/pg-01-overlap.wav"
     },
     "pg-02-canvas-overflow": {
       "script": "This page tests canvas EXCEED detection. Boxes extend beyond 1920x1080.",
-      "audioSrc": null
+      "audioSrc": "/audio/example-ch04-collision/pg-02-canvas-overflow.wav"
     },
     "pg-03-parent-overflow": {
       "script": "This page tests parent OVERFLOW detection. Child box extends beyond its parent.",
-      "audioSrc": null
+      "audioSrc": "/audio/example-ch04-collision/pg-03-parent-overflow.wav"
     },
     "pg-04-clean": {
       "script": "Clean control page — zero collisions expected.",
-      "audioSrc": null
+      "audioSrc": "/audio/example-ch04-collision/pg-04-clean.wav"
     }
   }
 }
