@@ -63,6 +63,28 @@ When `x`/`y` are provided, `boxStyle` adds `position: absolute`.
 - 2-line body: `h ≥ 96` → use `h={100}`
 - 1-line h2: `h ≥ 70` → use `h={75}`
 
+**❌ Never place multiple Text components inside a single Cardbox.** Each Text needs its own `y` offset, and if any text wraps, the `y` of the next element becomes incorrect. Use `<Markdown>` instead — it handles spacing, wrapping, and mixed styles automatically in one box.
+
+```tsx
+// ❌ Wrong — multiple Text with manual y offsets (breaks when text wraps)
+<Cardbox ...>
+  <Text variant="body" x={20} y={20} w={700}>...</Text>
+  <Text variant="body" x={20} y={140} w={700}>...</Text>
+  <Text variant="caption" x={20} y={260} w={700}>...</Text>
+</Cardbox>
+
+// ✅ Right — single Markdown, text flows naturally
+<Cardbox ...>
+  <Markdown x={20} y={20} w={700} h={400} content={`
+Paragraph one.
+
+Paragraph two.
+
+Some **bold** and *italic* and a caption at the end.
+  `} />
+</Cardbox>
+```
+
 ### data-box-id
 
 Auto-generated as `text-{variant}-{textSnippet}-{counter}` for collision debug.

@@ -79,7 +79,12 @@ Each subagent, for each of its chapters:
 
 **STOP HERE AND ASK USER TO APPROVE THE PAGES BEFORE PROCEEDING.**
 
-### 5. Audio Generation (Yet to be implemented)
+### 5. Audio Generation
+
+Run the batch TTS orchestrator from `scaffold/`:
+```bash
+cd scaffold && python tools/generate_audio.py
+```
 
 ## Directory Reference
 
