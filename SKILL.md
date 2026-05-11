@@ -22,13 +22,21 @@ use_when: >-
 
 ## Workflow
 
-### 0. Workflow Options
+### 0. Configuration
 
-Before starting, ask the user if they want you do the workflow step-by-step with for review.
+First, check if `KuraViz/MEMORY.md` exists.
+- If **yes**: read saved preferences (`language`, `style`, `voice`, `model`) and skip configuration.
+- If **no**: create `KuraViz/MEMORY.md`, then **ask the user** for:
+  - Video language (`zh` / `en` / `ja` / etc.)
+  - Narration style (`formal` / `conversational` / `tutorial`)
+  - TTS voice and model (if a TTS server is available)
+  - Any other `KURAVIZ_*` environment variables they want to set
+
+Save answers to `MEMORY.md`. See `references/config-guide.md` for format and options.
+
+Then ask the user if they want you to do the workflow step-by-step with pauses for review.
 - If yes, immediately ****STOP**** at each **PAUSE POINT** and ask for confirmation before proceeding.
 - If no, ****IGNORE**** all pause points and proceed through all steps and provide a final summary of changes.
-
-Then ask the user for video language, which you will use when writing narration scripts and creating pages.
 
 ### 1. Project Setup
 
@@ -117,6 +125,7 @@ Write a final report summarizing the work you did, including:
 
 | Path | Description |
 |---|---|
+| `references/config-guide.md` | Environment variables and user preferences |
 | `references/components.md` | All component APIs |
 | `references/page-creation.md` | Page creation workflow |
 | `references/narration-system.md` | Narration JSON schema |
