@@ -3,6 +3,7 @@
 import { boxStyle } from '@/lib/utils'
 import type { Box } from '@/lib/types'
 import { colors } from '@/components/theme'
+import { useOverflow } from '@/lib/use-overflow'
 
 interface CardboxProps extends Box {
   children: React.ReactNode
@@ -18,8 +19,11 @@ const variantStyle: Record<string, React.CSSProperties> = {
 let _cardboxUid = 0
 
 export function Cardbox({ children, variant = 'default', ...box }: CardboxProps) {
+  const overflowRef = useOverflow([])
+
   return (
     <div
+      ref={overflowRef}
       data-box-id={`cardbox-${variant}-${++_cardboxUid}`}
       style={{ ...boxStyle(box), borderRadius: 12, overflow: 'hidden', ...variantStyle[variant] }}
     >

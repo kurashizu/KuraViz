@@ -30,6 +30,7 @@ If you set `Anim h` to the single-line value but your text wraps, the Text's bou
 |---|---|---|
 | **OVERLAP** | `OVERLAP` | Top-level siblings (direct children of container) that overlap each other. 1px tolerance for touching edges. |
 | **OVERFLOW** | `OVERFLOW` | Absolutely-positioned child exceeds its nearest positioned parent's bounds. 0.5px tolerance. |
+| **CONTENT_OVERFLOW** | `CONTENT_OVERFLOW` | Element with `overflow:hidden` whose content (`scrollHeight`) exceeds its container (`clientHeight`). Detects markdown/text that doesn't fit inside a Cardbox. |
 | **EXCEED** | `EXCEED` | Absolutely-positioned element extends beyond the canvas boundary (1920×1080). 0.5px tolerance. |
 
 Each collision entry shows `{type} {element-id}[x,y w×h] vs {other-id}[x,y w×h]`.
@@ -59,8 +60,14 @@ PAGE ch01-intro/pg-02-section            ← the file to fix
 
 - Elements covering ≥80% of the canvas are skipped (background/full-screen elements).
 - Empty positioning wrappers (0×0) are skipped in OVERFLOW check.
-- Elements smaller than 3×3px are skipped (filters KaTeX 1×1 helper spans).
+- Elements smaller than 3×3px are skipped (filters KaTeX 1×1 helper spans, also filters them from CONTENT_OVERFLOW checks).
 - DOM positions must be stable for 3 consecutive `requestAnimationFrame` frames before detection runs.
+
+### Runtime Content Overflow Detection
+
+`lib/use-overflow.ts` — `useOverflow()` hook attached to every `Cardbox` component. After render it checks `scrollHeight > clientHeight` and warns via `console.warn` if content overflows. This catches markdown/text that renders too large for its Cardbox — a case the layout-based OVERFLOW check can miss since inline text doesn't create absolutely-positioned child elements.
+
+**How to fix**: Increase the Cardbox `h` (or the content area `h` inside it), or reduce/truncate the content.
 
 ## data-box-id
 

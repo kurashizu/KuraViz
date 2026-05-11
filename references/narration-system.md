@@ -50,3 +50,30 @@ const lineCount = script.split('\n').length  // count explicit line breaks
 const captionH = lineCount * 33              // 33px per line
 const captionY = 1080 - captionH - 20        // bottom margin
 ```
+
+## Script Writing Guidelines
+
+Write narration scripts to sound like natural human speech — not like reading a textbook or article aloud.
+
+### Do's
+
+- Use conversational phrasing: "So let's take a look at…" instead of "The following section examines…"
+- Vary sentence length. Mix short punchy sentences with longer flowing ones.
+- Use rhetorical questions: "But what does that actually mean?"
+- Add transitions: "Now that we've covered X, let's move on to Y."
+- Write for the ear, not the eye — read it aloud in your head. If it sounds stiff, rewrite it.
+- For tutorials/explanations, imagine you're talking to a colleague over a whiteboard.
+
+### Don'ts
+
+- Don't start every sentence with "This", "The", or "It".
+- Don't list facts in a dry "A is… B is… C is…" pattern.
+- Don't use overly formal academic language unless the subject demands it.
+- Don't write paragraph-long sentences without a breath pause.
+
+### Line Breaks
+
+- Use `\n` to split scripts into natural breath groups. A line should feel comfortable when read aloud.
+- For English: roughly 1 line per sentence or clause.
+- For Chinese: roughly every **40–50 characters**.
+- For mixed text, count English words as roughly 2 characters each.

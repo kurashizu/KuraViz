@@ -93,6 +93,10 @@
     "pg-04-clean": {
       "script": "Clean control page — zero collisions expected.",
       "audioSrc": "/audio/example-ch04-collision/pg-04-clean.wav"
+    },
+    "pg-05-content-overflow": {
+      "script": "Tests CONTENT_OVERFLOW detection. Cardbox too small for its markdown content.",
+      "audioSrc": "/audio/example-ch04-collision/pg-05-content-overflow.wav"
     }
   }
 }

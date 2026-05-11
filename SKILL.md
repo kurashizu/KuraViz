@@ -32,6 +32,14 @@ Build PPT-style videos as narrated HTML slides. Each slide is a React component 
 
 ## Workflow
 
+### 0. Workflow Options
+
+Before starting, ask the user if they want you do the workflow step-by-step with for review.
+- If yes, immediately ****STOP**** at each **PAUSE POINT** and ask for confirmation before proceeding.
+- If no, ****IGNORE**** all pause points and proceed through all steps and provide a final summary of changes.
+
+Then ask the user for video language, which you will use when writing narration scripts and creating pages.
+
 ### 1. Project Setup
 
 1. Create a directory named after your video content. This is your `WORKSPACE`.
@@ -55,7 +63,7 @@ WORKSPACE/
 2. Create `WORKSPACE/outline.md` with chapters and pages. Each page must have a title and a description of its content. See `references/outline-example.md` for an example.
 3. Generate narration JSON at `WORKSPACE/scaffold/public/narration.json`. Use `\n` to manually control line breaks in scripts — this determines the caption `h` on each page. Follow `references/narration-system.md` for the schema.
 
-**STOP HERE AND ASK USER TO APPROVE THE OUTLINE AND NARRATION BEFORE PROCEEDING.**
+### **PAUSE POINT**
 
 ### 3. Page Creation
 
@@ -68,18 +76,19 @@ Split chapters evenly across **2 subagents** for parallel development. Each suba
 - `WORKSPACE/scaffold/public/narration.json` — scripts (read-only)
 - `references/page-creation.md`, `references/design-guide.md`, `references/components.md`
 - `references/collision-prevention.md` — read before setting any `h`
+- the language used for page content and narration
 
 Each subagent, for each of its chapters:
 1. Creates pages as `pg-NN-name.tsx` in `content/chapters/chXX-name/`.
 2. Registers each page in the chapter's `index.ts`.
+
+### **PAUSE POINT**
 
 ### 4. Collision Testing & Fixing
 
 1. Run `node tools/test-collisions.mjs` from `scaffold/`, no need to run `npm run build` as this script will build and test in one step.
 2. Read the output to find which pages have issues, then fix them using `references/collision-prevention.md`.
 3. Repeat until no collisions remain.
-
-**STOP HERE AND ASK USER TO APPROVE THE PAGES BEFORE PROCEEDING.**
 
 ### 5. Audio Generation
 

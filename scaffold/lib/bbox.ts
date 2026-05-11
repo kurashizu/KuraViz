@@ -98,6 +98,25 @@ export function scanOverlaps(container: HTMLElement): { a: string; b: string; ra
     }
   }
 
+  // content overflow: elements with overflow:hidden whose content exceeds their box
+  for (const item of allPos) {
+    if (item.rect.width < 3 && item.rect.height < 3) continue
+    const el = item.el
+    const cs = getComputedStyle(el)
+    if (cs.overflow === 'hidden' || cs.overflowX === 'hidden' || cs.overflowY === 'hidden') {
+      if (el.scrollHeight > el.clientHeight || el.scrollWidth > el.clientWidth) {
+        const dh = el.scrollHeight - el.clientHeight
+        const dw = el.scrollWidth - el.clientWidth
+        collisions.push({
+          a: `CONTENT_OVERFLOW ${item.id}`,
+          b: `overflows by ${Math.max(dh, dw)}px (scroll=${el.scrollHeight}x${el.scrollWidth}, client=${el.clientHeight}x${el.clientWidth})`,
+          ra: el.getBoundingClientRect(),
+          rb: el.getBoundingClientRect(),
+        })
+      }
+    }
+  }
+
   // canvas overflow: every absolutely-positioned element must stay within canvas (container)
   for (const item of allPos) {
     if (item.rect.left + 0.5 < cr.left || item.rect.top + 0.5 < cr.top ||

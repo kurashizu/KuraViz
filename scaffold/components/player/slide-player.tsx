@@ -13,6 +13,7 @@ export function SlidePlayer() {
   const [chapterIdx, setChapterIdx] = useState(0)
   const [pageIdx, setPageIdx] = useState(0)
   const [narration, setNarration] = useState<NarrationMap | null>(null)
+  const [started, setStarted] = useState(false)
   const audioRef = useRef<HTMLAudioElement | null>(null)
 
   const chapter = chapters[chapterIdx]
@@ -48,8 +49,7 @@ export function SlidePlayer() {
         c++
         p = 0
       } else {
-        c = 0
-        p = 0
+        return // last page — stop, don't wrap
       }
     } else {
       if (p - 1 >= 0) {
@@ -81,15 +81,22 @@ export function SlidePlayer() {
 
     const audio = new Audio(narrationEntry.audioSrc)
     audioRef.current = audio
-    audio.play().catch(() => {})
-    audio.onended = () => navigate(1)
+
+    const playTimer = setTimeout(() => {
+      if (started) audio.play().catch(() => {})
+    }, 500)
+
+    audio.onended = () => {
+      setTimeout(() => navigate(1), 500)
+    }
 
     return () => {
+      clearTimeout(playTimer)
       audio.pause()
       audio.onended = null
       if (audioRef.current === audio) audioRef.current = null
     }
-  }, [chapterIdx, pageIdx, narrationEntry])
+  }, [chapterIdx, pageIdx, narrationEntry, started])
 
   if (!chapter || !pageDef) {
     return <div style={{ padding: 40 }}><Text variant="body" style={{ color: colors.semantic.error }}>No chapters loaded.</Text></div>
@@ -112,8 +119,26 @@ export function SlidePlayer() {
           background: colors.surface.bg,
         }}
         id="slide-viewport"
+        onClick={() => {
+          if (started) return
+          setStarted(true)
+          if (audioRef.current) audioRef.current.play().catch(() => {})
+        }}
       >
         {PageComponent && <PageComponent />}
+
+        {!started && (
+          <div
+            style={{
+              position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
+              zIndex: 99999, cursor: 'pointer', background: 'rgba(0,0,0,0.6)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column',
+            }}
+          >
+            <div style={{ fontSize: 48, marginBottom: 16 }}>▶</div>
+            <Text variant="h3" x={0} y={0} style={{ color: '#fff' }}>Click to start</Text>
+          </div>
+        )}
 
         <DebugOverlay
           info={{
