@@ -17,9 +17,7 @@ use_when: >-
 - **Python 3** (standard library — no extra packages required)
 - **Git**
 - **ffmpeg** — for screen recording and encoding
-- **vaapi** - for hardware-accelerated video encoding on Linux (optional but recommended for performance otherwise encoding will be on CPU)
 - **pulseaudio-utils** — for virtual audio sink (`pactl`)
-- **Playwright Firefox** — auto-installed via `postinstall` when you run `npm install` in scaffold.
 
 ## Workflow
 
