@@ -16,8 +16,9 @@ use_when: >-
 - **Node.js** ≥ 18 + **npm**
 - **Python 3** (standard library — no extra packages required)
 - **Git**
-- **ffmpeg** — for screen recording and encoding
+- **ffmpeg** (with `h264_vaapi` encoder optional for hardware encoding) — for video encoding
 - **pulseaudio-utils** — for virtual audio sink (`pactl`)
+- **Xvfb** — for virtual display (screen recording)
 
 ## Workflow
 
