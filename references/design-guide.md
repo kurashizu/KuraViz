@@ -6,6 +6,21 @@
 - Content safe zone: leave ≥80px padding on all edges (max content width ≈ 1760)
 - For centered content: use `cx = (1920 - width) / 2` to calculate x
 
+### Caption Positioning
+
+All bottom captions default to `w=1200` (~85 English chars/line at 22px font). Using a narrower width (e.g. `w=800`, ~55 chars/line) causes more line breaks and requires recalculating `h` and `y`.
+
+**Formula**: `h = lineCount × 33`, `y = 1080 - h - 20`
+
+| Lines | h | y |
+|---|---|---|
+| 1 | 33 | 1027 |
+| 2 | 66 | 994 |
+| 3 | 99 | 961 |
+| 4 | 132 | 928 |
+
+**If you change the caption width from the default `w=1200`**, text wraps at a different point, changing the line count. Always recalculate `h` and `y` when adjusting width.
+
 ## Page Content Capacity
 
 ### Text Content
