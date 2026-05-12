@@ -8,6 +8,8 @@ Fully autonomous video pipeline for AI agents. Build narrated tutorial videos fr
 
 ## Install as Agent Skill
 
+**Prerequisites**: Docker with Compose installed on host, and an agent that supports custom skills (e.g. OpenCode, Claude Code, Cursor, OpenClaw, Hermes Agent).
+
 ### Method 1 — Manual
 
 Clone or [download the ZIP](https://github.com/kurashizu/KuraViz/archive/refs/heads/master.zip) and extract it into your agent's skills directory:
@@ -35,7 +37,13 @@ After install, the agent reads `SKILL.md` and follows its workflow. The human ju
 
 > *"Make a tutorial video about [topic]"*
 
-The agent handles: project setup → research → page creation → collision fixing → TTS → video capture → final report.
+Then you may be advised to choose a TTS provider.
+You can use any CLI or API-based TTS service, just tell the agent what you prefer and it will generate the TTS adapter script.
+For example, if you would like to use `edge-tts` (Free & No API-KEY required), tell the agent:
+
+> *"Use edge-tts for narration."*
+
+Then the agent handles: project setup → research → page creation → collision fixing → TTS → video capture → final report.
 
 If you want to explore KuraViz without an agent, clone the repo anywhere and run `./scaffold/kuraviz.sh` commands directly (see [Commands](#commands)).
 
@@ -168,13 +176,6 @@ Repeat until zero collisions. Fixes reference `references/collision-prevention.m
 
 ```bash
 /tts/your-adapter.py --text "Script content" --output /path/to/output.wav
-```
-
-**Free option — edge-tts** (no API key required):
-
-```bash
-# scaffold/tools/requirements.txt
-edge-tts
 ```
 
 Based on `tools/tts.example.py`, create `scaffold/tools/tts.py` using `edge_tts`:
