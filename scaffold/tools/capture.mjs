@@ -130,6 +130,8 @@ function findFirefox() {
 function startFfmpeg(vaapiDevice) {
     const args = [
         "-y",
+        "-fflags",
+        "+genpts",
         // Hide the mouse cursor from the recording
         "-f",
         "x11grab",
@@ -141,6 +143,9 @@ function startFfmpeg(vaapiDevice) {
         "0",
         "-i",
         `${DISPLAY}.0`,
+        // Skip PulseAudio monitor cold-start dirty frames (~0.5s)
+        "-itsoffset",
+        "0.5",
         "-f",
         "pulse",
         "-i",
@@ -155,7 +160,7 @@ function startFfmpeg(vaapiDevice) {
     log(`ffmpeg ${args.join(" ")}`);
     const proc = spawn("ffmpeg", args, {
         stdio: ["ignore", "ignore", "pipe"],
-        env: { ...process.env, DISPLAY, PULSE_SINK: "kuraviz_sink", PULSE_LATENCY_MSEC: "2000" },
+        env: { ...process.env, DISPLAY, PULSE_SINK: "kuraviz_sink" },
     });
     proc.stderr.on("data", (d) => process.stderr.write(`[ffmpeg] ${d}`));
     proc.on("error", (e) => warn(`FFmpeg process error: ${e.message}`));
