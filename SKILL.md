@@ -1,8 +1,8 @@
 ---
 name: KuraViz
 description: >-
-  Build PPT-style videos using HTML slides (Next.js/React) + TTS audio.
-  Generates narrated slide decks rendered in a 1920x1080 canvas with auto-advance driven by audio playback.
+  Fully autonomous video pipeline for AI agents. Build narrated slide decks
+  rendered in a 1920x1080 canvas with auto-advance driven by audio playback.
 use_when: >-
   User asks to create a video tutorial, slide-based course, narrated presentation,
   or e-learning content using web technologies. Also use when building or modifying

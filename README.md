@@ -1,6 +1,6 @@
 # KuraViz
 
-Build PPT-style videos from HTML slides. Agent-powered narrated tutorial videos — zero video editing required. **Linux only** (requires Xvfb + pulseaudio for video capture).
+Fully autonomous video pipeline skill for AI agents. Build narrated tutorial videos from HTML slides — research, write, design, narrate, and record, all in one agent-driven workflow. **Linux only** (requires Xvfb + pulseaudio for video capture).
 
 ## Install
 
