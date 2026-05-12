@@ -155,7 +155,7 @@ function startFfmpeg(vaapiDevice) {
     log(`ffmpeg ${args.join(" ")}`);
     const proc = spawn("ffmpeg", args, {
         stdio: ["ignore", "ignore", "pipe"],
-        env: { ...process.env, DISPLAY, PULSE_SINK: "kuraviz_sink", PULSE_LATENCY_MSEC: "200" },
+        env: { ...process.env, DISPLAY, PULSE_SINK: "kuraviz_sink", PULSE_LATENCY_MSEC: "2000" },
     });
     proc.stderr.on("data", (d) => process.stderr.write(`[ffmpeg] ${d}`));
     proc.on("error", (e) => warn(`FFmpeg process error: ${e.message}`));
@@ -347,7 +347,7 @@ async function main() {
         const tmpOut = OUTPUT + ".tmp.mp4";
         try {
             execSync(
-                `ffmpeg -y -i "${OUTPUT}" -ss ${offset} -c:v libx264 -preset ultrafast -c:a aac -b:a 192k -movflags +faststart "${tmpOut}" 2>/dev/null`
+                `ffmpeg -y -ss ${offset} -i "${OUTPUT}" -c copy -avoid_negative_ts 1 "${tmpOut}" 2>/dev/null`
             );
             execSync(`mv "${tmpOut}" "${OUTPUT}"`);
             log("Trim complete");
