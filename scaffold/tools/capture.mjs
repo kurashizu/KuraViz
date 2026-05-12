@@ -335,27 +335,32 @@ async function main() {
     ffmpeg.kill("SIGINT");
     await new Promise((r) =>
         ffmpeg.on("close", (code) => {
-    log(`FFmpeg exited with code ${code}`);
-    r();
-});
+            log(`FFmpeg exited with code ${code}`);
+            r();
+        })
+    );
 
-// Trim initial silence/loading from output
-const offset = (playbackStart - ffmpegStart) / 1000;
-if (offset > 0.5) {
-    log(`Trimming ${offset.toFixed(1)}s of leading silence...`);
-    const tmpOut = OUTPUT + ".tmp.mp4";
-    try {
-        execSync(
-            `ffmpeg -y -ss ${offset} -i "${OUTPUT}" -c copy -avoid_negative_ts 1 "${tmpOut}" 2>/dev/null`
-        );
-        execSync(`mv "${tmpOut}" "${OUTPUT}"`);
-        log("Trim complete");
-    } catch {
-        log("Trim failed — keeping original output");
-        try { execSync(`rm -f "${tmpOut}"`); } catch {}
+    // Trim initial silence/loading from output
+    const offset = (playbackStart - ffmpegStart) / 1000;
+    if (offset > 0.5) {
+        log(`Trimming ${offset.toFixed(1)}s of leading silence...`);
+        const tmpOut = OUTPUT + ".tmp.mp4";
+        try {
+            execSync(
+                `ffmpeg -y -i "${OUTPUT}" -ss ${offset} -c:v libx264 -preset ultrafast -c:a aac -b:a 192k -movflags +faststart "${tmpOut}" 2>/dev/null`
+            );
+            execSync(`mv "${tmpOut}" "${OUTPUT}"`);
+            log("Trim complete");
+        } catch {
+            log("Trim failed — keeping original output");
+            try { execSync(`rm -f "${tmpOut}"`); } catch {}
+        }
     }
-}
-            log("Audio sink unloaded");
+
+    // 11. Cleanup
+    log("Cleaning up...");
+    server.kill();
+    if (sinkModule) {
         } catch {}
     }
     if (xvfb) { xvfb.kill(); log("Xvfb stopped"); }
