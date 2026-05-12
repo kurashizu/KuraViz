@@ -16,6 +16,16 @@ Ask your agent:
 
 The agent handles everything: content outline, slide pages, narration scripts, TTS audio, and video recording.
 
+### First-Run Configuration
+
+On first use, the agent checks if `MEMORY.md` exists. If not, it walks through `references/config-guide.md` as a setup wizard:
+
+1. **TTS Adapter** — asks if you have a TTS server to connect
+2. **Language** — narration and page content language (Chinese / English / Japanese etc.)
+3. **Style** — narration tone (formal / conversational / tutorial)
+
+Answers are saved to `MEMORY.md` and automatically loaded on subsequent runs.
+
 ---
 
 ## Pipeline
