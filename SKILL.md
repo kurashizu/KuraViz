@@ -11,22 +11,13 @@ use_when: >-
 
 # KuraViz Skill
 
-## Prerequisites
-
-- **Node.js** ≥ 18 + **npm**
-- **Python 3** (standard library — no extra packages required)
-- **Git**
-- **ffmpeg** (with `h264_vaapi` encoder optional for hardware encoding) — for video encoding
-- **pulseaudio-utils** — for virtual audio sink (`pactl`)
-- **Xvfb** — for virtual display (screen recording)
-
 ## Workflow
 
 ### 0. Configuration
 
-First, check if `KuraViz/MEMORY.md` exists.
+First, check if `MEMORY.md` exists in the current directory.
 - If **yes**: read saved preferences and skip configuration.
-- If **no**: create `KuraViz/MEMORY.md` and follow `references/config-guide.md` to ask the user for configuration. 
+- If **no**: create `MEMORY.md` and follow `references/config-guide.md` to ask the user for configuration. 
  
 **Remember** to load all environment variables from `MEMORY.md` before executing any related tools.
 
@@ -62,8 +53,6 @@ WORKSPACE/
 2. Create `WORKSPACE/outline.md` with chapters and pages. Each page must have a title and a description of its content. See `references/outline-example.md` for an example.
 3. Generate narration JSON at `WORKSPACE/scaffold/public/narration.json`. Use `\n` to manually control line breaks in scripts — this determines the caption `h` on each page. Follow `references/narration-system.md` for the schema.
 
-### **PAUSE POINT**
-
 ### 3. Page Creation
 
 First, rewrite `scaffold/content/chapters/index.ts` to make sure you unlink all example chapters and pages.
@@ -81,8 +70,6 @@ Each subagent, for each of its chapters:
 1. Creates pages as `pg-NN-name.tsx` in `content/chapters/chXX-name/`.
 2. Registers each page in the chapter's `index.ts`.
 
-### **PAUSE POINT**
-
 ### 4. Collision Testing & Fixing
 
 1. Run `node tools/test-collisions.mjs` from `scaffold/`, no need to run `npm run build` as this script will build and test in one step.
@@ -96,8 +83,6 @@ Run the batch TTS orchestrator from `scaffold/`:
 python tools/generate_audio.py
 ```
 After this, audio files will be generated in `scaffold/public/audio/` so `narration.json` can find them.
-
-### **PAUSE POINT**
 
 ### 6. Video Capture
 

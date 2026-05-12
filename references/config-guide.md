@@ -2,7 +2,32 @@
 
 ## First-run Configuration Wizard
 
-When `MEMORY.md` does not exist, walk through these steps conversationally. Explain each option in plain terms — do not just read the table aloud.
+When `MEMORY.md` does not exist, walk through these steps conversationally. Explain each option in plain terms.
+
+### 0. Check Prerequisites
+
+Check for the following tools and libraries. If any are missing, explain to the user what they are and how to install them:
+```bash
+# Check Node.js + npm
+node --version
+npm --version
+
+# Check Python
+python3 --version
+
+# Check Git
+git --version
+
+# Check ffmpeg (advise the user that vaapi support is a bonus)
+ffmpeg -version
+
+# Check pulseaudio-utils
+pactl --version
+
+# Check Xvfb
+Xvfb -help
+```
+
 
 ### 1. TTS Adapter
 
@@ -12,11 +37,11 @@ Explain to the user:
 
 If the user wants to set it up:
 - Give them a friendly bullet list of options:
-  - Use the existing `tools/tts.example.py` as a starting point (copy it and fill in your API endpoint)
-  - Write a custom script that accepts `--text "..." --output path.wav`
+  - Tell me what TTS service you're using
   - Skip it for now (can be configured later)
 
-When they provide a path, validate it with a quick test: `python /path/to/tts.py --text "Test" --output /tmp/test.wav`. If it produces a valid `.wav`, save `KURAVIZ_TTS_ADAPTOR` to `MEMORY.md`.
+When they tell you the TTS service, refer to `tools/tts.example.py` and implement it as `tts.py`.
+Test it with the command: `python tts.py --text "Hello world" --output /tmp/test.wav`. If it works, save the absolute path (e.g, `/path/to/tts.py`) to `KURAVIZ_TTS_ADAPTOR`.
 
 ### 2. Language
 
@@ -28,8 +53,6 @@ Ask naturally:
 |---|
 | `Chinese`, `English`, `Japanese` |
 
-Save the answer to `MEMORY.md`.
-
 ### 3. Style
 
 Ask naturally:
@@ -40,11 +63,9 @@ Ask naturally:
 |---|
 | `formal`, `conversational`, `tutorial` |
 
-Save the answer to `MEMORY.md`.
-
 ### 4. Save
 
-Write everything to `KuraViz/MEMORY.md`:
+Write everything to `MEMORY.md`:
 
 ```markdown
 # KuraViz Preferences
