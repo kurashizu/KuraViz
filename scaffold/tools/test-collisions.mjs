@@ -5,7 +5,10 @@ import { existsSync, readFileSync, mkdirSync } from "fs";
 import { resolve, dirname } from "path";
 import { setTimeout } from "timers/promises";
 
-const SCAFFOLD = resolve(import.meta.dirname, "..");
+const IS_CONTAINER = process.env.IS_CONTAINER === "1";
+const SCAFFOLD = IS_CONTAINER
+    ? "/app/scaffold"
+    : resolve(import.meta.dirname, "..");
 const LOG_FILE = resolve(SCAFFOLD, "logs", "debug.log");
 
 function getPort() {
@@ -30,7 +33,11 @@ function run(cmd, cwd = SCAFFOLD) {
 }
 
 async function main() {
-    run("npm run build");
+    if (!IS_CONTAINER) {
+        run("npm run build");
+    } else {
+        console.log("Container mode — skipping build (host should have built)");
+    }
 
     const port = await getPort();
     console.log(`\nStarting server on port ${port}...`);

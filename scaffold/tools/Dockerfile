@@ -5,7 +5,7 @@ ENV DISPLAY=:99
 ENV PULSE_SINK=kuraviz_sink
 ENV IS_CONTAINER=1
 
-# ── System packages ───────────────────────────────────────────────────────────
+# ── System packages ─────────────────────────────────────────────────────────
 RUN apt-get update && apt-get install -y --no-install-recommends \
     xvfb \
     pulseaudio \
@@ -13,6 +13,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     ca-certificates \
     gnupg \
+    python3 \
     # Firefox runtime deps
     libgtk-3-0 \
     libdbus-glib-1-2 \
@@ -34,25 +35,21 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     fonts-noto-cjk \
     && rm -rf /var/lib/apt/lists/*
 
-# ── Node.js 22 ────────────────────────────────────────────────────────────────
+# ── Node.js 22 ──────────────────────────────────────────────────────────────
 RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
     && apt-get install -y --no-install-recommends nodejs \
     && rm -rf /var/lib/apt/lists/*
 
-# ── App + Playwright Firefox ──────────────────────────────────────────────────
+# ── App dependencies + Playwright Firefox ────────────────────────────────────
 WORKDIR /app
 
-# Copy package files only — scaffold source is mounted at runtime
 COPY package.json package-lock.json* ./
-RUN npm ci --omit=dev
-
-# Install Playwright's bundled Firefox (version-locked, no host glib dependency)
-RUN npx playwright install firefox \
-    && npx playwright install-deps firefox \
+RUN npm install \
+    && npx playwright install firefox \
     && rm -rf /var/lib/apt/lists/*
 
-# ── Scripts ───────────────────────────────────────────────────────────────────
-COPY tools/capture.mjs tools/capture.mjs
+# ── Tool scripts ────────────────────────────────────────────────────────────
+COPY tools/capture.mjs tools/test-collisions.mjs tools/
 COPY tools/docker-entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 

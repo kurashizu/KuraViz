@@ -1,15 +1,16 @@
 # KuraViz
 
-Fully autonomous video pipeline skill for AI agents. Build narrated tutorial videos from HTML slides — research, write, design, narrate, and record, all in one agent-driven workflow. **Linux only** (requires Xvfb + pulseaudio for video capture).
+Fully autonomous video pipeline skill for AI agents. Build narrated tutorial videos from HTML slides — research, write, design, narrate, and record, all in one agent-driven workflow.
+
+**Cross-platform** via Docker. Runs on Linux, macOS, Windows.
 
 ## Prerequisites
 
-- **Node.js** ≥ 18 + npm
-- **Python 3** (stdlib only — no extra packages)
-- **ffmpeg** (optional: `h264_vaapi` for GPU encoding)
-- **pulseaudio-utils**, **Xvfb** (for video capture on Linux)
+- **Docker** (recommended) — the only requirement for recording + collision testing
+- **Node.js** ≥ 22 + **npm** (for development: page creation, dev server, build)
+- **Python 3** (optional — for TTS audio generation on host)
 
-## Install
+## Quick Start
 
 ```bash
 npx skills add kurashizu/KuraViz
@@ -92,9 +93,9 @@ Each page is a `'use client'` React component with absolute-positioned elements 
 
 All styles are inline via `boxStyle()` from `lib/bbox.ts`. Box heights must account for font metrics — see `references/collision-prevention.md`.
 
-### 4. Collision Testing & Fixing
+### 4. Collision Testing
 
-`tools/test-collisions.mjs` runs Playwright (headless Firefox) with `?debug=auto`, scanning every page for layout violations:
+Collision detection uses Playwright (headless Firefox) to scan every page for layout violations:
 
 | Type | Detection |
 |---|---|
@@ -103,7 +104,21 @@ All styles are inline via `boxStyle()` from `lib/bbox.ts`. Box heights must acco
 | `CONTENT_OVERFLOW` | Content hidden by `overflow:hidden` exceeds the box |
 | `EXCEED` | Element extends beyond the 1920×1080 canvas |
 
-Results are written to `logs/debug.log` and printed as a summary. Repeat until zero collisions.
+#### Via Docker (recommended)
+
+```bash
+cd scaffold
+npm run test:docker
+```
+
+#### Via Host
+
+```bash
+cd scaffold
+node tools/test-collisions.mjs
+```
+
+Results are written to `logs/debug.log`. Repeat until zero collisions.
 
 ### 5. Audio Generation
 
@@ -118,30 +133,27 @@ Set `KURAVIZ_TTS_ADAPTOR` to enable. A template is at `tools/tts.example.py`. If
 
 ### 6. Video Capture
 
-`tools/capture.mjs` records the final MP4.
+`tools/capture.mjs` records the final MP4. Requires a production build first (`npm run build`).
 
-#### Option A — Docker (recommended, cross-platform)
+#### Option A — Docker (recommended)
 
-Requires Docker only. No host dependencies.
+No host dependencies beyond Docker.
 
 ```bash
-npm run record:docker
-# or with custom output path:
-bash tools/record-docker.sh /path/to/output.mp4
+cd scaffold
+npm run build
+npm run record:docker /path/to/output.mp4
 ```
 
-The first run pulls `ghcr.io/kurashizu/kuraviz-recorder:latest` (~800 MB).
-Subsequent runs start immediately. The scaffold directory is mounted
-read-only; the output file is written to your current directory.
+First run pulls `ghcr.io/kurashizu/kuraviz-recorder:latest` (~800 MB). Subsequent runs are instant.
 
 To pass a GPU device for hardware encoding:
 
 ```bash
-docker run --rm \
-  --shm-size=2g \
+docker run --rm --shm-size=2g \
   --device /dev/dri/renderD128 \
   -v "$(pwd):/app/scaffold:ro" \
-  -v "$(pwd)/../output:/output" \
+  -v "$(pwd):/output" \
   ghcr.io/kurashizu/kuraviz-recorder:latest \
   /output/output.mp4
 ```
@@ -151,7 +163,9 @@ docker run --rm \
 Requires: `firefox`, `ffmpeg`, `pulseaudio`, `xvfb`, Node.js ≥ 22.
 
 ```bash
-npm run record
+cd scaffold
+npm run build
+npm run record output.mp4
 ```
 
 #### How the recorder works
@@ -160,12 +174,11 @@ npm run record
 2. Launches Xvfb (virtual 1920×1080 display)
 3. Creates a PulseAudio null sink for audio capture
 4. Launches Firefox in kiosk mode at `/?record=1`
-5. Waits for the first `[record] ch/pg` console log before starting
-   FFmpeg — no loading screen is captured
+5. Waits for the first `[record] ch/pg` console log before starting FFmpeg — no loading screen is captured
 6. Monitors page transitions; aborts if any page exceeds 5 minutes
 7. Stops FFmpeg gracefully on `[record] done`
 
-**SlidePlayer** (`components/player/slide-player.tsx`) is the runtime: fetches `narration.json`, creates an `HTMLAudioElement` for each page, and auto-advances on `onended` (500ms delay). In `?record=1` mode it skips the click-to-start overlay and auto-plays from page 1, logging every transition to the console.
+**SlidePlayer** (`components/player/slide-player.tsx`) is the runtime: fetches `narration.json`, creates an `HTMLAudioElement` for each page, and auto-advances on `onended` (500ms delay). In `?record=1` mode it skips the click-to-start overlay and auto-plays from page 1.
 
 #### Troubleshooting
 
@@ -175,6 +188,7 @@ npm run record
 | Hangs on `(init)` | Check that `?record=1` triggers auto-play in SlidePlayer |
 | Black video | FFmpeg x11grab failed — check `[ffmpeg]` log lines |
 | No audio in output | PulseAudio sink not ready — re-run |
+| `npm run build` inside container fails | Run build on host first — scaffold is mounted read-only |
 
 ---
 

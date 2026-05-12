@@ -5,11 +5,13 @@ import { mkdirSync, rmSync } from "fs";
 import { resolve } from "path";
 import { setTimeout } from "timers/promises";
 
-const SCAFFOLD = resolve(import.meta.dirname, "..");
-const OUTPUT = process.argv[2] ?? "output.mp4";
+const IS_CONTAINER    = process.env.IS_CONTAINER === "1";
+const SCAFFOLD        = IS_CONTAINER
+    ? "/app/scaffold"
+    : resolve(import.meta.dirname, "..");
+const OUTPUT          = process.argv[2] ?? "output.mp4";
 const PAGE_TIMEOUT_MS = 5 * 60 * 1000;
 const DISPLAY         = process.env.DISPLAY ?? ":99";
-const IS_CONTAINER    = process.env.IS_CONTAINER === "1";
 
 // ── Logging ───────────────────────────────────────────────────────────────────
 

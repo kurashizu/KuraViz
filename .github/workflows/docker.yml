@@ -7,7 +7,9 @@ on:
       - "scaffold/tools/Dockerfile"
       - "scaffold/tools/docker-entrypoint.sh"
       - "scaffold/tools/capture.mjs"
+      - "scaffold/tools/test-collisions.mjs"
       - "scaffold/package.json"
+      - "scaffold/package-lock.json"
       - ".github/workflows/docker.yml"
   workflow_dispatch:
 
