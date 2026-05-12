@@ -2,25 +2,21 @@
 
 Fully autonomous video pipeline for AI agents. Build narrated tutorial videos from HTML slides — research, write, design, narrate, and record, all in one agent-driven workflow.
 
-**Zero host dependencies** — the only requirement is Docker. Everything runs inside a self-contained container (Node.js, Python, Playwright Firefox, FFmpeg, Xvfb, PulseAudio).
+**Only requirement: Docker with Compose.** Everything else (Node.js, Python, Playwright Firefox, FFmpeg, Xvfb, PulseAudio) runs inside a self-contained container image published on [GHCR](https://github.com/kurashizu/KuraViz/pkgs/container/kuraviz-recorder).
 
-## Prerequisites
+---
 
-- **Docker** with Compose plugin (`docker compose`, not `docker-compose`)
-  - Docker Desktop (macOS/Windows) — included
-  - Linux — `docker-ce` + `docker-compose-plugin` (or `docker-compose-v2`)
-
-## Install
+## Install as Agent Skill
 
 Clone this repo into your agent's skills directory:
 
 | Agent | Install command |
 |---|---|
-| **OpenCode** | `mkdir -p ~/.config/opencode/skills && git clone https://github.com/kurashizu/KuraViz.git ~/.config/opencode/skills/kuraviz` |
-| **Claude Code** | `mkdir -p ~/.claude/skills && git clone https://github.com/kurashizu/KuraViz.git ~/.claude/skills/kuraviz` |
-| **Cursor** | `mkdir -p ~/.cursor/skills && git clone https://github.com/kurashizu/KuraViz.git ~/.cursor/skills/kuraviz` |
-| **OpenClaw** | `mkdir -p ~/.openclaw/skills && git clone https://github.com/kurashizu/KuraViz.git ~/.openclaw/skills/kuraviz` |
-| **Hermes Agent** | `mkdir -p ~/.hermes/skills && git clone https://github.com/kurashizu/KuraViz.git ~/.hermes/skills/kuraviz` |
+| **OpenCode** | `git clone https://github.com/kurashizu/KuraViz.git ~/.config/opencode/skills/kuraviz` |
+| **Claude Code** | `git clone https://github.com/kurashizu/KuraViz.git ~/.claude/skills/kuraviz` |
+| **Cursor** | `git clone https://github.com/kurashizu/KuraViz.git ~/.cursor/skills/kuraviz` |
+| **OpenClaw** | `git clone https://github.com/kurashizu/KuraViz.git ~/.openclaw/skills/kuraviz` |
+| **Hermes Agent** | `git clone https://github.com/kurashizu/KuraViz.git ~/.hermes/skills/kuraviz` |
 
 Or via `npx` (OpenCode):
 
@@ -28,61 +24,74 @@ Or via `npx` (OpenCode):
 npx skills add kurashizu/KuraViz
 ```
 
-## Usage
+After install, the agent reads `SKILL.md` and follows its workflow. The human just says:
 
-Ask your agent:
+> *"Make a tutorial video about [topic]"*
 
-> *"Use KuraViz Skill, make a tutorial video about [a blog post / news article / any topic]".*
+The agent handles: project setup → research → page creation → collision fixing → TTS → video capture → final report.
 
-The agent handles everything: content outline, slide pages, narration scripts, TTS audio, and video recording — all inside Docker.
-
-### Commands
-
-Every operation runs through Docker Compose. From the `scaffold/` directory:
-
-```bash
-./kuraviz.sh dev      # Start dev server at http://localhost:9999
-./kuraviz.sh build    # Build production bundle
-./kuraviz.sh test     # Run collision detection scan
-./kuraviz.sh record   # Record video (requires prior build)
-./kuraviz.sh tts      # Generate TTS audio files
-./kuraviz.sh scaffold /path/to/output  # Create a new project from template
-./kuraviz.sh shell    # Open a shell inside the container
-
-# Windows (PowerShell)
-.\kuraviz.ps1 dev
-.\kuraviz.ps1 build
-.\kuraviz.ps1 test
-.\kuraviz.ps1 record
-.\kuraviz.ps1 tts
-.\kuraviz.ps1 shell
-```
-
-Or via npm (thin Docker wrappers — npm required on host):
-
-```bash
-npm run dev
-npm run build
-npm run test
-npm run record
-npm run tts
-```
-
-The image is pre-pulled during `./kuraviz.sh scaffold`. No build step needed.
-
-### First-Run Configuration
-
-On first use, the agent checks if `MEMORY.md` exists. If not, it walks through `references/config-guide.md` as a setup wizard:
-
-1. **TTS Adapter** — asks if you have a TTS server to connect
-2. **Language** — narration and page content language (Chinese / English / Japanese etc.)
-3. **Style** — narration tone (formal / conversational / tutorial)
-
-Answers are saved to `MEMORY.md` and automatically loaded on subsequent runs.
+If you want to explore KuraViz without an agent, clone the repo anywhere and run `./scaffold/kuraviz.sh` commands directly (see [Commands](#commands)).
 
 ---
 
-## Pipeline
+## What the Agent Does
+
+```
+1. ./kuraviz.sh scaffold /workspace    → creates workspace/scaffold/, pre-pulls Docker image
+2. Research sources                    → saves to workspace/sources/
+3. outline.md + narration.json         → chapter structure + voiceover scripts
+4. Create page components              → React .tsx files in scaffold/content/chapters/
+5. ./kuraviz.sh test                   → collision scan, fix layout bugs
+6. ./kuraviz.sh tts                    → generate .wav audio from scripts
+7. ./kuraviz.sh build                  → production bundle
+8. ./kuraviz.sh record                 → output/output.mp4
+```
+
+The agent creates everything under a `WORKSPACE` directory:
+
+```
+workspace/
+├── outline.md               # chapter outline
+├── sources/                  # reference materials
+├── MEMORY.md                 # TTS config, language, style (created on first run)
+└── scaffold/
+    ├── content/chapters/      # page components
+    ├── public/
+    │   ├── narration.json     # voiceover scripts
+    │   └── audio/             # generated .wav files
+    ├── components/            # slide primitives (Text, Cardbox, Anim, Mermaid, …)
+    ├── lib/                   # utilities, types
+    ├── tools/                 # capture.mjs, test-collisions.mjs, generate_audio.py
+    ├── kuraviz.sh             # CLI for all operations
+    ├── kuraviz.ps1            # Windows PowerShell variant
+    └── docker-compose.yml     # references ghcr.io/kurashizu/kuraviz-recorder
+```
+
+The Docker image (~800 MB) is pre-pulled during scaffold creation. It ships a full Ubuntu environment with all dependencies — no build step needed.
+
+---
+
+## Commands
+
+All commands run from `scaffold/` inside the generated workspace (or the repo's own `scaffold/` for exploration). Every command runs in Docker — zero host dependencies.
+
+```bash
+./kuraviz.sh scaffold /path/to/output  # create new project (repo-only)
+./kuraviz.sh dev                       # dev server → http://localhost:9999
+./kuraviz.sh build                     # production build
+./kuraviz.sh test                      # collision detection scan
+./kuraviz.sh record                    # record video (requires build first)
+./kuraviz.sh tts                       # batch TTS audio generation
+./kuraviz.sh shell                     # open bash inside the container
+```
+
+Windows (PowerShell): `.\kuraviz.ps1 dev` etc.
+
+npm scripts (`npm run dev|build|test|record|tts`) are thin Docker wrappers — optional, requires npm installed on host.
+
+---
+
+## Pipeline Details
 
 ### 1. Project Setup
 
@@ -91,28 +100,11 @@ cd /path/to/kuraviz-repo/scaffold
 ./kuraviz.sh scaffold /path/to/workspace
 ```
 
-This creates the workspace directory containing the slide player, component library, and tooling. All dependencies run inside Docker — no npm or Python needed on the host.
-
-```
-workspace/
-├── outline.md               # Chapter outline (read/write)
-├── sources/                  # Reference materials (read/write)
-├── video.mp4                 # Final output (list only)
-└── scaffold/
-    ├── content/chapters/      # Page components (read/write)
-    ├── public/
-    │   ├── narration.json     # Narration scripts (read/write)
-    │   └── audio/             # Generated .wav files (no access)
-    ├── components/            # Slide primitives (read-only)
-    ├── lib/                   # Utilities, types (read-only)
-    └── tools/                 # Scripts (execute-only)
-```
+Copies the scaffold template into `workspace/scaffold/` and pre-pulls the Docker image from GHCR.
 
 ### 2. Source Collection & Outline
 
-The agent collects reference materials (3–6 sources) and saves them to `workspace/sources/` as markdown. A chapter outline is written to `workspace/outline.md` with page titles and descriptions.
-
-Each page gets an entry in `scaffold/public/narration.json`:
+The agent collects 3–6 reference sources, saves them as markdown in `workspace/sources/`, and writes a chapter outline to `workspace/outline.md`. Each page gets a narration entry in `scaffold/public/narration.json`:
 
 ```json
 {
@@ -125,13 +117,9 @@ Each page gets an entry in `scaffold/public/narration.json`:
 }
 ```
 
-The `script` field is displayed as a caption overlay and fed to TTS. The `audioSrc` path maps to the TTS output and the player's audio lookup.
-
 ### 3. Page Creation
 
-Each page is a `'use client'` React component with absolute-positioned elements on a 1920×1080 canvas. Registered in the chapter's `index.ts`.
-
-**Component library** (in `components/`):
+Each page is a `'use client'` React component on a 1920×1080 canvas, absolute-positioned. Registered in the chapter's `index.ts`.
 
 | Component | Purpose |
 |---|---|
@@ -140,13 +128,13 @@ Each page is a `'use client'` React component with absolute-positioned elements 
 | `<Anim>` | Entry animations (fade-in, slide-\*, scale-in) |
 | `<Markdown>` | Rich text with LaTeX, GFM tables, task lists, syntax-highlighted code |
 | `<Mermaid>` | Diagrams (flowchart, sequence, mindmap, gantt, class) |
-| `<BarChart>` / `<LineChart>` | Recharts-based data visualization |
+| `<BarChart>` / `<LineChart>` | Recharts data visualization |
 
-All styles are inline via `boxStyle()` from `lib/bbox.ts`. Box heights must account for font metrics — see `references/collision-prevention.md`.
+Design rules and metric details are in `references/` — see `references/design-guide.md` and `references/collision-prevention.md`.
 
 ### 4. Collision Testing
 
-Collision detection uses Playwright (headless Firefox) to scan every page for layout violations:
+Playwright (headless Firefox) scans every page for layout violations:
 
 | Type | Detection |
 |---|---|
@@ -156,69 +144,60 @@ Collision detection uses Playwright (headless Firefox) to scan every page for la
 | `EXCEED` | Element extends beyond the 1920×1080 canvas |
 
 ```bash
-cd scaffold
-npm run test
-# or: ./kuraviz.sh test
+./kuraviz.sh test   # outputs to logs/debug.log
 ```
 
-Results are written to `logs/debug.log`. Repeat until zero collisions.
+Repeat until zero collisions. Fixes reference `references/collision-prevention.md`.
 
 ### 5. Audio Generation
 
-`tools/generate_audio.py` reads `narration.json` and calls a TTS adapter for every page that doesn't already have a `.wav` file.
+`tools/generate_audio.py` reads `narration.json` and calls a TTS adapter for each page missing its `.wav` file.
 
-**TTS adapter contract**:
+**TTS adapter contract** — a script accepting `--text` and `--output`:
+
 ```bash
 /tts/your-adapter.py --text "Script content" --output /path/to/output.wav
 ```
 
 ```bash
-cd scaffold
-npm run tts
-# or: ./kuraviz.sh tts
+./kuraviz.sh tts
 ```
 
-Set `KURAVIZ_TTS_ADAPTOR` env var to enable. A template is at `tools/tts.example.py`. If the env var is unset, generation is skipped.
+Set `KURAVIZ_TTS_ADAPTOR` env var to enable. Template at `tools/tts.example.py`. If the env var is unset, TTS is skipped.
 
 ### 6. Video Capture
 
-Records the final MP4. Requires a production build first.
+Records the final MP4 using Firefox (kiosk mode) + FFmpeg (x11grab + PulseAudio).
 
 ```bash
-cd scaffold
-npm run build
-npm run record
-# or: ./kuraviz.sh build && ./kuraviz.sh record
+./kuraviz.sh build
+./kuraviz.sh record   # → output/output.mp4
 ```
 
-To pass a GPU device for hardware encoding:
+For GPU-accelerated encoding (Linux, VAAPI-compatible GPU):
 
 ```bash
-docker compose run --rm \
-  --device /dev/dri/renderD128 \
-  record
+docker compose run --rm --device /dev/dri/renderD128 record
 ```
 
-**How the recorder works**:
-
-1. Starts Next.js production server on a random port
-2. Launches Xvfb (virtual 1920×1080 display)
-3. Creates a PulseAudio null sink for audio capture
-4. Launches Firefox in kiosk mode at `/?record=1`
-5. Waits for the first `[record] ch/pg` console log before starting FFmpeg — no loading screen is captured
-6. Monitors page transitions; aborts if any page exceeds 5 minutes
-7. Stops FFmpeg gracefully on `[record] done`
-
-**SlidePlayer** (`components/player/slide-player.tsx`) is the runtime: fetches `narration.json`, creates an `HTMLAudioElement` for each page, and auto-advances on `onended` (500ms delay). In `?record=1` mode it skips the click-to-start overlay and auto-plays from page 1.
+**How it works**: starts Next.js → Xvfb virtual display → PulseAudio null sink → Firefox at `/?record=1` → FFmpeg captures when playback begins → graceful stop on `[record] done`. Pages auto-advance driven by audio `onended` events. Times out if any page exceeds 5 minutes.
 
 #### Troubleshooting
 
 | Symptom | Fix |
 |---|---|
 | Firefox crash / shm error | Increase `shm_size` in docker-compose.yml to `4gb` |
-| Hangs on `(init)` | Check that `?record=1` triggers auto-play in SlidePlayer |
-| Black video | FFmpeg x11grab failed — check `[ffmpeg]` log lines |
+| Black video | x11grab failed — check `[ffmpeg]` log lines |
 | No audio in output | PulseAudio sink not ready — re-run |
+| Image pull fails | Ensure the GHCR package visibility is set to Public |
+
+---
+
+## Further Reading
+
+- **`SKILL.md`** — the workflow the agent follows step by step
+- **`AGENTS.md`** — architecture rules, component reference, debug options
+- **`references/`** — design guides, component APIs, collision prevention, narration schema
 
 ---
 
