@@ -81,7 +81,7 @@ All commands run from `scaffold/` inside the generated workspace (or the repo's 
 .\tools\scaffold.ps1 C:\path\to\output  # Windows
 
 # From scaffold/ (all other commands):
-./kuraviz.sh dev                       # dev server → http://localhost:9999
+./kuraviz.sh dev                       # dev server → http://localhost:9999 (human preview only)
 ./kuraviz.sh build                     # production build
 ./kuraviz.sh test                      # collision detection scan
 ./kuraviz.sh record                    # record video (requires build first)
