@@ -86,9 +86,8 @@ def write_compose(target: str, image: str):
         }
     }
 
-    import yaml
-    # Prefer using yaml if available, otherwise write minimal yaml manually
     try:
+        import yaml
         with open(os.path.join(target, 'docker-compose.yml'), 'w') as f:
             yaml.dump(compose, f, default_flow_style=False, sort_keys=False)
     except ImportError:
