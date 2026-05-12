@@ -57,11 +57,11 @@ WORKSPACE/
     ├── public/
     │   ├── narration.json     # Narration scripts - Read/Write
     │   └── audio/             # Auto-generated TTS audio files - List-files-only
-    ├── tools/
+    ├── tools/                   # Write (tts.py + requirements.txt), Execute
     │   ├── generate_audio.py   # Batch TTS generation - Execute-only
     │   ├── capture.mjs         # Video capturing script - Execute-only
     │   └── test-collisions.mjs # Collision detection scan - Execute-only
-    └── ...                    # Everything else — No access
+    └── ...                     # Everything else — No access
 ```
 
 ### 2. Source Collection & Outline
