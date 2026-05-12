@@ -27,7 +27,7 @@ switch ($cmd) {
     "tts"      { docker compose run --rm tts @rest }
     "scaffold" {
         if ($rest.Count -eq 0) { Write-Host "Usage: .\kuraviz.ps1 scaffold C:\path\to\output"; exit 1 }
-        docker compose run --rm -v "${rest[0]}:/output" scaffold --dir /output
+        docker compose run --rm -v "${rest[0]}:/output" scaffold --dir /output @($rest[1..($rest.Count - 1)])
     }
     "shell"    { docker compose run --rm --entrypoint bash dev @rest }
     default {
