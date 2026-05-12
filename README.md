@@ -26,18 +26,6 @@ Or via `npx` (OpenCode):
 npx skills add kurashizu/KuraViz
 ```
 
-### First use
-
-Create a new project from the scaffold:
-
-```bash
-cd ~/.config/opencode/skills/kuraviz/scaffold   # adjust path for your agent
-./kuraviz.sh scaffold /path/to/workspace
-
-cd /path/to/workspace/scaffold
-./kuraviz.sh dev   # → http://localhost:9999
-```
-
 ## Usage
 
 Ask your agent:
