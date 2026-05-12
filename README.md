@@ -8,17 +8,24 @@ Fully autonomous video pipeline for AI agents. Build narrated tutorial videos fr
 
 ## Install as Agent Skill
 
-Clone this repo into your agent's skills directory:
+### Method 1 — Manual
 
-| Agent | Install command |
-|---|---|
-| **OpenCode** | `git clone https://github.com/kurashizu/KuraViz.git ~/.config/opencode/skills/kuraviz` |
-| **Claude Code** | `git clone https://github.com/kurashizu/KuraViz.git ~/.claude/skills/kuraviz` |
-| **Cursor** | `git clone https://github.com/kurashizu/KuraViz.git ~/.cursor/skills/kuraviz` |
-| **OpenClaw** | `git clone https://github.com/kurashizu/KuraViz.git ~/.openclaw/skills/kuraviz` |
-| **Hermes Agent** | `git clone https://github.com/kurashizu/KuraViz.git ~/.hermes/skills/kuraviz` |
+Clone or [download the ZIP](https://github.com/kurashizu/KuraViz/archive/refs/heads/master.zip) and extract it into your agent's skills directory:
 
-Or via `npx` (OpenCode):
+| Agent | Linux / macOS | Windows |
+|---|---|---|
+| **OpenCode** | `~/.config/opencode/skills/kuraviz` | `%USERPROFILE%\.config\opencode\skills\kuraviz` |
+| **Claude Code** | `~/.claude/skills/kuraviz` | `%USERPROFILE%\.claude\skills\kuraviz` |
+| **Cursor** | `~/.cursor/skills/kuraviz` | `%USERPROFILE%\.cursor\skills\kuraviz` |
+| **OpenClaw** | `~/.openclaw/skills/kuraviz` | `%USERPROFILE%\.openclaw\skills\kuraviz` |
+| **Hermes Agent** | `~/.hermes/skills/kuraviz` | `%USERPROFILE%\.hermes\skills\kuraviz` |
+
+Example for OpenCode on Linux:
+```bash
+git clone https://github.com/kurashizu/KuraViz.git ~/.config/opencode/skills/kuraviz
+```
+
+### Method 2 — npx (OpenCode only)
 
 ```bash
 npx skills add kurashizu/KuraViz
