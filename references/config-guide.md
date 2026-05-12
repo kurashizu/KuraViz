@@ -1,33 +1,50 @@
 # Configuration Guide
 
-## First-run Configuration Flow
+## First-run Configuration Wizard
 
-When `MEMORY.md` does not exist, follow these steps in order:
+When `MEMORY.md` does not exist, walk through these steps conversationally. Explain each option in plain terms — do not just read the table aloud.
 
-### Step 1 — Environment Variables
+### 1. TTS Adapter
 
-For each variable in the table below, tell the user its purpose and ask if they want to set it. If yes, write the value to `MEMORY.md`. If no, skip it (the related functionality will be unavailable).
+Explain to the user:
 
-| Key | Purpose |
-|---|---|
-| `KURAVIZ_TTS_ADAPTOR` | Path to a TTS adapter script (e.g. `/path/to/tts.py`). Without this, audio synthesis is skipped. |
+> A Text-to-Speech adapter turns your narration scripts into spoken audio. If you have a TTS server running, I'll need the path to a Python script that can talk to it. Without one, I'll skip audio generation and you'll have a silent slideshow.
 
-Please refer to `tools/tts.example.py` and save it as a separate file (e.g. `tts.py`) in your preferred directory, then set `KURAVIZ_TTS_ADAPTOR` to its absolute path.
+If the user wants to set it up:
+- Give them a friendly bullet list of options:
+  - Use the existing `tools/tts.example.py` as a starting point (copy it and fill in your API endpoint)
+  - Write a custom script that accepts `--text "..." --output path.wav`
+  - Skip it for now (can be configured later)
 
-Test the adapter by running `python /path/to/tts.py --text "Hello, world!" --output test.wav` and ensure it generates `test.wav` with the correct content.
+When they provide a path, validate it with a quick test: `python /path/to/tts.py --text "Test" --output /tmp/test.wav`. If it produces a valid `.wav`, save `KURAVIZ_TTS_ADAPTOR` to `MEMORY.md`.
 
-### Step 2 — User Preferences
+### 2. Language
 
-Ask the user for each of these and write to `MEMORY.md`:
+Ask naturally:
 
-| Key | Examples | Description |
-|---|---|---|
-| `language` | `Chinese`, `English`, `Japanese` | Language used for narration scripts and page content |
-| `style` | `formal`, `conversational`, `tutorial` | Tone for narration writing and page design |
+> What language should the video narration be in? This controls how I write the scripts and design the pages.
 
-### Step 3 — Save
+| Examples |
+|---|
+| `Chinese`, `English`, `Japanese` |
 
-Write all collected values to `KuraViz/MEMORY.md` in the following format:
+Save the answer to `MEMORY.md`.
+
+### 3. Style
+
+Ask naturally:
+
+> What tone would you like for the narration? Formal (like a lecture), conversational (like a casual explainer), or tutorial (step-by-step)?
+
+| Examples |
+|---|
+| `formal`, `conversational`, `tutorial` |
+
+Save the answer to `MEMORY.md`.
+
+### 4. Save
+
+Write everything to `KuraViz/MEMORY.md`:
 
 ```markdown
 # KuraViz Preferences
@@ -37,3 +54,5 @@ style: conversational
 # Environment Variables
 KURAVIZ_TTS_ADAPTOR=/path/to/tts.py
 ```
+
+Confirm with the user that everything looks correct.
