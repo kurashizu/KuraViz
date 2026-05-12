@@ -163,11 +163,29 @@ Repeat until zero collisions. Fixes reference `references/collision-prevention.m
 /tts/your-adapter.py --text "Script content" --output /path/to/output.wav
 ```
 
+**Free option — edge-tts** (no API key, runs locally):
+
+```bash
+# scaffold/tools/requirements.txt
+edge-tts
+```
+
+Based on `tools/tts.example.py`, create `scaffold/tools/tts.py` using `edge_tts`:
+```python
+import argparse, asyncio, edge_tts
+async def main(): await edge_tts.Communicate(args.text, "zh-CN-XiaoxiaoNeural").save(args.output)
+if __name__ == "__main__": asyncio.run(main())
+```
+
+Then set `KURAVIZ_TTS_ADAPTOR=/app/scaffold/tools/tts.py` and run:
+
 ```bash
 ./kuraviz.sh tts
 ```
 
-Set `KURAVIZ_TTS_ADAPTOR` env var to enable. Template at `tools/tts.example.py`. If the env var is unset, TTS is skipped.
+If extra Python libraries are needed, write them to `scaffold/tools/requirements.txt` — the container auto-installs them before running.
+
+If `KURAVIZ_TTS_ADAPTOR` is unset, TTS is skipped. See `tools/tts.example.py` for the adapter template.
 
 ### 6. Video Capture
 
