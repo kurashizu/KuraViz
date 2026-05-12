@@ -347,7 +347,7 @@ async function main() {
         const tmpOut = OUTPUT + ".tmp.mp4";
         try {
             execSync(
-                `ffmpeg -y -ss ${offset} -i "${OUTPUT}" -c copy -avoid_negative_ts 1 "${tmpOut}" 2>/dev/null`
+                `ffmpeg -y -ss ${offset} -i "${OUTPUT}" -c copy -fflags +genpts -avoid_negative_ts 1 "${tmpOut}" 2>/dev/null`
             );
             execSync(`mv "${tmpOut}" "${OUTPUT}"`);
             log("Trim complete");
