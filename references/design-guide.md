@@ -8,7 +8,12 @@
 
 ### Caption Positioning
 
-All bottom captions default to `w=1200` (~85 English chars/line at 22px font). Using a narrower width (e.g. `w=800`, ~55 chars/line) causes more line breaks and requires recalculating `h` and `y`.
+All bottom captions default to `w=1200`:
+- **English**: ~85 characters per line at 22px font
+- **Chinese/Japanese**: ~42 characters per line (CJK glyphs are ~2× Latin width)
+- **Mixed**: proportionally fewer English chars when CJK is present
+
+Using a narrower width (e.g. `w=800`) causes more line breaks and requires recalculating `h` and `y`.
 
 **Formula**: `h = lineCount × 33`, `y = 1080 - h - 20`
 
@@ -28,9 +33,9 @@ All bottom captions default to `w=1200` (~85 English chars/line at 22px font). U
 |---|---|---|---|
 | Title page subtitle | 1 line (h3, 42px) | ~30 words | 59px |
 | Card body paragraph | 3-5 lines (body, 30px) | ~15 words/line | 150-250px |
-| Bottom caption | 1 line (caption, 22px) | ~85 chars at w=1200 | 33px |
-| Bottom caption | 2 lines | ~170 chars at w=1200 | 66px |
-| Bottom caption | 3 lines | ~255 chars at w=1200 | 99px |
+| Bottom caption | 1 line (caption, 22px) | ~85 chars / ~42 CJK chars at w=1200 | 33px |
+| Bottom caption | 2 lines | ~170 chars / ~84 CJK chars | 66px |
+| Bottom caption | 3 lines | ~255 chars / ~126 CJK chars | 99px |
 
 **Caption y formula**: `y = 1080 - (lineCount × 33) - 20`
 - 1 line: `y=1027` (bottom=1060)
