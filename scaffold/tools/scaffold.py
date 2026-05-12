@@ -80,7 +80,7 @@ def write_compose(target: str, image: str):
                 'volumes': ['.:/app/scaffold'],
                 'working_dir': '/app/scaffold',
                 'entrypoint': '/bin/sh',
-                'command': '-c "[ -f tools/requirements.txt ] && PIP_REQUIRE_VIRTUALENV=false pip install -q --no-cache-dir -r tools/requirements.txt; exec python3 tools/generate_audio.py"',
+                'command': '-c "[ -f tools/requirements.txt ] && /opt/tts-venv/bin/pip install -q --no-cache-dir -r tools/requirements.txt; exec /opt/tts-venv/bin/python tools/generate_audio.py"',
                 'environment': ['KURAVIZ_TTS_ADAPTOR'],
             },
         }

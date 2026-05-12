@@ -51,6 +51,11 @@ RUN npm install \
     && npx playwright install firefox \
     && rm -rf /var/lib/apt/lists/*
 
+# ── TTS venv (isolated from PEP 668 system Python) ──────────────────────────
+RUN python3 -m venv /opt/tts-venv
+
+ENV TTS_PYTHON=/opt/tts-venv/bin/python
+
 # ── Tool scripts ────────────────────────────────────────────────────────────
 COPY tools/scaffold.py tools/generate_audio.py tools/
 COPY tools/capture.mjs tools/test-collisions.mjs tools/

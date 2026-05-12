@@ -25,6 +25,9 @@ def _resolve_path(*parts):
     return os.path.normpath(os.path.join(_script_dir(), '..', *parts))
 
 
+TTS_PYTHON = os.environ.get('TTS_PYTHON', sys.executable)
+
+
 def main():
     default_json = _resolve_path('public', 'narration.json')
     default_output = _resolve_path('public', 'audio')
@@ -71,7 +74,7 @@ def main():
                 continue
 
             subprocess.run(
-                [sys.executable, args.tts_script,
+                [TTS_PYTHON, args.tts_script,
                  '--text', script,
                  '--output', wav_path],
                 check=True,
