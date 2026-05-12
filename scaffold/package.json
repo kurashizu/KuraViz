@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "postinstall": "playwright install firefox"
+    "postinstall": "playwright install firefox",
+    "record": "node tools/capture.mjs",
+    "record:docker": "bash tools/record-docker.sh"
   },
   "dependencies": {
     "framer-motion": "^12.9.4",

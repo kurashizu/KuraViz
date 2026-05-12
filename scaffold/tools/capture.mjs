@@ -8,7 +8,8 @@ import { setTimeout } from "timers/promises";
 const SCAFFOLD = resolve(import.meta.dirname, "..");
 const OUTPUT = process.argv[2] ?? "output.mp4";
 const PAGE_TIMEOUT_MS = 5 * 60 * 1000;
-const DISPLAY = ":99";
+const DISPLAY         = process.env.DISPLAY ?? ":99";
+const IS_CONTAINER    = process.env.IS_CONTAINER === "1";
 
 // ── Logging ───────────────────────────────────────────────────────────────────
 
@@ -121,7 +122,7 @@ function findFirefox() {
             return p;
         } catch {}
     }
-    fail("No firefox binary found — install firefox or librewolf");
+    return null; // let Playwright use its bundled Firefox
 }
 
 function startFfmpeg(vaapiDevice) {
@@ -164,7 +165,7 @@ function startFfmpeg(vaapiDevice) {
 async function main() {
     mkdirSync(resolve(SCAFFOLD, "logs"), { recursive: true });
 
-    // Clean up stale Chromium profile to avoid translate/UI state carrying over
+    // Clean up stale profile to avoid translate/UI state carrying over
     rmSync("/tmp/kuraviz-recording-profile", { recursive: true, force: true });
 
     // 1. Pick a free port and start Next.js
@@ -183,31 +184,36 @@ async function main() {
     server.stderr.on("data", (d) => process.stderr.write(`[next] ${d}`));
     await setTimeout(4000);
 
-    // 3. Start a virtual display
-    log(`Starting Xvfb on ${DISPLAY}...`);
-    const xvfb = spawn(
-        "Xvfb",
-        [DISPLAY, "-screen", "0", "1920x1080x24", "-ac"],
-        {
+    // 3. Start a virtual display (skipped in container — entrypoint handles it)
+    let xvfb = null;
+    if (!IS_CONTAINER) {
+        log(`Starting Xvfb on ${DISPLAY}...`);
+        xvfb = spawn("Xvfb", [DISPLAY, "-screen", "0", "1920x1080x24", "-ac"], {
             stdio: "ignore",
-        },
-    );
-    xvfb.on("error", (e) => warn(`Xvfb error: ${e.message}`));
-    await setTimeout(1000);
-
-    // 4. Create a virtual audio sink
-    log("Creating virtual audio sink...");
-    let sinkModule = null;
-    try {
-        sinkModule = execSync(
-            "pactl load-module module-null-sink sink_name=kuraviz_sink sink_properties=device.description=KuraViz",
-            { env: { ...process.env, DISPLAY }, encoding: "utf-8" },
-        ).trim();
-        log(`Audio sink loaded (module id ${sinkModule})`);
-    } catch (e) {
-        fail(`pactl failed: ${e.message}`);
+        });
+        xvfb.on("error", (e) => warn(`Xvfb error: ${e.message}`));
+        await setTimeout(1000);
+    } else {
+        log("Container mode — Xvfb already running");
     }
-    await setTimeout(500);
+
+    // 4. Create a virtual audio sink (skipped in container)
+    let sinkModule = null;
+    if (!IS_CONTAINER) {
+        log("Creating virtual audio sink...");
+        try {
+            sinkModule = execSync(
+                "pactl load-module module-null-sink sink_name=kuraviz_sink sink_properties=device.description=KuraViz",
+                { env: { ...process.env, DISPLAY }, encoding: "utf-8" },
+            ).trim();
+            log(`Audio sink loaded (module id ${sinkModule})`);
+        } catch (e) {
+            fail(`pactl failed: ${e.message}`);
+        }
+        await setTimeout(500);
+    } else {
+        log("Container mode — audio sink already loaded");
+    }
 
     // 5. Detect encoder (do this early, before launching browser)
     log("Detecting video encoder...");
@@ -215,19 +221,32 @@ async function main() {
 
     // 6. Launch Firefox
     const url = `http://127.0.0.1:${port}/?record=1`;
-    const firefoxPath = findFirefox();
-    log(`Using browser: ${firefoxPath}`);
     log(`Navigating to ${url}`);
 
-    const browser = await firefox.launchPersistentContext("/tmp/kuraviz-recording-profile", {
+    const browserOptions = {
         headless: false,
-        executablePath: firefoxPath,
-        args: [
-            "--kiosk",
-        ],
+        args: ["--kiosk"],
         viewport: { width: 1920, height: 1080 },
         env: { ...process.env, DISPLAY, PULSE_SINK: "kuraviz_sink" },
-    });
+    };
+
+    // On host, try system Firefox first; fall back to Playwright bundled
+    if (!IS_CONTAINER) {
+        const firefoxPath = findFirefox();
+        if (firefoxPath) {
+            log(`Using system Firefox: ${firefoxPath}`);
+            browserOptions.executablePath = firefoxPath;
+        } else {
+            log("No system Firefox found — using Playwright bundled Firefox");
+        }
+    } else {
+        log("Container mode — using Playwright bundled Firefox");
+    }
+
+    const browser = await firefox.launchPersistentContext(
+        "/tmp/kuraviz-recording-profile",
+        browserOptions,
+    );
     const page = browser.pages()[0] || await browser.newPage({
         viewport: { width: 1920, height: 1080 },
     });
@@ -318,14 +337,15 @@ async function main() {
     // 11. Cleanup
     log("Cleaning up...");
     server.kill();
-    try {
-        execSync(`pactl unload-module ${sinkModule}`, {
-            env: { ...process.env, DISPLAY },
-        });
-        log("Audio sink unloaded");
-    } catch {}
-    xvfb.kill();
-    log("Xvfb stopped");
+    if (sinkModule) {
+        try {
+            execSync(`pactl unload-module ${sinkModule}`, {
+                env: { ...process.env, DISPLAY },
+            });
+            log("Audio sink unloaded");
+        } catch {}
+    }
+    if (xvfb) { xvfb.kill(); log("Xvfb stopped"); }
 
     if (timedOut) fail("Recording failed due to page timeout");
     log(`✔ Output saved: ${OUTPUT}`);

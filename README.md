@@ -118,18 +118,63 @@ Set `KURAVIZ_TTS_ADAPTOR` to enable. A template is at `tools/tts.example.py`. If
 
 ### 6. Video Capture
 
-`tools/capture.mjs` records the final MP4:
+`tools/capture.mjs` records the final MP4.
 
-1. Starts a Next.js production server on a random port
+#### Option A — Docker (recommended, cross-platform)
+
+Requires Docker only. No host dependencies.
+
+```bash
+npm run record:docker
+# or with custom output path:
+bash tools/record-docker.sh /path/to/output.mp4
+```
+
+The first run pulls `ghcr.io/kurashizu/kuraviz-recorder:latest` (~800 MB).
+Subsequent runs start immediately. The scaffold directory is mounted
+read-only; the output file is written to your current directory.
+
+To pass a GPU device for hardware encoding:
+
+```bash
+docker run --rm \
+  --shm-size=2g \
+  --device /dev/dri/renderD128 \
+  -v "$(pwd):/app/scaffold:ro" \
+  -v "$(pwd)/../output:/output" \
+  ghcr.io/kurashizu/kuraviz-recorder:latest \
+  /output/output.mp4
+```
+
+#### Option B — Host (Linux only)
+
+Requires: `firefox`, `ffmpeg`, `pulseaudio`, `xvfb`, Node.js ≥ 22.
+
+```bash
+npm run record
+```
+
+#### How the recorder works
+
+1. Starts Next.js production server on a random port
 2. Launches Xvfb (virtual 1920×1080 display)
 3. Creates a PulseAudio null sink for audio capture
-4. Launches Playwright Firefox in kiosk mode at `/?record=1`
-5. Watches for `[record] ch/pg` console logs to track progress
-6. Starts FFmpeg (x11grab + pulse) once playback begins
-7. Stops FFmpeg when `[record] done` fires
-8. Cleans up: server, audio sink, Xvfb
+4. Launches Firefox in kiosk mode at `/?record=1`
+5. Waits for the first `[record] ch/pg` console log before starting
+   FFmpeg — no loading screen is captured
+6. Monitors page transitions; aborts if any page exceeds 5 minutes
+7. Stops FFmpeg gracefully on `[record] done`
 
 **SlidePlayer** (`components/player/slide-player.tsx`) is the runtime: fetches `narration.json`, creates an `HTMLAudioElement` for each page, and auto-advances on `onended` (500ms delay). In `?record=1` mode it skips the click-to-start overlay and auto-plays from page 1, logging every transition to the console.
+
+#### Troubleshooting
+
+| Symptom | Fix |
+|---|---|
+| Firefox crash / shm error | Increase `--shm-size` to `4g` |
+| Hangs on `(init)` | Check that `?record=1` triggers auto-play in SlidePlayer |
+| Black video | FFmpeg x11grab failed — check `[ffmpeg]` log lines |
+| No audio in output | PulseAudio sink not ready — re-run |
 
 ---
 
