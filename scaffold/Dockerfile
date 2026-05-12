@@ -14,6 +14,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates \
     gnupg \
     python3 \
+    python3-pip \
     # Firefox runtime deps
     libgtk-3-0 \
     libdbus-glib-1-2 \
