@@ -101,13 +101,15 @@ Each subagent, for each of its chapters:
 
 ### 5. Audio Generation
 
-Run the TTS orchestrator from `scaffold/`:
+First, create the TTS adapter from `tools/tts.example.py` (the template in the skill repo) and save it to `scaffold/tools/tts.py`. Set `KURAVIZ_TTS_ADAPTOR=/app/scaffold/tools/tts.py` in your environment so the container can find it.
+
+If the adapter needs extra Python libraries beyond stdlib, write them to `scaffold/tools/requirements.txt` — the container auto-installs them before running.
+
+Then run the orchestrator:
 ```bash
 ./kuraviz.sh tts
 ```
-This processes every page in `narration.json`, calling the TTS adapter for each. Check that `.wav` files appear in `scaffold/public/audio/` with no errors.
-
-If the TTS adapter needs extra Python libraries beyond stdlib, write them to `scaffold/tools/requirements.txt`. The container auto-installs them before running.
+Check that `.wav` files appear in `scaffold/public/audio/` with no errors.
 
 If `KURAVIZ_TTS_ADAPTOR` is not set, skip this step — the video will be a silent slideshow.
 

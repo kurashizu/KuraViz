@@ -30,8 +30,7 @@ If the user wants to set it up:
   - Tell me what TTS service you're using
   - Skip it for now (can be configured later)
 
-When they tell you the TTS service, create an adapter script at `scaffold/tools/tts.py` based on `tools/tts.example.py`.
-Test it inside Docker: `docker compose run --rm tts`. If it works, save the path as `KURAVIZ_TTS_ADAPTOR=/app/scaffold/tools/tts.py`.
+When they tell you the TTS service, save a note in `MEMORY.md` and create the adapter script later in Step 5 (after scaffold exists).
 
 ### 2. Language
 
@@ -63,7 +62,7 @@ language: Chinese
 style: conversational
 
 # Environment Variables
-KURAVIZ_TTS_ADAPTOR=/app/scaffold/tools/tts.py
+# KURAVIZ_TTS_ADAPTOR=  (set in Step 5 after scaffold exists)
 ```
 
 Confirm with the user that everything looks correct.
