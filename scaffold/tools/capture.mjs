@@ -109,12 +109,11 @@ function videoEncodeArgs(vaapiDevice) {
     return ["-c:v", "libx264", "-preset", "veryfast", "-crf", "23"];
 }
 
-function findChromium() {
+function findFirefox() {
     const candidates = [
-        "/usr/bin/chromium",
-        "/usr/bin/chromium-browser",
-        "/usr/bin/google-chrome-stable",
-        "/usr/bin/google-chrome",
+        "/usr/bin/firefox",
+        "/usr/bin/firefox-developer-edition",
+        "/usr/bin/librewolf",
     ];
     for (const p of candidates) {
         try {
@@ -122,7 +121,7 @@ function findChromium() {
             return p;
         } catch {}
     }
-    fail("No chromium binary found — install chromium or google-chrome");
+    fail("No firefox binary found — install firefox or librewolf");
 }
 
 function startFfmpeg(vaapiDevice) {
@@ -216,10 +215,13 @@ async function main() {
 
     // 6. Launch Firefox
     const url = `http://127.0.0.1:${port}/?record=1`;
+    const firefoxPath = findFirefox();
+    log(`Using browser: ${firefoxPath}`);
     log(`Navigating to ${url}`);
 
     const browser = await firefox.launchPersistentContext("/tmp/kuraviz-recording-profile", {
         headless: false,
+        executablePath: firefoxPath,
         args: [
             "--kiosk",
         ],
