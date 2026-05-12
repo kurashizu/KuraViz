@@ -163,7 +163,7 @@ Repeat until zero collisions. Fixes reference `references/collision-prevention.m
 /tts/your-adapter.py --text "Script content" --output /path/to/output.wav
 ```
 
-**Free option — edge-tts** (no API key, runs locally):
+**Free option — edge-tts** (no API key required):
 
 ```bash
 # scaffold/tools/requirements.txt
