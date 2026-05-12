@@ -3,7 +3,6 @@
 ## Project layout
 
 - **`scaffold/`** — the actual Next.js app template. All source code lives here.
-- **`tools/scaffold.py`** — thin Docker wrapper; creates a project via `./kuraviz.sh scaffold`.
 - **`tools/tts.example.py`** — TTS adapter template. Copy and modify, then point `KURAVIZ_TTS_ADAPTOR` env var at it.
 
 To create a new project: `./kuraviz.sh scaffold /path/to/workspace` from scaffold/
