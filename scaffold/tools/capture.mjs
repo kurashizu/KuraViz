@@ -361,6 +361,11 @@ async function main() {
     log("Cleaning up...");
     server.kill();
     if (sinkModule) {
+        try {
+            execSync(`pactl unload-module ${sinkModule}`, {
+                env: { ...process.env, DISPLAY },
+            });
+            log("Audio sink unloaded");
         } catch {}
     }
     if (xvfb) { xvfb.kill(); log("Xvfb stopped"); }
