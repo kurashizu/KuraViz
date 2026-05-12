@@ -19,11 +19,11 @@ export function SlidePlayer() {
   const params = useSearchParams()
   const record = params.get('record') === '1' || params.get('record') === 'true'
 
-  // record mode: auto-start after narration loads (2s delay for fullscreen)
+  // record mode: auto-start after narration loads (3s delay for PA/FFmpeg setup)
   useEffect(() => {
     if (record && narration) {
       setStarted(true)
-      setTimeout(() => audioRef.current?.play().catch(() => {}), 2000)
+      setTimeout(() => audioRef.current?.play().catch(() => {}), 3000)
     }
   }, [record, narration])
 
