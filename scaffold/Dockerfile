@@ -14,6 +14,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates \
     gnupg \
     python3 \
+    python3-pip \
     libgtk-3-0 \
     libdbus-glib-1-2 \
     libxt6 \
@@ -33,9 +34,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     fonts-liberation \
     fonts-noto-cjk \
     && rm -rf /var/lib/apt/lists/*
-
-# Bootstrap pip via Python's built-in ensurepip
-RUN python3 -m ensurepip --upgrade --default-pip && rm -rf /root/.cache/pip
 
 # pactl (pulseaudio-utils) in separate layer — t64 safe
 RUN apt-get update && apt-get install -y --no-install-recommends pulseaudio-utils 2>/dev/null || true; rm -rf /var/lib/apt/lists/*
