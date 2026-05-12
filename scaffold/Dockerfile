@@ -9,6 +9,7 @@ ENV IS_CONTAINER=1
 RUN apt-get update && apt-get install -y --no-install-recommends \
     xvfb \
     pulseaudio \
+    pulseaudio-utils \
     ffmpeg \
     curl \
     ca-certificates \
