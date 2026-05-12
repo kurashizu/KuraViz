@@ -15,6 +15,8 @@ use_when: >-
 
 **Docker with Compose** is the only host dependency. All tooling (Node.js, Python, Playwright, FFmpeg) runs inside a self-contained container. The user must have Docker and `docker compose` (v2 plugin) installed and running.
 
+**CRITICAL**: All commands must be run through the Docker container. Never execute `python`, `node`, or `npx` directly on the host. Always use `./kuraviz.sh` (macOS/Linux/WSL) or `.\kuraviz.ps1` (Windows) from the `scaffold/` directory. The only file you may run directly on the host is `tools/scaffold.py` at the repo root (it is a Docker wrapper — it delegates to the container automatically).
+
 On macOS/Linux/WSL use `./kuraviz.sh`. On Windows (PowerShell) use `.\kuraviz.ps1`. npm scripts (`npm run dev|build|test|record|tts`) are also available but require npm installed on the host.
 
 ## Workflow
