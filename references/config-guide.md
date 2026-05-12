@@ -6,27 +6,17 @@ When `MEMORY.md` does not exist, walk through these steps conversationally. Expl
 
 ### 0. Check Prerequisites
 
-Check for the following tools and libraries. If any are missing, explain to the user what they are and how to install them:
+Only Docker with Compose is required:
+
 ```bash
-# Check Node.js + npm
-node --version
-npm --version
-
-# Check Python
-python3 --version
-
-# Check Git
-git --version
-
-# Check ffmpeg (advise the user that vaapi support is a bonus)
-ffmpeg -version
-
-# Check pulseaudio-utils
-pactl --version
-
-# Check Xvfb
-Xvfb -help
+docker compose version
 ```
+
+If Docker is missing, tell the user:
+- **macOS/Windows**: Install [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+- **Linux**: Install `docker-ce` + `docker-compose-plugin`
+
+Everything else (Node.js, Python, Playwright Firefox, FFmpeg, Xvfb, PulseAudio) runs inside the container — no host installation needed.
 
 
 ### 1. TTS Adapter
@@ -40,8 +30,8 @@ If the user wants to set it up:
   - Tell me what TTS service you're using
   - Skip it for now (can be configured later)
 
-When they tell you the TTS service, refer to `tools/tts.example.py` and implement it as `tts.py`.
-Test it with the command: `python tts.py --text "Hello world" --output /tmp/test.wav`. If it works, save the absolute path (e.g, `/path/to/tts.py`) to `KURAVIZ_TTS_ADAPTOR`.
+When they tell you the TTS service, create an adapter script at `scaffold/tools/tts.py` based on `tools/tts.example.py`.
+Test it inside Docker: `docker compose run --rm tts`. If it works, save the path as `KURAVIZ_TTS_ADAPTOR=/app/scaffold/tools/tts.py`.
 
 ### 2. Language
 
@@ -73,7 +63,7 @@ language: Chinese
 style: conversational
 
 # Environment Variables
-KURAVIZ_TTS_ADAPTOR=/path/to/tts.py
+KURAVIZ_TTS_ADAPTOR=/app/scaffold/tools/tts.py
 ```
 
 Confirm with the user that everything looks correct.
