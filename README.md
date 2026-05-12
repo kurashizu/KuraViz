@@ -8,15 +8,30 @@ Fully autonomous video pipeline for AI agents. Build narrated tutorial videos fr
 
 - **Docker** (Docker Desktop on macOS/Windows, docker-ce on Linux)
 
-## Quick Start
+## Install
+
+Clone this repo into your agent's skills directory:
+
+| Agent | Install command |
+|---|---|
+| **OpenCode** | `mkdir -p ~/.config/opencode/skills && git clone https://github.com/kurashizu/KuraViz.git ~/.config/opencode/skills/kuraviz` |
+| **Claude Code** | `mkdir -p ~/.claude/skills && git clone https://github.com/kurashizu/KuraViz.git ~/.claude/skills/kuraviz` |
+| **Cursor** | `mkdir -p ~/.cursor/skills && git clone https://github.com/kurashizu/KuraViz.git ~/.cursor/skills/kuraviz` |
+| **OpenClaw** | `mkdir -p ~/.openclaw/skills && git clone https://github.com/kurashizu/KuraViz.git ~/.openclaw/skills/kuraviz` |
+| **Hermes Agent** | `mkdir -p ~/.hermes/skills && git clone https://github.com/kurashizu/KuraViz.git ~/.hermes/skills/kuraviz` |
+
+Or via `npx` (OpenCode):
 
 ```bash
 npx skills add kurashizu/KuraViz
 ```
 
-Create a new project:
+### First use
+
+Create a new project from the scaffold:
+
 ```bash
-cd /path/to/kuraviz-repo/scaffold
+cd ~/.config/opencode/skills/kuraviz/scaffold   # adjust path for your agent
 ./kuraviz.sh scaffold /path/to/workspace
 
 cd /path/to/workspace/scaffold
