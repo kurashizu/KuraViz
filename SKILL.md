@@ -101,11 +101,11 @@ Each subagent, for each of its chapters:
 
 ### 5. Audio Generation
 
-Run the batch TTS orchestrator from `scaffold/`:
+Run the TTS orchestrator from `scaffold/`:
 ```bash
 ./kuraviz.sh tts
 ```
-This runs inside Docker. Set `KURAVIZ_TTS_ADAPTOR` env var to enable TTS. After this, audio files will be generated in `scaffold/public/audio/` so `narration.json` can find them.
+This processes every page in `narration.json`, calling the TTS adapter for each. Check that `.wav` files appear in `scaffold/public/audio/` with no errors. If `KURAVIZ_TTS_ADAPTOR` is not set, skip this step — the video will be a silent slideshow.
 
 ### 6. Video Capture
 
