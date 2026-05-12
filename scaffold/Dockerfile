@@ -8,6 +8,7 @@ ENV IS_CONTAINER=1
 # ── System packages ─────────────────────────────────────────────────────────
 RUN apt-get update && apt-get install -y --no-install-recommends \
     xvfb \
+    xkbcomp \
     pulseaudio \
     pulseaudio-utils \
     ffmpeg \
