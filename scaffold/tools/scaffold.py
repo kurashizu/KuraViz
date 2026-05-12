@@ -18,15 +18,6 @@ IS_CONTAINER = os.environ.get('IS_CONTAINER') == '1'
 SCAFFOLD_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) \
     if not IS_CONTAINER else '/app/scaffold'
 
-if not IS_CONTAINER:
-    print(
-        '[Error] This script must run inside the Docker container.\n'
-        '  Use ./kuraviz.sh scaffold /path/to/output from the scaffold/ directory.\n'
-        '  Or: python tools/scaffold.py --dir /path/to/output (the repo-root wrapper).',
-        file=sys.stderr,
-    )
-    sys.exit(1)
-
 DEFAULT_PORT = 9999
 DEFAULT_HOST = '0.0.0.0'
 DEFAULT_IMAGE = 'ghcr.io/kurashizu/kuraviz-recorder:latest'
@@ -37,6 +28,7 @@ IGNORE_PATTERNS = shutil.ignore_patterns(
     'node_modules',
     'output',
     'docker-compose.yml',
+    'scaffold.py',
 )
 
 
