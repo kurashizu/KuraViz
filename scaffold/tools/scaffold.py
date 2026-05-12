@@ -79,7 +79,8 @@ def write_compose(target: str, image: str):
                 'image': image,
                 'volumes': ['.:/app/scaffold'],
                 'working_dir': '/app/scaffold',
-                'command': 'python3 tools/generate_audio.py',
+                'entrypoint': '/bin/sh',
+                'command': '-c "pip install -q --no-cache-dir -r tools/requirements.txt 2>/dev/null; exec python3 tools/generate_audio.py"',
                 'environment': ['KURAVIZ_TTS_ADAPTOR'],
             },
         }

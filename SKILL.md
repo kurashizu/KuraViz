@@ -105,7 +105,11 @@ Run the TTS orchestrator from `scaffold/`:
 ```bash
 ./kuraviz.sh tts
 ```
-This processes every page in `narration.json`, calling the TTS adapter for each. Check that `.wav` files appear in `scaffold/public/audio/` with no errors. If `KURAVIZ_TTS_ADAPTOR` is not set, skip this step — the video will be a silent slideshow.
+This processes every page in `narration.json`, calling the TTS adapter for each. Check that `.wav` files appear in `scaffold/public/audio/` with no errors.
+
+If the TTS adapter needs extra Python libraries beyond stdlib, write them to `scaffold/tools/requirements.txt`. The container auto-installs them before running.
+
+If `KURAVIZ_TTS_ADAPTOR` is not set, skip this step — the video will be a silent slideshow.
 
 ### 6. Video Capture
 
