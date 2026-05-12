@@ -5,7 +5,7 @@
 - **`scaffold/`** — the actual Next.js app template. All source code lives here.
 - **`tools/tts.example.py`** — TTS adapter template. Copy and modify, then point `KURAVIZ_TTS_ADAPTOR` env var at it.
 
-To create a new project: `./kuraviz.sh scaffold /path/to/workspace` from scaffold/
+To create a new project: `./tools/scaffold.sh /path/to/workspace` from repo root.
 
 ## Commands
 
@@ -13,7 +13,7 @@ Run in `scaffold/`. All commands run inside Docker — no host dependencies beyo
 
 | Command | Purpose |
 |---|---|
-| `./kuraviz.sh scaffold <dir>` | Create a new project from template (or `.\kuraviz.ps1 scaffold <dir>` on Windows) |
+| `./tools/scaffold.sh <dir>` | Create a new project from template (or `.\tools\scaffold.ps1 <dir>` on Windows) |
 | `./kuraviz.sh dev` | Dev server at `http://localhost:9999` (or `.\kuraviz.ps1 dev` on Windows) |
 | `./kuraviz.sh build` | Build + typecheck (there is no separate typecheck script) |
 | `./kuraviz.sh test` | Auto-scan ALL pages for collisions, logs to `logs/debug.log` (requires prior build) |

@@ -76,7 +76,11 @@ The Docker image (~800 MB) is pre-pulled during scaffold creation. It ships a fu
 All commands run from `scaffold/` inside the generated workspace (or the repo's own `scaffold/` for exploration). Every command runs in Docker — zero host dependencies.
 
 ```bash
-./kuraviz.sh scaffold /path/to/output  # create new project (repo-only)
+# From repo root (project creation only):
+./tools/scaffold.sh /path/to/output     # Linux/macOS/WSL
+.\tools\scaffold.ps1 C:\path\to\output  # Windows
+
+# From scaffold/ (all other commands):
 ./kuraviz.sh dev                       # dev server → http://localhost:9999
 ./kuraviz.sh build                     # production build
 ./kuraviz.sh test                      # collision detection scan
@@ -85,7 +89,7 @@ All commands run from `scaffold/` inside the generated workspace (or the repo's 
 ./kuraviz.sh shell                     # open bash inside the container
 ```
 
-Windows (PowerShell): `.\kuraviz.ps1 dev` etc.
+Windows inside scaffold/: `.\kuraviz.ps1 dev` etc.
 
 npm scripts (`npm run dev|build|test|record|tts`) are thin Docker wrappers — optional, requires npm installed on host.
 
@@ -96,8 +100,8 @@ npm scripts (`npm run dev|build|test|record|tts`) are thin Docker wrappers — o
 ### 1. Project Setup
 
 ```bash
-cd /path/to/kuraviz-repo/scaffold
-./kuraviz.sh scaffold /path/to/workspace
+cd /path/to/kuraviz-repo
+./tools/scaffold.sh /path/to/workspace
 ```
 
 Copies the scaffold template into `workspace/scaffold/` and pre-pulls the Docker image from GHCR.

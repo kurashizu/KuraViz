@@ -15,7 +15,7 @@ use_when: >-
 
 **Docker with Compose** is the only host dependency. All tooling (Node.js, Python, Playwright, FFmpeg) runs inside a self-contained container. The user must have Docker and `docker compose` (v2 plugin) installed and running.
 
-On macOS/Linux/WSL use `./kuraviz.sh`. On Windows (PowerShell) use `.\kuraviz.ps1`. npm scripts (`npm run dev|build|test|record|tts`) are also available but require npm installed on the host.
+On macOS/Linux/WSL use `./scaffold/kuraviz.sh` from the repo root, or `./kuraviz.sh` from within scaffold/. On Windows (PowerShell) use `.\scaffold\kuraviz.ps1`. npm scripts (`npm run dev|build|test|record|tts`) are also available but require npm installed on the host.
 
 ## Workflow
 
@@ -32,8 +32,8 @@ First, check if `MEMORY.md` exists in the current working directory (the project
 1. Create / choose a directory for your video project. This is your `WORKSPACE`.
 2. Run scaffold from the skill's repo directory to generate the project skeleton:
    ```bash
-   cd /path/to/kuraviz-repo/scaffold
-   ./kuraviz.sh scaffold /path/to/WORKSPACE
+   cd /path/to/kuraviz-repo
+   ./tools/scaffold.sh /path/to/WORKSPACE
    ```
    This creates `WORKSPACE/scaffold/` with all files and tools, then pre-pulls the recorder image so all future commands are instant. No npm or Python required on the host — everything runs inside Docker.
 
