@@ -4,8 +4,7 @@
 
 - **`scaffold/`** — the actual Next.js app template. All source code lives here.
 - **`tools/scaffold.py`** — copies scaffold/ to a target directory with pre-installed node_modules.
-- **`adaptors/`** — TTS adapter scripts (e.g., `tts.py`). Point `KURAVIZ_TTS_ADAPTOR` env var here.
-- **`tts/`**, **`tools/`**, **`references/`**, **`SKILL.md`** — project-level tooling and docs, not part of the scaffold.
+- **`tools/tts.example.py`** — TTS adapter template. Copy and modify, then point `KURAVIZ_TTS_ADAPTOR` env var at it.
 
 To create a new project: `python tools/scaffold.py --dir /path/to/workspace --port 9999 --host 0.0.0.0`
 

@@ -10,5 +10,3 @@ __pycache__/
 logs/
 tts/
 MEMORY.md
-adaptors/*
-!adaptors/*.example.*

@@ -10,11 +10,11 @@ For each variable in the table below, tell the user its purpose and ask if they 
 
 | Key | Purpose |
 |---|---|
-| `KURAVIZ_TTS_ADAPTOR` | Path to a TTS adapter script (e.g. `/home/user/adaptors/tts.py`). Without this, audio synthesis is skipped. |
+| `KURAVIZ_TTS_ADAPTOR` | Path to a TTS adapter script (e.g. `/path/to/tts.py`). Without this, audio synthesis is skipped. |
 
-The TTS adapter script must accept command-line arguments `--text "narration content" --output path.wav`.
-For guidance on writing a TTS adapter, refer to `adaptors/adaptors.example.py` and and save it as `adaptors/tts.py` (set the absolute path as `KURAVIZ_TTS_ADAPTOR`).
-Test the adapter by running `python adaptors/tts.py --text "Hello, world!" --output test.wav` and ensure it generates `test.wav` with the correct content.
+Please refer to `tools/tts.example.py` and save it as a separate file (e.g. `tts.py`) in your preferred directory, then set `KURAVIZ_TTS_ADAPTOR` to its absolute path.
+
+Test the adapter by running `python /path/to/tts.py --text "Hello, world!" --output test.wav` and ensure it generates `test.wav` with the correct content.
 
 ### Step 2 — User Preferences
 
@@ -35,5 +35,5 @@ language: Chinese
 style: conversational
 
 # Environment Variables
-KURAVIZ_TTS_ADAPTOR=/home/user/adaptors/tts.py
+KURAVIZ_TTS_ADAPTOR=/path/to/tts.py
 ```
