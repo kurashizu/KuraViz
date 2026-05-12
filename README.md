@@ -2,6 +2,13 @@
 
 Fully autonomous video pipeline skill for AI agents. Build narrated tutorial videos from HTML slides — research, write, design, narrate, and record, all in one agent-driven workflow. **Linux only** (requires Xvfb + pulseaudio for video capture).
 
+## Prerequisites
+
+- **Node.js** ≥ 18 + npm
+- **Python 3** (stdlib only — no extra packages)
+- **ffmpeg** (optional: `h264_vaapi` for GPU encoding)
+- **pulseaudio-utils**, **Xvfb** (for video capture on Linux)
+
 ## Install
 
 ```bash
@@ -25,16 +32,6 @@ On first use, the agent checks if `MEMORY.md` exists. If not, it walks through `
 3. **Style** — narration tone (formal / conversational / tutorial)
 
 Answers are saved to `MEMORY.md` and automatically loaded on subsequent runs.
-
-## Prerequisites
-
-- **Node.js** ≥ 18 + npm
-- **Python 3** (stdlib only — no extra packages)
-- **ffmpeg** (optional: `h264_vaapi` for GPU encoding)
-- **pulseaudio-utils**, **Xvfb** (for video capture on Linux)
-
-These are installed automatically when you `npm install` inside `scaffold/` (via `postinstall` script):
-- playwright (Firefox browser)
 
 ---
 
