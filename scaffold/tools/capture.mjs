@@ -146,6 +146,8 @@ function startFfmpeg(vaapiDevice) {
         "-i",
         "kuraviz_sink.monitor",
         ...videoEncodeArgs(vaapiDevice),
+        "-af",
+        "aresample=async=1:first_pts=0",
         "-c:a",
         "aac",
         "-b:a",
@@ -155,7 +157,7 @@ function startFfmpeg(vaapiDevice) {
     log(`ffmpeg ${args.join(" ")}`);
     const proc = spawn("ffmpeg", args, {
         stdio: ["ignore", "ignore", "pipe"],
-        env: { ...process.env, DISPLAY, PULSE_SINK: "kuraviz_sink" },
+        env: { ...process.env, DISPLAY, PULSE_SINK: "kuraviz_sink", PULSE_LATENCY_MSEC: "200" },
     });
     proc.stderr.on("data", (d) => process.stderr.write(`[ffmpeg] ${d}`));
     proc.on("error", (e) => warn(`FFmpeg process error: ${e.message}`));
