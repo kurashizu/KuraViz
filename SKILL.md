@@ -35,12 +35,13 @@ First, check if `MEMORY.md` exists in the current directory.
    cd /path/to/kuraviz-repo/scaffold
    ./kuraviz.sh scaffold /path/to/WORKSPACE
    ```
-   This creates `WORKSPACE/scaffold/` with all files and tools. No npm or Python required on the host — everything runs inside Docker.
+   This creates `WORKSPACE/scaffold/` with all files and tools, then pre-pulls the recorder image so all future commands are instant. No npm or Python required on the host — everything runs inside Docker.
 
-3. From the new `WORKSPACE/scaffold/`, build the Docker image once:
-   ```bash
-   cd /path/to/WORKSPACE/scaffold
-   docker compose build
+3. Created structure:
+   ```
+   WORKSPACE/                     ← your working root
+   ├── scaffold/                  ← generated here (cd into it for all commands)
+   └── (sources/, outline.md, video.mp4 go here — one level above scaffold/)
    ```
 
 You must strictly follow the **directory structure** and **access rules** below:
@@ -91,9 +92,9 @@ Each subagent, for each of its chapters:
 
 1. Run collision test from `scaffold/`:
    ```bash
-   npm run test
+   ./kuraviz.sh test
    ```
-   This runs `docker compose run --rm test`. The script builds and scans in one step — no separate build needed.
+   The script builds and scans in one step — no separate build needed.
 2. Read the output to find which pages have issues, then fix them using `references/collision-prevention.md`.
 3. Repeat until no collisions remain.
 
@@ -101,7 +102,7 @@ Each subagent, for each of its chapters:
 
 Run the batch TTS orchestrator from `scaffold/`:
 ```bash
-npm run tts
+./kuraviz.sh tts
 ```
 This runs inside Docker. Set `KURAVIZ_TTS_ADAPTOR` env var to enable TTS. After this, audio files will be generated in `scaffold/public/audio/` so `narration.json` can find them.
 
@@ -109,12 +110,12 @@ This runs inside Docker. Set `KURAVIZ_TTS_ADAPTOR` env var to enable TTS. After 
 
 First build, then record — both from `scaffold/`:
 ```bash
-npm run build
-npm run record
-# records to scaffold/output/output.mp4
+./kuraviz.sh build
+./kuraviz.sh record
+# output → scaffold/output/output.mp4
 ```
 
-To specify a custom output path, pass the argument directly to docker compose:
+To save to a custom path (e.g. `../video.mp4`):
 ```bash
 docker compose run --rm -v "$(pwd)/..:/output" record /output/video.mp4
 ```

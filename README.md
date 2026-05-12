@@ -18,6 +18,9 @@ Create a new project:
 ```bash
 cd /path/to/kuraviz-repo/scaffold
 ./kuraviz.sh scaffold /path/to/workspace
+
+cd /path/to/workspace/scaffold
+./kuraviz.sh dev   # → http://localhost:9999
 ```
 
 ## Usage
@@ -50,7 +53,7 @@ Every operation runs through Docker Compose. From the `scaffold/` directory:
 .\kuraviz.ps1 shell
 ```
 
-Or via npm (thin Docker wrapper):
+Or via npm (thin Docker wrappers — npm required on host):
 
 ```bash
 npm run dev
@@ -60,7 +63,7 @@ npm run record
 npm run tts
 ```
 
-The first invocation builds the Docker image (~2 minutes). Subsequent runs are instant.
+The image is pre-pulled during `./kuraviz.sh scaffold`. No build step needed.
 
 ### First-Run Configuration
 

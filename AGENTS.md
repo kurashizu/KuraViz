@@ -3,7 +3,7 @@
 ## Project layout
 
 - **`scaffold/`** — the actual Next.js app template. All source code lives here.
-- **`tools/scaffold.py`** — copies scaffold/ to a target directory with pre-installed node_modules.
+- **`tools/scaffold.py`** — thin Docker wrapper; creates a project via `./kuraviz.sh scaffold`.
 - **`tools/tts.example.py`** — TTS adapter template. Copy and modify, then point `KURAVIZ_TTS_ADAPTOR` env var at it.
 
 To create a new project: `./kuraviz.sh scaffold /path/to/workspace` from scaffold/
@@ -30,7 +30,7 @@ Run in `scaffold/`. All commands run inside Docker — no host dependencies beyo
 | `?debug=auto` | Auto-scan all pages, logs collisions to `logs/debug.log` |
 | `?record=1` | Recording mode: auto-plays from page 1, logs `[record] ch/pg` progress
 
-The Docker image is built on first invocation. Set `KURAVIZ_TTS_ADAPTOR` env var to enable TTS.
+The Docker image is pre-pulled during `kuraviz.sh scaffold`. Set `KURAVIZ_TTS_ADAPTOR` env var to enable TTS.
 
 ## Architecture rules (agent must not violate)
 
