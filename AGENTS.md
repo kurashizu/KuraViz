@@ -10,15 +10,15 @@ To create a new project: `./kuraviz.sh scaffold /path/to/workspace` from scaffol
 
 ## Commands
 
-Run in `scaffold/`. All commands run inside Docker — no host dependencies beyond Docker itself.
+Run in `scaffold/`. All commands run inside Docker — no host dependencies beyond Docker with Compose (v2 plugin).
 
 | Command | Purpose |
 |---|---|
 | `./kuraviz.sh scaffold <dir>` | Create a new project from template (or `.\kuraviz.ps1 scaffold <dir>` on Windows) |
 | `./kuraviz.sh dev` | Dev server at `http://localhost:9999` (or `.\kuraviz.ps1 dev` on Windows) |
 | `./kuraviz.sh build` | Build + typecheck (there is no separate typecheck script) |
-| `./kuraviz.sh test` | Auto-scan ALL pages for collisions, logs to `logs/debug.log` |
-| `./kuraviz.sh record` | Record video via Firefox + FFmpeg → `output/output.mp4` |
+| `./kuraviz.sh test` | Auto-scan ALL pages for collisions, logs to `logs/debug.log` (requires prior build) |
+| `./kuraviz.sh record` | Record video via Firefox + FFmpeg → `output/output.mp4` (requires prior build) |
 | `./kuraviz.sh tts` | Batch TTS: reads `public/narration.json`, outputs `.wav` to `public/audio/` |
 | `./kuraviz.sh shell` | Open bash shell inside the container |
 | `npm run dev` | Same as `kuraviz.sh dev` (thin wrapper) |
@@ -58,6 +58,20 @@ The Docker image is pre-pulled during `kuraviz.sh scaffold`. Set `KURAVIZ_TTS_AD
 | `@/components/markdown` | Markdown renderer (LaTeX, GFM tables, task lists with Unicode ☐/☑, syntax-highlighted code blocks) |
 | `@/components/markdown/mermaid` | Mermaid diagram renderer (mindmap/flowchart/sequence/class/gantt) |
 | `@/components/graph` | BarChart, LineChart, Axis (via recharts) |
+
+## Reference docs
+
+Located in `references/`:
+
+| Path | Purpose |
+|---|---|
+| `references/config-guide.md` | Environment variables and user preferences |
+| `references/components.md` | All component APIs |
+| `references/page-creation.md` | Page creation workflow |
+| `references/narration-system.md` | Narration JSON schema |
+| `references/design-guide.md` | Visual design rules, layout templates |
+| `references/collision-prevention.md` | Font metrics, box sizing, debug workflow |
+| `references/outline-example.md` | Example chapter outline |
 
 ## Debug
 
