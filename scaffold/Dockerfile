@@ -10,7 +10,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     xvfb \
     xkbcomp \
     pulseaudio \
-    pulseaudio-utils \
     ffmpeg \
     curl \
     ca-certificates \
@@ -37,6 +36,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     fonts-liberation \
     fonts-noto-cjk \
     && rm -rf /var/lib/apt/lists/*
+
+# pulseaudio-utils provides pactl — separate layer to avoid t64 conflicts
+RUN apt-get update && apt-get install -y --no-install-recommends pulseaudio-utils 2>/dev/null || true; rm -rf /var/lib/apt/lists/*
 
 # ── Node.js 22 ──────────────────────────────────────────────────────────────
 RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
