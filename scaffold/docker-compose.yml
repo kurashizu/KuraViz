@@ -1,6 +1,6 @@
 services:
   scaffold:
-    build: .
+    image: ghcr.io/kurashizu/kuraviz-recorder:latest
     volumes:
       - .:/app/scaffold:ro
     entrypoint: python3
