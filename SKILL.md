@@ -29,9 +29,19 @@ First, check if `MEMORY.md` exists in the current directory.
 
 ### 1. Project Setup
 
-1. Create a directory named after your video content. This is your `WORKSPACE`.
-2. Run `tools/scaffold.py --dir /PATH/TO/WORKSPACE` to generate the scaffold.
-3. Build the Docker image: from `scaffold/`, run `docker compose build`.
+1. Create / choose a directory for your video project. This is your `WORKSPACE`.
+2. Run scaffold from the skill's repo directory to generate the project skeleton:
+   ```bash
+   cd /path/to/kuraviz-repo/scaffold
+   ./kuraviz.sh scaffold /path/to/WORKSPACE
+   ```
+   This creates `WORKSPACE/scaffold/` with all files and tools. No npm or Python required on the host — everything runs inside Docker.
+
+3. From the new `WORKSPACE/scaffold/`, build the Docker image once:
+   ```bash
+   cd /path/to/WORKSPACE/scaffold
+   docker compose build
+   ```
 
 You must strictly follow the **directory structure** and **access rules** below:
 ```

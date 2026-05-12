@@ -6,6 +6,8 @@ on:
     paths:
       - "scaffold/Dockerfile"
       - "scaffold/tools/docker-entrypoint.sh"
+      - "scaffold/tools/scaffold.py"
+      - "scaffold/tools/generate_audio.py"
       - "scaffold/tools/capture.mjs"
       - "scaffold/tools/test-collisions.mjs"
       - "scaffold/package.json"

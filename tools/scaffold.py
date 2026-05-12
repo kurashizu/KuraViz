@@ -1,98 +1,30 @@
 #!/usr/bin/env python3
 """
-Scaffold tool — pre-installs dependencies and copies the web-video scaffold template.
+Docker wrapper for scaffold.py — delegates to the container.
+Zero host dependencies beyond Docker.
 
 Usage:
     python tools/scaffold.py --dir /path/to/workspace
-    python tools/scaffold.py --dir /path/to/workspace --name my-project --port 8080 --host 127.0.0.1
-    python tools/scaffold.py --dir /path/to/workspace --force
+    python tools/scaffold.py --dir /path/to/workspace --name my-project --force
 """
 
 import argparse
-import json
 import os
-import shutil
 import subprocess
 import sys
 
-SCAFFOLD_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'scaffold')
-DEFAULT_PORT = 9999
-DEFAULT_HOST = '0.0.0.0'
+REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+SCAFFOLD_DIR = os.path.join(REPO, 'scaffold')
 
-IGNORE_PATTERNS = shutil.ignore_patterns('.next', '.gitignore')
+parser = argparse.ArgumentParser(add_help=False)
+parser.add_argument('--dir', type=str, required=True)
+known, remaining = parser.parse_known_args()
 
+target_abs = os.path.abspath(known.dir)
 
-def ensure_deps():
-    nm = os.path.join(SCAFFOLD_DIR, 'node_modules')
-    if os.path.isdir(nm):
-        print(f'  [OK] Dependencies already installed in scaffold/')
-        return True
-    print(f'  [..] Installing dependencies in scaffold/...')
-    try:
-        subprocess.run(['node', '--version'], capture_output=True, check=True)
-    except (subprocess.CalledProcessError, FileNotFoundError):
-        print(f'  [Error] Node.js not found. Install Node.js first.', file=sys.stderr)
-        sys.exit(1)
-    result = subprocess.run(['npm', 'install'], cwd=SCAFFOLD_DIR, capture_output=True, text=True, timeout=180)
-    if result.returncode == 0:
-        print(f'  [OK] npm install completed in scaffold/')
-        return True
-    print(f'  [Error] npm install failed in scaffold/:', file=sys.stderr)
-    for line in result.stderr.strip().split('\n')[-5:]:
-        print(f'    {line}', file=sys.stderr)
-    sys.exit(1)
-
-
-def inject_server_config(target: str, port: int, host: str):
-    pkg_path = os.path.join(target, 'package.json')
-    with open(pkg_path, 'r') as f:
-        pkg = json.load(f)
-
-    pkg['scripts']['dev'] = f'next dev -p {port} -H {host}'
-    pkg['scripts']['start'] = f'next start -p {port} -H {host}'
-
-    with open(pkg_path, 'w') as f:
-        json.dump(pkg, f, indent=2)
-        f.write('\n')
-    print(f'  [OK] Server: {host}:{port}')
-
-
-def main():
-    parser = argparse.ArgumentParser(description='Copy scaffold template to target directory')
-    parser.add_argument('--dir', type=str, required=True, help='Target workspace directory')
-    parser.add_argument('--name', type=str, default='scaffold', help='Output folder name')
-    parser.add_argument('--port', type=int, default=DEFAULT_PORT, help='Dev server port (default: 9999)')
-    parser.add_argument('--host', type=str, default=DEFAULT_HOST, help='Dev server host (default: 0.0.0.0)')
-    parser.add_argument('--force', action='store_true', help='Overwrite existing directory')
-    args = parser.parse_args()
-
-    target = os.path.abspath(os.path.join(args.dir, args.name))
-
-    if not os.path.exists(SCAFFOLD_DIR):
-        print(f'[Error] Scaffold source not found: {SCAFFOLD_DIR}', file=sys.stderr)
-        sys.exit(1)
-
-    if os.path.exists(target):
-        if args.force:
-            shutil.rmtree(target)
-            print(f'  [OK] Removed existing: {target}')
-        else:
-            print(f'[Error] Target already exists: {target}', file=sys.stderr)
-            print(f'  Use --force to overwrite.', file=sys.stderr)
-            sys.exit(1)
-
-    ensure_deps()
-
-    os.makedirs(os.path.dirname(target), exist_ok=True)
-    shutil.copytree(SCAFFOLD_DIR, target, ignore=IGNORE_PATTERNS, symlinks=True)
-    print(f'  [OK] Copied scaffold → {target}')
-
-    inject_server_config(target, args.port, args.host)
-
-    print(f'\n  ── Done ──')
-    print(f'  cd {target}')
-    print(f'  npm run dev')
-
-
-if __name__ == '__main__':
-    main()
+subprocess.run([
+    'docker', 'compose', 'run', '--rm',
+    '-v', f'{target_abs}:/output',
+    'scaffold',
+    '--dir', '/output',
+] + remaining, cwd=SCAFFOLD_DIR, check=True)

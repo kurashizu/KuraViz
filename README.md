@@ -14,6 +14,12 @@ Fully autonomous video pipeline for AI agents. Build narrated tutorial videos fr
 npx skills add kurashizu/KuraViz
 ```
 
+Create a new project:
+```bash
+cd /path/to/kuraviz-repo/scaffold
+./kuraviz.sh scaffold /path/to/workspace
+```
+
 ## Usage
 
 Ask your agent:
@@ -27,12 +33,12 @@ The agent handles everything: content outline, slide pages, narration scripts, T
 Every operation runs through Docker Compose. From the `scaffold/` directory:
 
 ```bash
-# macOS / Linux / WSL
 ./kuraviz.sh dev      # Start dev server at http://localhost:9999
 ./kuraviz.sh build    # Build production bundle
 ./kuraviz.sh test     # Run collision detection scan
 ./kuraviz.sh record   # Record video (requires prior build)
 ./kuraviz.sh tts      # Generate TTS audio files
+./kuraviz.sh scaffold /path/to/output  # Create a new project from template
 ./kuraviz.sh shell    # Open a shell inside the container
 
 # Windows (PowerShell)
@@ -72,7 +78,12 @@ Answers are saved to `MEMORY.md` and automatically loaded on subsequent runs.
 
 ### 1. Project Setup
 
-`tools/scaffold.py` generates a Next.js workspace at the target directory containing the slide player, component library, and tooling.
+```bash
+cd /path/to/kuraviz-repo/scaffold
+./kuraviz.sh scaffold /path/to/workspace
+```
+
+This creates the workspace directory containing the slide player, component library, and tooling. All dependencies run inside Docker — no npm or Python needed on the host.
 
 ```
 workspace/

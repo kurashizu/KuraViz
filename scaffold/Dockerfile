@@ -49,6 +49,7 @@ RUN npm install \
     && rm -rf /var/lib/apt/lists/*
 
 # ── Tool scripts ────────────────────────────────────────────────────────────
+COPY tools/scaffold.py tools/generate_audio.py tools/
 COPY tools/capture.mjs tools/test-collisions.mjs tools/
 COPY tools/docker-entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh

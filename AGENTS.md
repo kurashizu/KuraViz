@@ -6,7 +6,7 @@
 - **`tools/scaffold.py`** — copies scaffold/ to a target directory with pre-installed node_modules.
 - **`tools/tts.example.py`** — TTS adapter template. Copy and modify, then point `KURAVIZ_TTS_ADAPTOR` env var at it.
 
-To create a new project: `python tools/scaffold.py --dir /path/to/workspace --port 9999 --host 0.0.0.0`
+To create a new project: `./kuraviz.sh scaffold /path/to/workspace` from scaffold/
 
 ## Commands
 
@@ -14,6 +14,7 @@ Run in `scaffold/`. All commands run inside Docker — no host dependencies beyo
 
 | Command | Purpose |
 |---|---|
+| `./kuraviz.sh scaffold <dir>` | Create a new project from template (or `.\kuraviz.ps1 scaffold <dir>` on Windows) |
 | `./kuraviz.sh dev` | Dev server at `http://localhost:9999` (or `.\kuraviz.ps1 dev` on Windows) |
 | `./kuraviz.sh build` | Build + typecheck (there is no separate typecheck script) |
 | `./kuraviz.sh test` | Auto-scan ALL pages for collisions, logs to `logs/debug.log` |

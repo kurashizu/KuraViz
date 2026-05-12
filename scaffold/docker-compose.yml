@@ -1,4 +1,11 @@
 services:
+  scaffold:
+    build: .
+    volumes:
+      - .:/app/scaffold:ro
+    entrypoint: python3
+    command: /app/scaffold/tools/scaffold.py --dir /output --name scaffold
+
   dev:
     build: .
     ports:
