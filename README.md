@@ -25,7 +25,7 @@ Example for OpenCode on Linux:
 git clone https://github.com/kurashizu/KuraViz.git ~/.config/opencode/skills/kuraviz
 ```
 
-### Method 2 — npx (OpenCode only)
+### Method 2 — npx
 
 ```bash
 npx skills add kurashizu/KuraViz
