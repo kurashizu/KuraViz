@@ -2,11 +2,13 @@
 
 Build PPT-style videos from HTML slides. Write React components on a 1920×1080 canvas, pair them with narration scripts, auto-generate audio via TTS, and record a video — all without a video editor.
 
-## Install
+## Usage
 
 ```bash
 npx skills add kurashizu/KuraViz
 ```
+
+Then ask your agent: *"Use KuraViz Skill, make a tutorial video about [a blog post / news article / any topic]".*
 
 ## How It Works
 
@@ -14,6 +16,8 @@ npx skills add kurashizu/KuraViz
 2. **Add scripts** — pair each slide with a voiceover script in `narration.json`
 3. **Generate audio** — TTS pipeline turns scripts into `.wav` files
 4. **Record video** — automatic playback captured via Firefox + FFmpeg into an MP4
+
+## Commands
 
 ## Project Structure
 
