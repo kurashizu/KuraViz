@@ -22,111 +22,97 @@ The agent handles everything: content outline, slide pages, narration scripts, T
 
 ### 1. Project Setup
 
-`tools/scaffold.py` generates a Next.js workspace at the target directory. The workspace contains a pre-configured `scaffold/` folder with the slide player, component library, and tooling ready to go.
+`tools/scaffold.py` generates a Next.js workspace at the target directory containing the slide player, component library, and tooling.
 
 ```
 workspace/
-├── outline.md               # Chapter outline
-├── sources/                  # Reference materials
-├── video.mp4                 # Final output
+├── outline.md               # Chapter outline (read/write)
+├── sources/                  # Reference materials (read/write)
+├── video.mp4                 # Final output (list only)
 └── scaffold/
-    ├── content/chapters/      # Page components
+    ├── content/chapters/      # Page components (read/write)
     ├── public/
-    │   ├── narration.json     # Narration scripts
-    │   └── audio/             # Generated .wav files
+    │   ├── narration.json     # Narration scripts (read/write)
+    │   └── audio/             # Generated .wav files (no access)
     ├── components/            # Slide primitives (read-only)
     ├── lib/                   # Utilities, types (read-only)
     └── tools/                 # Scripts (execute-only)
 ```
 
-### 2. Slide Pages
+### 2. Source Collection & Outline
 
-Pages are React components (`'use client'`) with absolute-positioned elements on a 1920×1080 canvas. Each chapter has its own directory under `content/chapters/`, with an `index.ts` that registers all pages.
+The agent collects reference materials (3–6 sources) and saves them to `workspace/sources/` as markdown. A chapter outline is written to `workspace/outline.md` with page titles and descriptions.
 
-**Component library** (`components/`):
-
-| Component | Purpose |
-|---|---|
-| `<Text>` | Typography (h1–h3, body, caption, citation, code, watermark) |
-| `<Cardbox>` | Card container (default / elevated / bordered) |
-| `<Anim>` | Entry animations (fade-in, slide-\*, scale-in) |
-| `<Markdown>` | Rich text with LaTeX, GFM tables, task lists, code syntax highlighting |
-| `<Mermaid>` | Diagrams (flowchart, sequence, mindmap, gantt, class) |
-| `<BarChart>` / `<LineChart>` | Recharts-based data visualization |
-
-**Styling constraints**: All styles are inline via `boxStyle()` from `lib/bbox.ts`. No Tailwind. Box heights must account for font metrics — see `references/collision-prevention.md`.
-
-### 3. Narration
-
-Each page has an entry in `public/narration.json`:
+Each page gets an entry in `scaffold/public/narration.json`:
 
 ```json
 {
   "{chapterId}": {
     "{pageId}": {
-      "script": "Text spoken on this slide.\\nUse \\n for line breaks.",
+      "script": "Narration text for this slide.",
       "audioSrc": "/audio/{chapterId}/{pageId}.wav"
     }
   }
 }
 ```
 
-The `script` field is displayed as a caption overlay and fed to TTS. The `audioSrc` path determines where the TTS output is stored and how the player loads it.
+The `script` field is displayed as a caption overlay and fed to TTS. The `audioSrc` path maps to the TTS output and the player's audio lookup.
 
-### 4. TTS Audio
+### 3. Page Creation
 
-**Interface**: `tools/generate_audio.py` reads `narration.json`, iterates over pages, and for each one calls:
+Each page is a `'use client'` React component with absolute-positioned elements on a 1920×1080 canvas. Registered in the chapter's `index.ts`.
 
+**Component library** (in `components/`):
+
+| Component | Purpose |
+|---|---|
+| `<Text>` | Typography (h1–h3, body, caption, citation, code, watermark) |
+| `<Cardbox>` | Card container (default / elevated / bordered) |
+| `<Anim>` | Entry animations (fade-in, slide-\*, scale-in) |
+| `<Markdown>` | Rich text with LaTeX, GFM tables, task lists, syntax-highlighted code |
+| `<Mermaid>` | Diagrams (flowchart, sequence, mindmap, gantt, class) |
+| `<BarChart>` / `<LineChart>` | Recharts-based data visualization |
+
+All styles are inline via `boxStyle()` from `lib/bbox.ts`. Box heights must account for font metrics — see `references/collision-prevention.md`.
+
+### 4. Collision Testing & Fixing
+
+`tools/test-collisions.mjs` runs Playwright (headless Firefox) with `?debug=auto`, scanning every page for layout violations:
+
+| Type | Detection |
+|---|---|
+| `OVERLAP` | Sibling absolute elements overlap |
+| `OVERFLOW` | Child exceeds its positioned parent's bounds |
+| `CONTENT_OVERFLOW` | Content hidden by `overflow:hidden` exceeds the box |
+| `EXCEED` | Element extends beyond the 1920×1080 canvas |
+
+Results are written to `logs/debug.log` and printed as a summary. Repeat until zero collisions.
+
+### 5. Audio Generation
+
+`tools/generate_audio.py` reads `narration.json` and calls a TTS adapter for every page that doesn't already have a `.wav` file.
+
+**TTS adapter contract**:
 ```bash
-/tts/your-adapter.py --text "script content" --output /path/to/output.wav
+/tts/your-adapter.py --text "Script content" --output /path/to/output.wav
 ```
 
-This is the **TTS adapter contract** — any script that accepts `--text` and `--output` can serve as the backend.
-
-**Configuration**: Set `KURAVIZ_TTS_ADAPTOR` to the adapter path. If unset, generation is skipped. A template is at `tools/tts.example.py`.
-
-**Skip logic**: Already-existing `.wav` files are skipped so the pipeline is restartable.
-
-### 5. Player
-
-`SlidePlayer` (`components/player/slide-player.tsx`) is the core runtime:
-
-- Fetches `narration.json` on mount
-- Looks up the current chapter+page key to get the `audioSrc`
-- Creates an `HTMLAudioElement` and calls `.play()`
-- On `onended`, auto-advances to the next page (500ms delay)
-- Stops on the last slide (no wrap-around)
-- Arrow keys ← → for manual navigation
-
-**Record mode** (`?record=1`): Skips the click-to-start overlay. The player auto-plays from page 1 and logs every page change to the console as `[record] chapterId/pageId`. On the last slide it logs `[record] done`.
+Set `KURAVIZ_TTS_ADAPTOR` to enable. A template is at `tools/tts.example.py`. If the env var is unset, generation is skipped.
 
 ### 6. Video Capture
 
-`tools/capture.mjs` orchestrates the recording:
+`tools/capture.mjs` records the final MP4:
 
 1. Starts a Next.js production server on a random port
 2. Launches Xvfb (virtual 1920×1080 display)
 3. Creates a PulseAudio null sink for audio capture
-4. Launches Playwright Firefox in kiosk mode (no browser UI) at `/?record=1`
-5. Listens for `[record]` console messages to track progress
-6. Starts FFmpeg (x11grab + pulse input) once playback begins
-7. Signals FFmpeg to stop when `[record] done` is received
-8. Cleans up: kills server, unloads audio sink, stops Xvfb
+4. Launches Playwright Firefox in kiosk mode at `/?record=1`
+5. Watches for `[record] ch/pg` console logs to track progress
+6. Starts FFmpeg (x11grab + pulse) once playback begins
+7. Stops FFmpeg when `[record] done` fires
+8. Cleans up: server, audio sink, Xvfb
 
-**Output**: A single MP4 with H.264 video (VAAPI hardware encoding if available) and AAC audio.
-
-### 7. Collision Detection
-
-`tools/test-collisions.mjs` runs headless Firefox with `?debug=auto`. It scans every page for four layout violation types:
-
-| Type | Detection |
-|---|---|
-| `OVERLAP` | Sibling absolute elements overlap (>1px tolerance) |
-| `OVERFLOW` | Child exceeds its positioned parent's bounds |
-| `CONTENT_OVERFLOW` | Content inside `overflow:hidden` container exceeds its box (`scrollHeight > clientHeight`) |
-| `EXCEED` | Element extends beyond the 1920×1080 canvas |
-
-Results are written to `logs/debug.log` and printed as a summary.
+**SlidePlayer** (`components/player/slide-player.tsx`) is the runtime: fetches `narration.json`, creates an `HTMLAudioElement` for each page, and auto-advances on `onended` (500ms delay). In `?record=1` mode it skips the click-to-start overlay and auto-plays from page 1, logging every transition to the console.
 
 ---
 
