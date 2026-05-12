@@ -146,8 +146,6 @@ function startFfmpeg(vaapiDevice) {
         "-i",
         "kuraviz_sink.monitor",
         ...videoEncodeArgs(vaapiDevice),
-        "-af",
-        "aresample=async=1:first_pts=0",
         "-c:a",
         "aac",
         "-b:a",
@@ -219,9 +217,16 @@ async function main() {
         log("Container mode — audio sink already loaded");
     }
 
-    // 5. Detect encoder (do this early, before launching browser)
+    // 5. Detect encoder + start FFmpeg BEFORE any audio plays
     log("Detecting video encoder...");
     const vaapiDevice = detectVaapi();
+    const ffmpeg = startFfmpeg(vaapiDevice);
+    const ffmpegStart = Date.now();
+    await setTimeout(500);
+    if (ffmpeg.exitCode !== null) {
+        fail("FFmpeg exited immediately — check the arguments printed above");
+    }
+    log("FFmpeg is running");
 
     // 6. Launch Firefox
     const url = `http://127.0.0.1:${port}/?record=1`;
@@ -261,6 +266,7 @@ async function main() {
     let done = false;
     let timedOut = false;
     let startResolve;
+    let playbackStart = 0;
     const startPromise = new Promise((r) => { startResolve = r; });
 
     const donePromise = new Promise((resolveP) => {
@@ -278,7 +284,11 @@ async function main() {
                 log(`Recording page: ${id}`);
                 currentPage = id;
                 lastPageAt = Date.now();
-                if (startResolve) { startResolve(); startResolve = null; }
+                if (startResolve) {
+                    playbackStart = Date.now();
+                    startResolve();
+                    startResolve = null;
+                }
             }
         });
     });
@@ -314,15 +324,7 @@ async function main() {
         new Promise((_, rejectP) => globalThis.setTimeout(() => rejectP(new Error("Playback did not start within 30s")), 30000)),
     ]);
 
-    // 7. FFmpeg starts NOW — playback has begun
-    log("Playback started — starting FFmpeg...");
-    const ffmpeg = startFfmpeg(vaapiDevice);
-    await setTimeout(300);
-
-    if (ffmpeg.exitCode !== null) {
-        fail("FFmpeg exited immediately — check the arguments printed above");
-    }
-    log("FFmpeg is running");
+    // 7. Playback has begun — FFmpeg has been recording since before load
 
     // 8. Wait for playback to complete or timeout
     await Promise.race([donePromise, timeoutPromise]);
@@ -333,19 +335,26 @@ async function main() {
     ffmpeg.kill("SIGINT");
     await new Promise((r) =>
         ffmpeg.on("close", (code) => {
-            log(`FFmpeg exited with code ${code}`);
-            r();
-        }),
-    );
+    log(`FFmpeg exited with code ${code}`);
+    r();
+});
 
-    // 11. Cleanup
-    log("Cleaning up...");
-    server.kill();
-    if (sinkModule) {
-        try {
-            execSync(`pactl unload-module ${sinkModule}`, {
-                env: { ...process.env, DISPLAY },
-            });
+// Trim initial silence/loading from output
+const offset = (playbackStart - ffmpegStart) / 1000;
+if (offset > 0.5) {
+    log(`Trimming ${offset.toFixed(1)}s of leading silence...`);
+    const tmpOut = OUTPUT + ".tmp.mp4";
+    try {
+        execSync(
+            `ffmpeg -y -ss ${offset} -i "${OUTPUT}" -c copy -avoid_negative_ts 1 "${tmpOut}" 2>/dev/null`
+        );
+        execSync(`mv "${tmpOut}" "${OUTPUT}"`);
+        log("Trim complete");
+    } catch {
+        log("Trim failed — keeping original output");
+        try { execSync(`rm -f "${tmpOut}"`); } catch {}
+    }
+}
             log("Audio sink unloaded");
         } catch {}
     }
