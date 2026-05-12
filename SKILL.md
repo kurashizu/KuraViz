@@ -13,7 +13,7 @@ use_when: >-
 
 ## Prerequisites
 
-**Docker** is the only host dependency. All tooling (Node.js, Python, Playwright, FFmpeg) runs inside a self-contained Docker container. The user must have Docker installed and running.
+**Docker with Compose** is the only host dependency. All tooling (Node.js, Python, Playwright, FFmpeg) runs inside a self-contained container. The user must have Docker and `docker compose` (v2 plugin) installed and running.
 
 On macOS/Linux/WSL use `./kuraviz.sh`. On Windows (PowerShell) use `.\kuraviz.ps1`. npm scripts (`npm run dev|build|test|record|tts`) work everywhere.
 

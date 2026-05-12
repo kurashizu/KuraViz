@@ -6,7 +6,9 @@ Fully autonomous video pipeline for AI agents. Build narrated tutorial videos fr
 
 ## Prerequisites
 
-- **Docker** (Docker Desktop on macOS/Windows, docker-ce on Linux)
+- **Docker** with Compose plugin (`docker compose`, not `docker-compose`)
+  - Docker Desktop (macOS/Windows) — included
+  - Linux — `docker-ce` + `docker-compose-plugin` (or `docker-compose-v2`)
 
 ## Install
 
