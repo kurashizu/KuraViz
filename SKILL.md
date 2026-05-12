@@ -41,7 +41,7 @@ First, check if `MEMORY.md` exists in the current working directory (the project
    ```
    WORKSPACE/                     ← your working root
    ├── scaffold/                  ← generated here (cd into it for all commands)
-   └── (sources/, outline.md, video.mp4 go here — one level above scaffold/)
+    └── (sources/, outline.md go here — one level above scaffold/)
    ```
 
 You must strictly follow the **directory structure** and **access rules** below:
