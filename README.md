@@ -1,14 +1,12 @@
 # KuraViz
 
-Fully autonomous video pipeline skill for AI agents. Build narrated tutorial videos from HTML slides — research, write, design, narrate, and record, all in one agent-driven workflow.
+Fully autonomous video pipeline for AI agents. Build narrated tutorial videos from HTML slides — research, write, design, narrate, and record, all in one agent-driven workflow.
 
-**Cross-platform** via Docker. Runs on Linux, macOS, Windows.
+**Zero host dependencies** — the only requirement is Docker. Everything runs inside a self-contained container (Node.js, Python, Playwright Firefox, FFmpeg, Xvfb, PulseAudio).
 
 ## Prerequisites
 
-- **Docker** (recommended) — the only requirement for recording + collision testing
-- **Node.js** ≥ 22 + **npm** (for development: page creation, dev server, build)
-- **Python 3** (optional — for TTS audio generation on host)
+- **Docker** (Docker Desktop on macOS/Windows, docker-ce on Linux)
 
 ## Quick Start
 
@@ -22,7 +20,41 @@ Ask your agent:
 
 > *"Use KuraViz Skill, make a tutorial video about [a blog post / news article / any topic]".*
 
-The agent handles everything: content outline, slide pages, narration scripts, TTS audio, and video recording.
+The agent handles everything: content outline, slide pages, narration scripts, TTS audio, and video recording — all inside Docker.
+
+### Commands
+
+Every operation runs through Docker Compose. From the `scaffold/` directory:
+
+```bash
+# macOS / Linux / WSL
+./kuraviz.sh dev      # Start dev server at http://localhost:9999
+./kuraviz.sh build    # Build production bundle
+./kuraviz.sh test     # Run collision detection scan
+./kuraviz.sh record   # Record video (requires prior build)
+./kuraviz.sh tts      # Generate TTS audio files
+./kuraviz.sh shell    # Open a shell inside the container
+
+# Windows (PowerShell)
+.\kuraviz.ps1 dev
+.\kuraviz.ps1 build
+.\kuraviz.ps1 test
+.\kuraviz.ps1 record
+.\kuraviz.ps1 tts
+.\kuraviz.ps1 shell
+```
+
+Or via npm (thin Docker wrapper):
+
+```bash
+npm run dev
+npm run build
+npm run test
+npm run record
+npm run tts
+```
+
+The first invocation builds the Docker image (~2 minutes). Subsequent runs are instant.
 
 ### First-Run Configuration
 
@@ -104,18 +136,10 @@ Collision detection uses Playwright (headless Firefox) to scan every page for la
 | `CONTENT_OVERFLOW` | Content hidden by `overflow:hidden` exceeds the box |
 | `EXCEED` | Element extends beyond the 1920×1080 canvas |
 
-#### Via Docker (recommended)
-
 ```bash
 cd scaffold
-npm run test:docker
-```
-
-#### Via Host
-
-```bash
-cd scaffold
-node tools/test-collisions.mjs
+npm run test
+# or: ./kuraviz.sh test
 ```
 
 Results are written to `logs/debug.log`. Repeat until zero collisions.
@@ -129,46 +153,34 @@ Results are written to `logs/debug.log`. Repeat until zero collisions.
 /tts/your-adapter.py --text "Script content" --output /path/to/output.wav
 ```
 
-Set `KURAVIZ_TTS_ADAPTOR` to enable. A template is at `tools/tts.example.py`. If the env var is unset, generation is skipped.
+```bash
+cd scaffold
+npm run tts
+# or: ./kuraviz.sh tts
+```
+
+Set `KURAVIZ_TTS_ADAPTOR` env var to enable. A template is at `tools/tts.example.py`. If the env var is unset, generation is skipped.
 
 ### 6. Video Capture
 
-`tools/capture.mjs` records the final MP4. Requires a production build first (`npm run build`).
-
-#### Option A — Docker (recommended)
-
-No host dependencies beyond Docker.
+Records the final MP4. Requires a production build first.
 
 ```bash
 cd scaffold
 npm run build
-npm run record:docker /path/to/output.mp4
+npm run record
+# or: ./kuraviz.sh build && ./kuraviz.sh record
 ```
-
-First run pulls `ghcr.io/kurashizu/kuraviz-recorder:latest` (~800 MB). Subsequent runs are instant.
 
 To pass a GPU device for hardware encoding:
 
 ```bash
-docker run --rm --shm-size=2g \
+docker compose run --rm \
   --device /dev/dri/renderD128 \
-  -v "$(pwd):/app/scaffold:ro" \
-  -v "$(pwd):/output" \
-  ghcr.io/kurashizu/kuraviz-recorder:latest \
-  /output/output.mp4
+  record
 ```
 
-#### Option B — Host (Linux only)
-
-Requires: `firefox`, `ffmpeg`, `pulseaudio`, `xvfb`, Node.js ≥ 22.
-
-```bash
-cd scaffold
-npm run build
-npm run record output.mp4
-```
-
-#### How the recorder works
+**How the recorder works**:
 
 1. Starts Next.js production server on a random port
 2. Launches Xvfb (virtual 1920×1080 display)
@@ -184,11 +196,10 @@ npm run record output.mp4
 
 | Symptom | Fix |
 |---|---|
-| Firefox crash / shm error | Increase `--shm-size` to `4g` |
+| Firefox crash / shm error | Increase `shm_size` in docker-compose.yml to `4gb` |
 | Hangs on `(init)` | Check that `?record=1` triggers auto-play in SlidePlayer |
 | Black video | FFmpeg x11grab failed — check `[ffmpeg]` log lines |
 | No audio in output | PulseAudio sink not ready — re-run |
-| `npm run build` inside container fails | Run build on host first — scaffold is mounted read-only |
 
 ---
 

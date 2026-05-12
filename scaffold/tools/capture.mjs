@@ -165,7 +165,7 @@ function startFfmpeg(vaapiDevice) {
 // ── Main ──────────────────────────────────────────────────────────────────────
 
 async function main() {
-    mkdirSync(resolve(SCAFFOLD, "logs"), { recursive: true });
+    try { mkdirSync(resolve(SCAFFOLD, "logs"), { recursive: true }); } catch {}
 
     // Clean up stale profile to avoid translate/UI state carrying over
     rmSync("/tmp/kuraviz-recording-profile", { recursive: true, force: true });

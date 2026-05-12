@@ -10,21 +10,26 @@ To create a new project: `python tools/scaffold.py --dir /path/to/workspace --po
 
 ## Commands
 
-Run in `scaffold/`:
+Run in `scaffold/`. All commands run inside Docker — no host dependencies beyond Docker itself.
 
 | Command | Purpose |
-|---|---|---|
-| `npm run dev` | Dev server at `0.0.0.0:9999` |
-| `npm run build` | Build + typecheck (there is no separate typecheck script) |
-| `npm install` | Installs deps + auto-runs `playwright install firefox` |
-| `python tools/generate_audio.py` | Batch TTS: reads `public/narration.json`, outputs `.wav` to `public/audio/`. Set `KURAVIZ_TTS_ADAPTOR` env to enable. |
-| `node tools/capture.mjs <output.mp4>` | Record video via Firefox + FFmpeg (requires Xvfb + pulseaudio) |
-| `node tools/test-collisions.mjs` | Auto-scan ALL pages for collisions, logs to `logs/debug.log` |
+|---|---|
+| `./kuraviz.sh dev` | Dev server at `http://localhost:9999` (or `.\kuraviz.ps1 dev` on Windows) |
+| `./kuraviz.sh build` | Build + typecheck (there is no separate typecheck script) |
+| `./kuraviz.sh test` | Auto-scan ALL pages for collisions, logs to `logs/debug.log` |
+| `./kuraviz.sh record` | Record video via Firefox + FFmpeg → `output/output.mp4` |
+| `./kuraviz.sh tts` | Batch TTS: reads `public/narration.json`, outputs `.wav` to `public/audio/` |
+| `./kuraviz.sh shell` | Open bash shell inside the container |
+| `npm run dev` | Same as `kuraviz.sh dev` (thin wrapper) |
+| `npm run build` | Same as `kuraviz.sh build` |
+| `npm run test` | Same as `kuraviz.sh test` |
+| `npm run record` | Same as `kuraviz.sh record` |
+| `npm run tts` | Same as `kuraviz.sh tts` |
 | `?debug=1` | Show chapter/page/audio/script debug overlay |
 | `?debug=auto` | Auto-scan all pages, logs collisions to `logs/debug.log` |
 | `?record=1` | Recording mode: auto-plays from page 1, logs `[record] ch/pg` progress
 
-If `scaffold/node_modules` is missing, run `cd scaffold && npm install`.
+The Docker image is built on first invocation. Set `KURAVIZ_TTS_ADAPTOR` env var to enable TTS.
 
 ## Architecture rules (agent must not violate)
 

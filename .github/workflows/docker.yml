@@ -4,7 +4,7 @@ on:
   push:
     branches: [master]
     paths:
-      - "scaffold/tools/Dockerfile"
+      - "scaffold/Dockerfile"
       - "scaffold/tools/docker-entrypoint.sh"
       - "scaffold/tools/capture.mjs"
       - "scaffold/tools/test-collisions.mjs"
@@ -47,7 +47,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: ./scaffold
-          file: ./scaffold/tools/Dockerfile
+          file: ./scaffold/Dockerfile
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}

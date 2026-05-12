@@ -3,14 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
+    "dev": "docker compose run --rm --service-ports dev",
+    "build": "docker compose run --rm build",
     "start": "next start",
     "lint": "next lint",
-    "postinstall": "playwright install firefox",
-    "record": "node tools/capture.mjs",
-    "record:docker": "bash tools/record-docker.sh",
-    "test:docker": "docker run --rm --shm-size=2g -v \"$(pwd)\":/app/scaffold:ro ghcr.io/kurashizu/kuraviz-recorder:latest node /app/tools/test-collisions.mjs"
+    "test": "docker compose run --rm test",
+    "record": "docker compose run --rm record",
+    "tts": "docker compose run --rm tts"
   },
   "dependencies": {
     "framer-motion": "^12.9.4",

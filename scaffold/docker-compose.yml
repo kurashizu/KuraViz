@@ -1,0 +1,41 @@
+services:
+  dev:
+    build: .
+    ports:
+      - "9999:9999"
+    volumes:
+      - .:/app/scaffold
+    working_dir: /app/scaffold
+    command: npx next dev -H 0.0.0.0 -p 9999
+
+  build:
+    build: .
+    volumes:
+      - .:/app/scaffold
+    working_dir: /app/scaffold
+    command: npx next build
+
+  test:
+    build: .
+    volumes:
+      - .:/app/scaffold
+    command: node /app/tools/test-collisions.mjs
+    shm_size: "2gb"
+
+  record:
+    build: .
+    volumes:
+      - .:/app/scaffold:ro
+      - ./output:/output
+    entrypoint: /entrypoint.sh
+    command: /output/output.mp4
+    shm_size: "2gb"
+
+  tts:
+    build: .
+    volumes:
+      - .:/app/scaffold
+    working_dir: /app/scaffold
+    command: python3 tools/generate_audio.py
+    environment:
+      - KURAVIZ_TTS_ADAPTOR
