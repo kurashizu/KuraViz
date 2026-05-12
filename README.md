@@ -1,47 +1,42 @@
 # KuraViz
 
-Build PPT-style videos from HTML slides. Write React components on a 1920×1080 canvas, pair them with narration scripts, auto-generate audio via TTS, and record a video — all without a video editor.
+Build PPT-style videos from HTML slides. Agent-powered narrated tutorial videos — zero video editing required.
 
-## Usage
+## Install
 
 ```bash
 npx skills add kurashizu/KuraViz
 ```
 
-Then ask your agent: *"Use KuraViz Skill, make a tutorial video about [a blog post / news article / any topic]".*
-
-## How It Works
-
-1. **Write slides** — each page is a `.tsx` component with absolute-positioned text, cards, markdown, charts, or diagrams
-2. **Add scripts** — pair each slide with a voiceover script in `narration.json`
-3. **Generate audio** — TTS pipeline turns scripts into `.wav` files
-4. **Record video** — automatic playback captured via Firefox + FFmpeg into an MP4
-
-## Commands
-
-## Project Structure
-
-```
-├── scaffold/            # Next.js app template
-│   ├── content/chapters/# Slide page components
-│   ├── components/      # Slide primitives (Text, Cardbox, Anim, …)
-│   ├── lib/             # Utilities, types, collision detection
-│   └── public/          # narration.json, audio/
-├── references/          # Design guide, component API, rules
-└── tools/               # Scaffold generator, capture, TTS template
-```
-
 ## Usage
 
-| Command | What it does |
-|---|---|
-| `python tools/scaffold.py --dir /path/to/project` | Create a new project |
-| `cd scaffold && npm run dev` | Start dev server at `0.0.0.0:9999` |
-| `cd scaffold && python tools/generate_audio.py` | Generate TTS audio (needs `KURAVIZ_TTS_ADAPTOR`) |
-| `cd scaffold && node tools/capture.mjs output.mp4` | Record video via Firefox |
-| `cd scaffold && node tools/test-collisions.mjs` | Detect layout collisions |
+Ask your agent:
 
-Append `?debug=1`, `?debug=auto`, or `?record=1` to the URL during development.
+> *"Use KuraViz Skill, make a tutorial video about [a blog post / news article / any topic]".*
+
+The agent will guide you through content, design, TTS audio, and final video recording.
+
+## What It Does
+
+1. **Write slides** — each page is a React component with text, cards, markdown, charts, or diagrams on a 1920×1080 canvas
+2. **Add scripts** — pair each slide with a voiceover script
+3. **Generate audio** — TTS pipeline turns scripts into `.wav` files
+4. **Record video** — automatic playback captured into MP4 via Firefox + FFmpeg
+
+## Prerequisites
+
+- Node.js ≥ 18 + npm
+- Python 3
+- ffmpeg (optional: `h264_vaapi` for hardware encoding)
+- pulseaudio-utils, Xvfb (for video recording)
+
+## Structure
+
+```
+├── scaffold/       # Next.js app (slides, player, components)
+├── references/     # Design guide, component API, rules
+└── tools/          # Scaffold generator, capture, TTS template
+```
 
 ## License
 
