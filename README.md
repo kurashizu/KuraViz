@@ -26,6 +26,16 @@ On first use, the agent checks if `MEMORY.md` exists. If not, it walks through `
 
 Answers are saved to `MEMORY.md` and automatically loaded on subsequent runs.
 
+## Prerequisites
+
+- **Node.js** ≥ 18 + npm
+- **Python 3** (stdlib only — no extra packages)
+- **ffmpeg** (optional: `h264_vaapi` for GPU encoding)
+- **pulseaudio-utils**, **Xvfb** (for video capture on Linux)
+
+These are installed automatically when you `npm install` inside `scaffold/` (via `postinstall` script):
+- playwright (Firefox browser)
+
 ---
 
 ## Pipeline
@@ -125,13 +135,6 @@ Set `KURAVIZ_TTS_ADAPTOR` to enable. A template is at `tools/tts.example.py`. If
 **SlidePlayer** (`components/player/slide-player.tsx`) is the runtime: fetches `narration.json`, creates an `HTMLAudioElement` for each page, and auto-advances on `onended` (500ms delay). In `?record=1` mode it skips the click-to-start overlay and auto-plays from page 1, logging every transition to the console.
 
 ---
-
-## Prerequisites
-
-- Node.js ≥ 18 + npm
-- Python 3
-- ffmpeg (optional: `h264_vaapi` for GPU encoding)
-- pulseaudio-utils, Xvfb
 
 ## License
 
