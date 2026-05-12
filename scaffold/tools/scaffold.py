@@ -20,12 +20,14 @@ SCAFFOLD_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) \
 
 DEFAULT_PORT = 9999
 DEFAULT_HOST = '0.0.0.0'
+DEFAULT_IMAGE = 'ghcr.io/kurashizu/kuraviz-recorder:latest'
 
 IGNORE_PATTERNS = shutil.ignore_patterns(
     '.next',
     '.gitignore',
     'node_modules',
     'output',
+    'docker-compose.yml',
 )
 
 
@@ -40,6 +42,74 @@ def inject_server_config(target: str, port: int, host: str):
         json.dump(pkg, f, indent=2)
         f.write('\n')
     print(f'  [OK] Server: {host}:{port}')
+
+
+def write_compose(target: str, image: str):
+    """Write a docker-compose.yml for the workspace that uses the pre-built image."""
+    compose = {
+        'services': {
+            'dev': {
+                'image': image,
+                'ports': ['9999:9999'],
+                'volumes': ['.:/app/scaffold'],
+                'working_dir': '/app/scaffold',
+                'command': 'npx next dev -H 0.0.0.0 -p 9999',
+            },
+            'build': {
+                'image': image,
+                'volumes': ['.:/app/scaffold'],
+                'working_dir': '/app/scaffold',
+                'command': 'npx next build',
+            },
+            'test': {
+                'image': image,
+                'volumes': ['.:/app/scaffold'],
+                'command': 'node /app/tools/test-collisions.mjs',
+                'shm_size': '2gb',
+            },
+            'record': {
+                'image': image,
+                'volumes': ['.:/app/scaffold:ro', './output:/output'],
+                'entrypoint': '/entrypoint.sh',
+                'command': '/output/output.mp4',
+                'shm_size': '2gb',
+            },
+            'tts': {
+                'image': image,
+                'volumes': ['.:/app/scaffold'],
+                'working_dir': '/app/scaffold',
+                'command': 'python3 tools/generate_audio.py',
+                'environment': ['KURAVIZ_TTS_ADAPTOR'],
+            },
+        }
+    }
+
+    import yaml
+    # Prefer using yaml if available, otherwise write minimal yaml manually
+    try:
+        with open(os.path.join(target, 'docker-compose.yml'), 'w') as f:
+            yaml.dump(compose, f, default_flow_style=False, sort_keys=False)
+    except ImportError:
+        _write_compose_plain(os.path.join(target, 'docker-compose.yml'), compose)
+
+    print(f'  [OK] docker-compose.yml (image: {image})')
+
+
+def _write_compose_plain(path: str, compose: dict):
+    """Fallback yaml writer — no PyYAML dependency."""
+    lines = ['services:']
+    for name, cfg in compose['services'].items():
+        lines.append(f'  {name}:')
+        for key, val in cfg.items():
+            if isinstance(val, list):
+                lines.append(f'    {key}:')
+                for item in val:
+                    lines.append(f'      - {item}')
+            else:
+                lines.append(f'    {key}: {val}')
+    lines.append('')
+    with open(path, 'w') as f:
+        f.write('\n'.join(lines))
 
 
 def main():
@@ -71,6 +141,7 @@ def main():
     print(f'  [OK] Copied scaffold -> {target}')
 
     inject_server_config(target, args.port, args.host)
+    write_compose(target, DEFAULT_IMAGE)
 
     print()
     print(f'  -- Done --')
