@@ -62,7 +62,10 @@ language: Chinese
 style: conversational
 
 # Environment Variables
-# KURAVIZ_TTS_ADAPTOR=  (set in Step 5 after scaffold exists)
+KURAVIZ_TTS_ADAPTOR=  (set in Step 5 after scaffold exists)
+
+# Lessons Learned
+Any errors or issues encountered during previous runs, along with their solutions, should be documented here for future reference. You will update this section after each run to keep track of what you've learned and how you resolved any problems.
 ```
 
 Confirm with the user that everything looks correct.

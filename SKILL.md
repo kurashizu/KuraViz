@@ -66,10 +66,12 @@ WORKSPACE/
 
 ### 2. Source Collection & Outline
 
-**You MUST collect real reference materials — never make up content.** If the user provided source materials, convert them to markdown files and save them in `WORKSPACE/sources/`. Otherwise, use web search to find relevant materials, write them as markdown files, and save them to `WORKSPACE/sources/`. Do not proceed without concrete source material.
-
 1. Collect 3-6 relevant reference materials and save as markdown files in `WORKSPACE/sources/`.
-2. Create `WORKSPACE/outline.md` with chapters and pages. Each page must have a title and a description of its content. See `references/outline-example.md` for an example.
+**You MUST collect real reference materials — never make up content.** Use web search to find relevant materials, write them as markdown files, and save them to `WORKSPACE/sources/`. Do not proceed without concrete source material.
+Please refer to `references/research-guide.md` for how to conduct research and write markdown files.
+You need to create a **subagent** to do research across collected sources and compress them into `WORKSPACE/sources.md` as a single file for easier reading. This subagent should read all markdown files in `WORKSPACE/sources/`, extract relevant content, and write to `WORKSPACE/sources.md`. This file will be used for page creation in the next step.
+
+2. Refer to `WORKSPACE/sources.md` and create `WORKSPACE/outline.md` with chapters and pages. Each page must have a title and a description of its content. See `references/outline-example.md` for an example.
 3. Generate narration JSON at `WORKSPACE/scaffold/public/narration.json`. Use `\n` to manually control line breaks in scripts — this determines the caption `h` on each page. Follow `references/narration-system.md` for the schema.
 
 ### 3. Page Creation
@@ -129,20 +131,16 @@ docker compose run --rm -v "$(pwd)/..:/output" record /output/video.mp4
 
 This will generate the video file. All dependencies (FFmpeg, Xvfb, PulseAudio, Firefox) are handled inside the Docker container.
 
-### 7. Final Report
+### 7. Upload to Bilibili
 
-Write a final report summarizing the work you did, including:
-- A summary of the video content and structure (chapters/pages).
-- Any challenges you faced and how you overcame them.
+Please refer to `references/upload-guide.md` for how to upload videos to Bilibili, including how to write descriptions and choose tags.
 
-## Directory Reference
+### 8. Final Report
 
-| Path | Description |
-|---|---|
-| `references/config-guide.md` | Environment variables and user preferences |
-| `references/components.md` | All component APIs |
-| `references/page-creation.md` | Page creation workflow |
-| `references/narration-system.md` | Narration JSON schema |
-| `references/design-guide.md` | Visual design rules, layout templates |
-| `references/collision-prevention.md` | Font metrics, box sizing, debug workflow |
-| `references/outline-example.md` | Example chapter outline |
+After successful upload, write a final report summarizing the project, including:
+- The topic and content of the video
+- The workflow you followed and any deviations from the standard process
+- Challenges you faced and how you overcame them
+- The final outcome and any feedback received after upload
+
+And update `MEMORY.md` with any errors encountered and how you resolved them in `# Lessons Learned` section. Keep them concise, delete redundant info, and focus on key takeaways for future reference.
