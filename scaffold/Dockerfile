@@ -59,7 +59,8 @@ ENV TTS_PYTHON=/opt/tts-venv/bin/python
 
 ARG HOST_UID=1000
 ARG HOST_GID=1000
-RUN groupadd -g $HOST_GID appgroup && useradd -u $HOST_UID -g $HOST_GID appuser
+RUN groupadd -f -g $HOST_GID appgroup || true \
+    && useradd -o -u $HOST_UID -g $HOST_GID appuser || true
 
 # ── Tool scripts ────────────────────────────────────────────────────────────
 COPY tools/scaffold.py tools/generate_audio.py tools/
