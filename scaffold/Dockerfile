@@ -57,8 +57,14 @@ RUN python3 -m venv /opt/tts-venv
 
 ENV TTS_PYTHON=/opt/tts-venv/bin/python
 
+ARG HOST_UID=1000
+ARG HOST_GID=1000
+RUN groupadd -g $HOST_GID appgroup && useradd -u $HOST_UID -g $HOST_GID appuser
+
 # ── Tool scripts ────────────────────────────────────────────────────────────
 COPY tools/scaffold.py tools/generate_audio.py tools/
 COPY tools/capture.mjs tools/test-collisions.mjs tools/
 COPY tools/docker-entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
+
+USER appuser
